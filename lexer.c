@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:35:38 by rgregori          #+#    #+#             */
-/*   Updated: 2025/10/24 15:44:45 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/10/27 14:50:08 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,46 @@ char	*skip_whitespace(char *input)
 	return (input);
 }
 
+int	is_operator_start(char c)
+{
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
+t_token *extract_operator_token(char **input)
+{
+	if (**input == '>' && *(*input + 1) == '>')
+	{
+		*input += 2;
+		return (create_token(strdup(">>"), TOKEN_REDIR_APPEND));
+	}
+	else if (**input == '<' && *(*input + 1) == '<')
+	{
+		*input += 2;
+		return (create_token(strdup("<<"), TOKEN_REDIR_HEREDOC));
+	}
+	else if (**input == '>')
+	{
+		*input += 1;
+		return (create_token(strdup(">"), TOKEN_REDIR_OUT));
+	}
+	else if (**input == '<')
+	{
+		*input += 1;
+		return (create_token(strdup("<"), TOKEN_REDIR_IN));
+	}
+	else if (**input == '|')
+	{
+		*input += 1;
+		return (create_token(strdup("|"), TOKEN_PIPE));
+	}
+}
+
 t_token	*lexer(char *input)
 {
 	t_token	*head;
+	t_token	*new_token;
 
 	head = NULL;
 	while (*input)
@@ -29,6 +66,16 @@ t_token	*lexer(char *input)
 		input = skip_whitespace(input);
 		if (!*input)
 			break ;
+		if (is_operator_start(*input))
+			new_token = extract_operator_token(&input);
+		else
+			new_token = extract_word_token(&input);
+		if (!new_token) 
+		{
+			free_tokens(head);
+			return (NULL);
+		}
+		add_token_to_end(&head, new_token); 
 	}
 	return (head);	
 }
