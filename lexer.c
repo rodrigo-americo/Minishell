@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:35:38 by rgregori          #+#    #+#             */
-/*   Updated: 2025/10/27 14:50:08 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:12:45 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*skip_whitespace(char *input)
 {
-	while (*input != '\0' && (*input != ' ' || *input != '\t'))
+	while (*input != '\0' && (*input == ' ' || *input == '\t'))
 		input++;
 	return (input);
 }
@@ -31,29 +31,65 @@ t_token *extract_operator_token(char **input)
 	if (**input == '>' && *(*input + 1) == '>')
 	{
 		*input += 2;
-		return (create_token(strdup(">>"), TOKEN_REDIR_APPEND));
+		return (create_token(">>", TOKEN_REDIR_APPEND));
 	}
 	else if (**input == '<' && *(*input + 1) == '<')
 	{
 		*input += 2;
-		return (create_token(strdup("<<"), TOKEN_REDIR_HEREDOC));
+		return (create_token("<<", TOKEN_REDIR_HEREDOC));
 	}
 	else if (**input == '>')
 	{
 		*input += 1;
-		return (create_token(strdup(">"), TOKEN_REDIR_OUT));
+		return (create_token(">", TOKEN_REDIR_OUT));
 	}
 	else if (**input == '<')
 	{
 		*input += 1;
-		return (create_token(strdup("<"), TOKEN_REDIR_IN));
+		return (create_token("<", TOKEN_REDIR_IN));
 	}
 	else if (**input == '|')
 	{
 		*input += 1;
-		return (create_token(strdup("|"), TOKEN_PIPE));
+		return (create_token("|", TOKEN_PIPE));
 	}
 }
+
+t_token *extract_word_token(char **input)
+{
+	char *start;
+
+	start = *input;
+	if (**input == '\'')
+	{
+		if (ft_strchr(*(*input + 1), '\''))
+		{
+			
+		}
+		else 
+			create_token(input, TOKEN_WORD);
+	}
+	else if (**input == '\"')
+	{
+		if (ft_strchr(*input, '\"'))
+		{
+			
+		}
+		else 
+			create_token(input, TOKEN_WORD);
+	}
+	else
+	{
+		if (ft_strchr(*input, ' '))
+		{
+			
+		}
+		else 
+			create_token(strdup(input), TOKEN_WORD);
+	}
+	return ();
+}
+
 
 t_token	*lexer(char *input)
 {
