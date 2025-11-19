@@ -1,42 +1,66 @@
-# Nome do programa final
+# --- Nomes ---
 NAME        = minishell
 
-# Arquivos fonte C (.c)
-SRCS        = main.c signal.c
+# --- Diretórios ---
+LIBFT_DIR   = ./libft
+SRC_DIR     = ./src
+OBJ_DIR     = ./obj
+INC_DIR     = ./includes
 
-# Arquivos objeto (.o)
-OBJS        = $(SRCS:.c=.o)
+# --- Arquivos ---
+# Liste aqui todos os seus arquivos .c que estão dentro de src/
+# Estou colocando os que você me enviou + lexer_utils (que vamos precisar)
+SRC_FILES   = main.c \
+              signal.c \
+              utils.c \
+              lexer/lexer.c \
+              lexer/token_utils.c
 
-# Compilador e flags
-CC          = gcc
-CFLAGS      = -Wall -Wextra -Werror -pthread -I.
-LDFLAGS     = -pthread -lreadline
+# Transforma .c em .o mantendo a estrutura ou simplificando
+OBJS        = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 
-RM          = rm -f
+# --- Compilação ---
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror -g3
+# Includes: Procura headers na pasta includes E na pasta libft
+INCLUDES    = -I $(INC_DIR) -I $(LIBFT_DIR)
 
-# ----------------- REGRAS -----------------
+# --- Bibliotecas ---
+# Linka com a libft compilada e com a readline
+LIBS        = -L$(LIBFT_DIR) -lft -lreadline
+
+# --- Comandos ---
+RM          = rm -rf
+MKDIR       = mkdir -p
+
+# --- Regras ---
+
 all: $(NAME)
 
+# Regra principal: Compila a libft se necessário, depois o minishell
 $(NAME): $(OBJS)
-	@echo "Linking $(NAME)..."
-	@$(CC) $(OBJS) $(LDFLAGS) -o $(NAME)
+	@make -C $(LIBFT_DIR)
+	@echo "🔨 Linkando $(NAME)..."
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	@echo "✅ Minishell compilado com sucesso!"
 
-%.o: %.c
-	@mkdir -p $(dir $@)
-	@echo "Compiling $<..."
-	@$(CC) $(CFLAGS) -c $< -o $@
+# Regra genérica para objetos
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@$(MKDIR) $(dir $@)
+	@echo "📝 Compilando $<..."
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# Regra para limpeza dos arquivos objeto
+# Limpeza
 clean:
-	@echo "Removing object files..."
-	@$(RM) $(OBJS)
+	@make clean -C $(LIBFT_DIR)
+	@echo "🧹 Limpando objetos..."
+	@$(RM) $(OBJ_DIR)
 
-# Regra para limpeza total (objetos + executável)
 fclean: clean
-	@echo "Removing executable $(NAME)..."
+	@make fclean -C $(LIBFT_DIR)
+	@echo "🗑️ Removendo executável..."
 	@$(RM) $(NAME)
 
-# Regra para recompilar o projeto
 re: fclean all
 
 .PHONY: all clean fclean re

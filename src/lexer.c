@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:35:38 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/12 15:12:45 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:47:34 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,41 +55,46 @@ t_token *extract_operator_token(char **input)
 	}
 }
 
-t_token *extract_word_token(char **input)
+/*
+** Retorna o tamanho da palavra até o próximo separador ou fim da string.
+** Retorna -1 se encontrar aspas não fechadas (Erro Léxico).
+*/
+int get_word_len(char *input)
 {
-	char *start;
+    int i;
+    char quote;
 
-	start = *input;
-	if (**input == '\'')
-	{
-		if (ft_strchr(*(*input + 1), '\''))
-		{
-			
-		}
-		else 
-			create_token(input, TOKEN_WORD);
-	}
-	else if (**input == '\"')
-	{
-		if (ft_strchr(*input, '\"'))
-		{
-			
-		}
-		else 
-			create_token(input, TOKEN_WORD);
-	}
-	else
-	{
-		if (ft_strchr(*input, ' '))
-		{
-			
-		}
-		else 
-			create_token(strdup(input), TOKEN_WORD);
-	}
-	return ();
+    i = 0;
+    while (input[i] && !is_separator(input[i]))
+    {
+        if (input[i] == '\'' || input[i] == '\"')
+        {
+            quote = input[i++]; // Guarda qual aspa abriu
+            while (input[i] && input[i] != quote)
+                i++;
+            if (!input[i]) // Chegou ao fim sem fechar
+                return (-1); // Código de erro
+        }
+        i++;
+    }
+    return (i);
 }
 
+t_token *extract_word_token(char **input)
+{
+    int     len;
+    char    *value;
+
+    len = get_word_len(*input);
+    if (len == -1)
+    {
+        print_error("minishell", "syntax error: unclosed quotes\n");
+        return (NULL); 
+    }
+    value = ft_substr(*input, 0, len);
+    *input += len;
+    return (create_token(value, TOKEN_WORD));
+}
 
 t_token	*lexer(char *input)
 {
@@ -114,38 +119,4 @@ t_token	*lexer(char *input)
 		add_token_to_end(&head, new_token); 
 	}
 	return (head);	
-}
-
-t_token	*create_token(char *value, int type)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-	{
-		return (NULL);
-	}
-	token->value = strdup(value);
-	if (!token->value)
-	{
-		free(token);
-		return (NULL);
-	}
-	token->type = type;
-	token->next = NULL;
-	return (token);
-}
-void	free_tokens(t_token *tokens)
-{
-	t_token	*current;
-	t_token	*next;
-
-	current  = tokens;
-	while (current)
-	{
-		next = current->next;
-		if (current->value)
-			free(current->value);
-		current = next;	
-	}	
 }
