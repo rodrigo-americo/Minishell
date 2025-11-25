@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/10/24 11:02:04 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/11/25 15:08:45 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,15 @@ typedef struct s_redir
 	char			*file;
 	struct s_redir	*next;
 }	t_redir;
+
+/* Tipos de Redirecionamento */
+typedef enum e_redir_type
+{
+	REDIR_IN,          // <
+	REDIR_OUT,         // >
+	REDIR_APPEND,      // >>
+	REDIR_HEREDOC      // <<
+}	t_redir_type;
 
 /* Command Structure */
 typedef struct s_cmd
@@ -185,5 +194,10 @@ void	error_exit(char *msg);
 void	print_error(char *cmd, char *msg);
 char	**ft_split(char *str, char delimiter);
 void	free_array(char **arr);
+char	*skip_whitespace(char *input);
+int		is_separator(char c);
+char **ft_add_to_array(char **arr, char *new_str);
+void add_redir_to_end(t_redir **head, t_redir *new_redir);
+t_redir *create_redir(char *file_name, t_redir_type type);
 
 #endif

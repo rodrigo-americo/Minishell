@@ -6,18 +6,11 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:35:38 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/19 15:47:34 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/11/25 11:25:33 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*skip_whitespace(char *input)
-{
-	while (*input != '\0' && (*input == ' ' || *input == '\t'))
-		input++;
-	return (input);
-}
 
 int	is_operator_start(char c)
 {
@@ -53,13 +46,14 @@ t_token *extract_operator_token(char **input)
 		*input += 1;
 		return (create_token("|", TOKEN_PIPE));
 	}
+	return (NULL);
 }
 
 /*
 ** Retorna o tamanho da palavra até o próximo separador ou fim da string.
 ** Retorna -1 se encontrar aspas não fechadas (Erro Léxico).
 */
-int get_word_len(char *input)
+static int get_word_len(char *input)
 {
     int i;
     char quote;
@@ -80,7 +74,7 @@ int get_word_len(char *input)
     return (i);
 }
 
-t_token *extract_word_token(char **input)
+static t_token *extract_word_token(char **input)
 {
     int     len;
     char    *value;

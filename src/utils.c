@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:07:53 by rgregori          #+#    #+#             */
-/*   Updated: 2025/10/27 10:53:14 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/11/25 11:25:41 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,18 @@ void	print_error(char *cmd, char *msg)
 {
 	printf("%s : %s",cmd, msg);
 }
-char	**ft_split(char *str, char delimiter);
+
+char	*skip_whitespace(char *input)
+{
+	while (*input != '\0' && (*input == ' ' || *input == '\t'))
+		input++;
+	return (input);
+}
+
+int	is_separator(char c)
+{
+	return (c == ' ' || c == '\t' || c == '|' || c == '<' || c == '>' || c == '\0');
+}
 
 void	free_array(char **arr)
 {
