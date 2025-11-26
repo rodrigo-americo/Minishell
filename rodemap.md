@@ -111,9 +111,9 @@ typedef struct s_cmd {
 **Dificuldade:** ⭐⭐⭐⭐☆
 
 ### 2.1 Lexer (Tokenização)
-- [ ] Identificar tokens (palavras, operadores, redirecionamentos)
-- [ ] Tratar aspas simples e duplas
-- [ ] Identificar pipes e redirecionamentos
+- [x] Identificar tokens (palavras, operadores, redirecionamentos)
+- [x] Tratar aspas simples e duplas
+- [x] Identificar pipes e redirecionamentos
 
 **Funções a Implementar:**
 - `lexer()` - Tokenizar input
@@ -154,10 +154,10 @@ typedef struct s_cmd {
 - `echo $NONEXISTENT` → imprime string vazia
 
 ### 2.3 Parser (Análise Sintática)
-- [ ] Construir árvore de comandos
-- [ ] Identificar comandos e argumentos
-- [ ] Organizar pipes
-- [ ] Organizar redirecionamentos
+- [x] Construir árvore de comandos
+- [x] Identificar comandos e argumentos
+- [x] Organizar pipes
+- [x] Organizar redirecionamentos
 
 **Funções a Implementar:**
 - `parser()` - Analisar tokens

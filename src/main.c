@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 10:47:32 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/25 11:18:56 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:40:21 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ void display_prompt(t_shell *shell)
 /* src/main.c */
 void main_loop(t_shell *shell)
 {
-    t_token *tokens;
-    
+    t_token	*tokens;
+    t_cmd	*cmds;
+
     while (1)
     {
         display_prompt(shell); // Lê a entrada (e aloca shell->input)
@@ -41,16 +42,12 @@ void main_loop(t_shell *shell)
             tokens = lexer(shell->input);
             free(shell->input); // Libera o que foi lido pelo readline
 
-            if (!tokens)
-            {
-                // Erro Léxico detectado pelo lexer (tokens = NULL). Volta para o loop.
-                continue ; 
-            }
-
+			if (!tokens)
+				continue ; 
             // 2. Parser (Próxima Fase)
-            // t_cmd *cmds = parser(tokens);
-            // free_tokens(tokens); // Libera tokens após o parser
-
+			cmds = parser(tokens);
+			if (!cmds)
+				continue ;
             // ... etc.
 
             // if (cmds)
