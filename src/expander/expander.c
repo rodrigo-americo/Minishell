@@ -6,11 +6,21 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 11:01:32 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/26 13:48:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/02 11:35:28 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char	get_quote_state(char s, char state)
+{
+	if (s == state)
+		state = 0;
+	else if (state == 0)
+		state = s;
+	return (state);
+}
+
 
 char	*process_string_content(char *original_str, t_shell *shell)
 {
@@ -25,10 +35,7 @@ char	*process_string_content(char *original_str, t_shell *shell)
 	{
 		if (original_str[i] == '\'' || original_str[i] == '\"')
 		{
-			if (original_str[i] == quote_state)
-				quote_state = 0;
-			else if (quote_state == 0)
-				quote_state = original_str[i];
+			quote_state = get_quote_state(original_str[i], quote_state);
 			i++;
 			continue;
 		}
