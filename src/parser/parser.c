@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 11:30:33 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/25 15:48:38 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:32:09 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ static t_cmd *parse_simple_command(t_token **token)
 	{
 		if (current->type >= TOKEN_REDIR_IN)
 		{
-			current->next->value = NULL;
 			add_redir_to_end(&cmd->redirs, create_redir(current->next->value, current->type));
+			current->next->value = NULL;
 			current = current->next->next;
 		}
 		else

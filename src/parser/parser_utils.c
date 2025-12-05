@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:06:07 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/25 15:49:15 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:41:30 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void add_redir_to_end(t_redir **head, t_redir *new_redir)
 	current->next = new_redir;
 }
 
-static char *ft_coop_arry(char **arr, int len, char *new_str)
+static char **ft_coop_arry(char **arr, int len, char *new_str)
 {
 	int 	i;
 	char	**new_arr;
@@ -90,11 +90,36 @@ char **ft_add_to_array(char **arr, char *new_str)
 	return (new_arr);	
 }
 
-void free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd)
 {
+	t_redir	*redir;
+	t_redir	*next;
+
+	if (!cmd)
+		return;
 	if (cmd->args)
 		free_array(cmd->args);
-	if (cmd->redirs)
-		free(cmd->redirs);
-	
+	redir = cmd->redirs;
+	while (redir)
+	{
+		next = redir->next;
+		if (redir->file)
+			free(redir->file);
+		free(redir);
+		redir = next;
+	}
+	free(cmd);
+}
+void free_commands(t_cmd *cmds)
+{
+    t_cmd *current;
+    t_cmd *next;
+
+    current = cmds;
+    while (current)
+    {
+        next = current->next;
+        free_cmd(current);
+        current = next;
+    }
 }

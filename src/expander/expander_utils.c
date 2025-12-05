@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:20:41 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/02 13:18:34 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:10:15 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,38 +35,52 @@ char *ft_strjoin_char(char *s, char c)
 
 static char *get_pid_str(void)
 {
-	int		fd;
-	int		i;
-	char	buf[64];
-	ssize_t	n;
+    int		fd;
+    int		i;
+    char	buf[64];
+    ssize_t	n;
 
-	fd = open("/proc/self/stat",O_RDONLY);
-	if (fd < 0)
-		return (ft_strdup("0"));
-	n = read(fd, buf, sizeof(buf) - 1);
-	close(fd);
-	if (n <= 0)
-		return (ft_strdup("0"));
-	buf[n] = '\0';
-	i = 0;
-	while (buf[i] && buf[i] != ' ' && buf[i] != '\n')
-	{
-		if (i < (int)sizeof(buf) - 1)
-			break ;
-		i++;
-	}
-	buf[i] ='\0';
-	return (ft_strdup(buf));
+    fd = open("/proc/self/stat", O_RDONLY);
+    if (fd < 0)
+        return (ft_strdup("0"));
+    n = read(fd, buf, sizeof(buf) - 1);
+    close(fd);
+    if (n <= 0)
+        return (ft_strdup("0"));
+    buf[n] = '\0';
+    i = 0;
+    /* primeiro campo de /proc/<pid>/stat é o PID */
+    while (buf[i] && buf[i] != ' ' && buf[i] != '\n' && i < (int)sizeof(buf) - 1)
+        i++;
+    buf[i] = '\0';
+    return (ft_strdup(buf));
 }
 
-static int expansion_special(t_shell *shell, char c)
+static char *expansion_special(t_shell *shell, char c)
 {
-	int	var_value;
-	if (c == '?')
-		var_value = ft_itoa(shell->exit_status);
-	else
-		var_value = get_pid_str();
-	return (var_value);
+    if (c == '?')
+        return (ft_itoa(shell->exit_status));
+    return (get_pid_str());
+}
+
+static int ft_get_varname_len(char *str_at_dollar)
+{
+    int	i;
+
+    i = 0;
+    if (str_at_dollar[0] == '\0')
+        return (0);
+    if (ft_isdigit(str_at_dollar[0]))
+        return (1);
+    while (str_at_dollar[i])
+    {
+        if (ft_isalnum(str_at_dollar[i]) || str_at_dollar[i] == '_')
+            i++;
+        else
+            break ;
+    }
+    return (i);
+    
 }
 
 static char *expand_env_var(char *str_at_dollar, t_shell *shell, int *name_len)
@@ -90,6 +104,8 @@ int ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
     char	*temp;
     int		name_len;
 
+    var_value = NULL;
+    name_len = 0;
     if (str_at_dollar[1] == '?' || str_at_dollar[1] == '$')
     {
         var_value = expansion_special(shell, str_at_dollar[1]);
@@ -99,12 +115,13 @@ int ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
     {
         var_value = expand_env_var(str_at_dollar, shell, &name_len);
         if (!var_value)
-            return (0);
+            return (1);
     }
     if (var_value && *var_value)
     {
         temp = *new_str;
         *new_str = ft_strjoin(*new_str, var_value);
+        free(temp);
         free(var_value);
     }
     else if (var_value)

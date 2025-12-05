@@ -6,21 +6,20 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 10:47:32 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/26 10:40:21 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:40:51 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void display_prompt(t_shell *shell)
+void	display_prompt(t_shell *shell)
 {
-	char *propt;
-	
-	propt = "minishell> ";
-	shell->input = readline(propt);
-	if (*shell->input)
+	char	*prompt;
+
+	prompt = "minishell> ";
+	shell->input = readline(prompt);
+	if (shell->input && *shell->input)
 		add_history(shell->input);
-	free(shell->input);	
 }
 
 /* src/main.c */

@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:17:33 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/19 15:18:08 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:31:41 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	free_tokens(t_token *tokens)
 		next = current->next;
 		if (current->value)
 			free(current->value);
+		free(current);
 		current = next;	
 	}	
 }
