@@ -23,7 +23,10 @@ char *ft_strjoin_char(char *s, char c)
 		len = ft_strlen(s);
 	new_s = malloc(len + 2);
 	if (!new_s)
+    {
+        free(s);
 		return (NULL);
+    }
 	if (s)
 		ft_memcpy(new_s, s, len);
 	new_s[len] = c;

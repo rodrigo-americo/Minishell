@@ -17,7 +17,7 @@ TESTS=test_token test_lexer test_parser test_utils
 all: $(TESTS)
 
 $(LIBFT_DIR)/libft.a:
-	$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) bonus -C $(LIBFT_DIR)
 
 test_token: test_token.c $(LIBFT_DIR)/libft.a
 	$(CC) $(CFLAGS) test_token.c $(SRC_DIR)/token_utils.c $(SRC_DIR)/utils.c -L$(LIBFT_DIR) -lft -o test_token

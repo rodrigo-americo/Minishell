@@ -31,16 +31,12 @@ void main_loop(t_shell *shell)
     while (1)
     {
         display_prompt(shell); // Lê a entrada (e aloca shell->input)
-        
         if (!shell->input) // Trata EOF (Ctrl+D)
             break ; 
-
         if (shell->input && *shell->input) // Garante que a linha não está vazia
         {
             // 1. Lexer: Quebra em tokens
             tokens = lexer(shell->input);
-            free(shell->input); // Libera o que foi lido pelo readline
-
 			if (!tokens)
 				continue ; 
             // 2. Parser (Próxima Fase)
@@ -56,8 +52,7 @@ void main_loop(t_shell *shell)
             //     // free_commands(cmds);
             // }
         }
-        else
-            free(shell->input); // Libera se for uma linha vazia (apenas enter)
+        free(shell->input); // Libera se for uma linha vazia (apenas enter)
     }
     printf("exit\n"); // Mensagem de saída para Ctrl+D
 }
@@ -73,6 +68,7 @@ int main(void)
 		perror(ERR_MALLOC);
 		exit(1);
 	}
+    // crirar _shell_init
 	main_loop(shell);
 	return (0);
 }

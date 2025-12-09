@@ -20,7 +20,7 @@ t_env *create_env_node(char *key, char *value)
     // Retorna o nó
 }
 
-t_env create_env(char **envp)
+t_env *create_env(char **envp)
 {
 	
 }

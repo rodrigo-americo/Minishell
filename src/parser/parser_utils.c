@@ -62,7 +62,8 @@ static char **ft_coop_arry(char **arr, int len, char *new_str)
 		new_arr[i] = arr[i];
 	new_arr[len] = new_str;
 	new_arr[len + 1] = NULL;
-	return (new_arr);	
+	free(arr);
+	return (new_arr);		
 }
 
 char **ft_add_to_array(char **arr, char *new_str)
