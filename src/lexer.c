@@ -19,32 +19,32 @@ int	is_operator_start(char c)
 	return (0);
 }
 
-t_token *extract_operator_token(char **input)
+t_list *extract_operator_token(char **input)
 {
 	if (**input == '>' && *(*input + 1) == '>')
 	{
 		*input += 2;
-		return (create_token(">>", TOKEN_REDIR_APPEND));
+		return (token_node_new(">>", TOKEN_REDIR_APPEND));
 	}
 	else if (**input == '<' && *(*input + 1) == '<')
 	{
 		*input += 2;
-		return (create_token("<<", TOKEN_REDIR_HEREDOC));
+		return (token_node_new("<<", TOKEN_REDIR_HEREDOC));
 	}
 	else if (**input == '>')
 	{
 		*input += 1;
-		return (create_token(">", TOKEN_REDIR_OUT));
+		return (token_node_new(">", TOKEN_REDIR_OUT));
 	}
 	else if (**input == '<')
 	{
 		*input += 1;
-		return (create_token("<", TOKEN_REDIR_IN));
+		return (token_node_new("<", TOKEN_REDIR_IN));
 	}
 	else if (**input == '|')
 	{
 		*input += 1;
-		return (create_token("|", TOKEN_PIPE));
+		return (token_node_new("|", TOKEN_PIPE));
 	}
 	return (NULL);
 }
@@ -74,7 +74,7 @@ static int get_word_len(char *input)
     return (i);
 }
 
-static t_token *extract_word_token(char **input)
+static t_list *extract_word_token(char **input)
 {
     int     len;
     char    *value;
@@ -87,13 +87,12 @@ static t_token *extract_word_token(char **input)
     }
     value = ft_substr(*input, 0, len);
     *input += len;
-    return (create_token(value, TOKEN_WORD));
+	return (token_node_new(value, TOKEN_WORD));
 }
-
-t_token	*lexer(char *input)
+t_list	*lexer(char *input)
 {
-	t_token	*head;
-	t_token	*new_token;
+	t_list  *head;
+	t_list  *new_node;
 
 	head = NULL;
 	while (*input)
@@ -102,15 +101,15 @@ t_token	*lexer(char *input)
 		if (!*input)
 			break ;
 		if (is_operator_start(*input))
-			new_token = extract_operator_token(&input);
+			new_node = extract_operator_token(&input);
 		else
-			new_token = extract_word_token(&input);
-		if (!new_token) 
+			new_node = extract_word_token(&input);
+		if (!new_node)
 		{
-			free_tokens(head);
+			tokens_list_clear(&head);
 			return (NULL);
 		}
-		add_token_to_end(&head, new_token); 
+		tokens_list_add_back(&head, new_node);
 	}
-	return (head);	
+	return (head);
 }

@@ -47,6 +47,8 @@
 # include <readline/readline.h>  // readline, rl_clear_history, rl_on_new_line,
                                   // rl_replace_line, rl_redisplay
 # include <readline/history.h>   // add_history
+/* Libft list type and helpers */
+# include "libft.h"
 
 /* ************************************************************************** */
 /*                              DEFINES                                       */
@@ -84,7 +86,6 @@ typedef struct s_token
 {
 	char			*value;
 	int				type;
-	struct s_token	*next;
 }	t_token;
 
 /* Redirection Structure */
@@ -124,7 +125,7 @@ typedef struct s_env
 typedef struct s_shell
 {
 	char			*input;
-	t_token			*tokens;
+	t_list			*tokens;
 	t_cmd			*cmds;
 	t_env			*env;
 	int				exit_status;
@@ -146,12 +147,21 @@ void	setup_signals(void);
 void	signal_handler(int signum);
 
 /* Lexer */
-t_token	*lexer(char *input);
+/* Tokens are stored as `t_list *` where each node's `content` is a `t_token *`.
+ * Use helpers `token_node_new`, `tokens_list_add_back` and `tokens_list_clear`
+ * from `src/token_utils.c`.
+ */
+t_list	*lexer(char *input);
 t_token	*create_token(char *value, int type);
-void	free_tokens(t_token *tokens);
+	void	tokens_list_clear(t_list **tokens);
+	/* Token helpers (token utils) */
+	t_token *token_new(const char *value, int type);
+	void    token_del(void *p);
+	t_list  *token_node_new(char *value, int type);
+	void    tokens_list_add_back(t_list **head, t_list *new_node);
 
 /* Parser */
-t_cmd	*parser(t_token *tokens);
+t_cmd	*parser(t_list *tokens);
 void	free_commands(t_cmd *cmds);
 
 /* Expansion */

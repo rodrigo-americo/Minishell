@@ -25,7 +25,7 @@ void	display_prompt(t_shell *shell)
 /* src/main.c */
 void main_loop(t_shell *shell)
 {
-    t_token	*tokens;
+    t_list  *tokens;
     t_cmd	*cmds;
 
     while (1)
@@ -44,7 +44,7 @@ void main_loop(t_shell *shell)
 			if (!tokens)
 				continue ; 
             // 2. Parser (Próxima Fase)
-			cmds = parser(tokens);
+    		cmds = parser(tokens);
 			if (!cmds)
 				continue ;
             // ... etc.
