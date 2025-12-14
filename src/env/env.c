@@ -53,5 +53,25 @@ static t_env	*create_and_link_node(char *envp_line)
 
 t_env	*create_env(char **envp)
 {
-	
+	t_env	*head;
+	t_env	*current;
+	t_env	*new;
+	int		i;
+
+	head = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		new = create_and_link_node(envp[i]);
+		if (new)
+		{
+			if (!head)
+				head = new;
+			else
+				current->next = new;
+			current = new;
+		}
+		i++;
+	}
+	return (head);
 }
