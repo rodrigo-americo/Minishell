@@ -24,6 +24,7 @@ SRC_FILES   = main.c \
 			  executor/executor.c \
 			  executor/path_resolution.c \
 			  executor/env_conversion.c \
+			  executor/pipes.c \
 			  builtins/builtins.c
 
 # Transforma .c em .o mantendo a estrutura ou simplificando
