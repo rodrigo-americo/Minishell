@@ -12,20 +12,6 @@
 
 #include "minishell.h"
 
-void	execute_command(t_cmd *cmd, t_shell *shell)
-{
-	
-}
-
-void	execute_pipeline(t_cmd *cmds, t_shell *shell)
-{
-
-}
-
-void	executor(t_cmd *cmds, t_shell *shell)
-{
-
-}
 /*
 ** execute_child_process - Executa comando no processo filho
 **
