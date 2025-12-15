@@ -25,6 +25,7 @@ static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 {
 	char	**envp;
 
+	setup_signals_child();
 	envp = env_to_array(shell->env);
 	if (!envp)
 	{
@@ -43,7 +44,7 @@ static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 **
 ** Return: Exit status correto (0-255, ou 128+N se morto por sinal)
 */
-static int	get_exit_status(int status)
+int	get_exit_status(int status)
 {
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
@@ -83,24 +84,29 @@ int	execute_simple_command(t_cmd *cmd, t_shell *shell)
 		fprintf(stderr, "minishell: %s: command not found\n", cmd->args[0]);
 		return (127);
 	}
+	setup_signals_executing();
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("minishell: fork");
 		free(cmd_path);
+		setup_signals_interactive();
 		return (1);
 	}
 	if (pid == 0)
 		execute_child_process(cmd_path, cmd, shell);
 	free(cmd_path);
 	waitpid(pid, &status, 0);
+	setup_signals_interactive();
 	return (get_exit_status(status));
 }
 
 /*
 ** executor - Ponto de entrada principal da execução
 **
-** Por enquanto executa apenas o primeiro comando (sem pipes).
+** Decide se executa comando simples ou pipeline.
+** Se houver cmds->next, usa execute_pipeline().
+** Caso contrário, usa execute_simple_command().
 **
 ** @cmds: lista encadeada de comandos
 ** @shell: ponteiro para estrutura shell
@@ -109,12 +115,9 @@ void executor(t_cmd *cmds, t_shell *shell)
 {
     if (!cmds)
         return;
-    shell->exit_status = execute_simple_command(cmds, shell);
 
-    // FASE 2 (depois): iterar por cmds->next para pipes
-    // while (cmds)
-    // {
-    //     executar com pipes...
-    //     cmds = cmds->next;
-    // }
+    if (cmds->next)
+        shell->exit_status = execute_pipeline(cmds, shell);
+    else
+        shell->exit_status = execute_simple_command(cmds, shell);
 }

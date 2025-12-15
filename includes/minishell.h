@@ -144,7 +144,13 @@ void	cleanup_shell(t_shell *shell);
 
 /* Signal Handling */
 void	setup_signals(void);
+void	setup_signals_interactive(void);
+void	setup_signals_executing(void);
+void	setup_signals_child(void);
 void	signal_handler(int signum);
+
+/* Global variable for signal handling (only allowed global) */
+extern volatile sig_atomic_t	g_signal_received;
 
 /* Lexer */
 /* Tokens are stored as `t_list *` where each node's `content` is a `t_token *`.
@@ -172,7 +178,8 @@ char	*expand_exit_status(char *str, int exit_status);
 void	executor(t_cmd *cmds, t_shell *shell);
 int		execute_simple_command(t_cmd *cmd, t_shell *shell);
 void	execute_command(t_cmd *cmd, t_shell *shell);
-void	execute_pipeline(t_cmd *cmds, t_shell *shell);
+int		execute_pipeline(t_cmd *cmds, t_shell *shell);
+int		get_exit_status(int status);
 
 /* Built-ins */
 int		is_builtin(char *cmd);

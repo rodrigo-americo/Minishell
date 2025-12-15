@@ -86,8 +86,6 @@ char **ft_add_to_array(char **arr, char *new_str)
 			free(arr);
 		return (NULL);
 	}
-	if (arr)
-		free(arr);
 	return (new_arr);
 }
 
