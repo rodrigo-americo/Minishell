@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:07:53 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/25 11:25:41 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/15 15:24:48 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	error_exit(char *msg)
 
 void	print_error(char *cmd, char *msg)
 {
-	printf("%s : %s",cmd, msg);
+	printf("%s : %s", cmd, msg);
 }
 
 char	*skip_whitespace(char *input)
@@ -32,7 +32,8 @@ char	*skip_whitespace(char *input)
 
 int	is_separator(char c)
 {
-	return (c == ' ' || c == '\t' || c == '|' || c == '<' || c == '>' || c == '\0');
+	return ((c == ' ' || c == '\t' || c == '|'
+			|| c == '<' || c == '>' || c == '\0'));
 }
 
 void	free_array(char **arr)

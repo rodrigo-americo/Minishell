@@ -3,15 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 10:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/14 10:00:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/15 15:29:34 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	execute_command(t_cmd *cmd, t_shell *shell)
+{
+	
+}
+
+void	execute_pipeline(t_cmd *cmds, t_shell *shell)
+{
+
+}
+
+void	executor(t_cmd *cmds, t_shell *shell)
+{
+
+}
 /*
 ** execute_child_process - Executa comando no processo filho
 **
