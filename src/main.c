@@ -50,7 +50,7 @@ void main_loop(t_shell *shell)
 				shell->input = NULL;
 				continue ;
 			}
-			// expander(cmds, shell);
+			expander(cmds, shell);
 			executor(cmds, shell);
 			free_commands(cmds);
         }

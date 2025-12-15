@@ -211,7 +211,7 @@ int		is_separator(char c);
 char 	**ft_add_to_array(char **arr, char *new_str);
 void 	add_redir_to_end(t_redir **head, t_redir *new_redir);
 void 	free_cmd(t_cmd *cmd);
-// void 	word_splitting(t_cmd *cmd);
+void 	word_splitting(t_cmd *cmd);
 char 	*ft_strjoin_char(char *s, char c);
 int 	ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell);
 char 	*process_string_content(char *original_str, t_shell *shell);

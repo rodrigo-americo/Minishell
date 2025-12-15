@@ -132,14 +132,74 @@ int ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
     return (name_len);
 }
 
+static char **split_single_arg(char *arg)
+{
+	char	**parts;
+	int		i;
+
+	parts = ft_split(arg, ' ');
+	if (!parts)
+		return (NULL);
+	i = 0;
+	while (parts[i])
+	{
+		if (ft_strlen(parts[i]) == 0)
+		{
+			free(parts[i]);
+			parts[i] = NULL;
+		}
+		i++;
+	}
+	return (parts);
+}
+
+static char **rebuild_args(char **old_args)
+{
+	char	**new_args;
+	char	**parts;
+	int		i;
+	int		j;
+
+	new_args = NULL;
+	i = 0;
+	while (old_args && old_args[i])
+	{
+		if (ft_strchr(old_args[i], ' ') || ft_strchr(old_args[i], '\t'))
+		{
+			parts = split_single_arg(old_args[i]);
+			j = 0;
+			while (parts && parts[j])
+			{
+				new_args = ft_add_to_array(new_args, ft_strdup(parts[j]));
+				j++;
+			}
+			free_array(parts);
+		}
+		else
+			new_args = ft_add_to_array(new_args, ft_strdup(old_args[i]));
+		i++;
+	}
+	return (new_args);
+}
+
 /*
-** word_splitting - Divide palavras com base em IFS (STUB)
+** word_splitting - Divide palavras com base em IFS
 **
-** Por enquanto não faz nada - implementação virá depois.
+** Percorre cmd->args e divide argumentos que contêm espaços/tabs
+** em múltiplos argumentos separados.
 **
 ** @cmd: estrutura do comando
 */
 void	word_splitting(t_cmd *cmd)
 {
-	(void)cmd;
+	char	**new_args;
+
+	if (!cmd || !cmd->args)
+		return ;
+	new_args = rebuild_args(cmd->args);
+	if (new_args)
+	{
+		free_array(cmd->args);
+		cmd->args = new_args;
+	}
 }
