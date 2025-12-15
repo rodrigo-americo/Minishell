@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/25 15:08:45 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/15 16:21:56 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void	signal_handler(int signum);
  * from `src/token_utils.c`.
  */
 t_list	*lexer(char *input);
-t_token	*create_token(char *value, int type);
+// t_token	*create_token(char *value, int type);
 void	tokens_list_clear(t_list **tokens);
 /* Token helpers (token utils) */
 t_token *token_new(const char *value, int type);
@@ -205,14 +205,14 @@ void	print_error(char *cmd, char *msg);
 void	free_array(char **arr);
 char	*skip_whitespace(char *input);
 int		is_separator(char c);
-char **ft_add_to_array(char **arr, char *new_str);
-void add_redir_to_end(t_redir **head, t_redir *new_redir);
-void free_cmd(t_cmd *cmd);
-void word_splitting(t_cmd *cmd);
-char *ft_strjoin_char(char *s, char c);
-int ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell);
-char *process_string_content(char *original_str, t_shell *shell);
-void expander(t_cmd *cmds, t_shell *shell);
+char 	**ft_add_to_array(char **arr, char *new_str);
+void 	add_redir_to_end(t_redir **head, t_redir *new_redir);
+void 	free_cmd(t_cmd *cmd);
+// void 	word_splitting(t_cmd *cmd);
+char 	*ft_strjoin_char(char *s, char c);
+int 	ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell);
+char 	*process_string_content(char *original_str, t_shell *shell);
+void 	expander(t_cmd *cmds, t_shell *shell);
 t_redir *create_redir(char *file_name, t_redir_type type);
 
 #endif
