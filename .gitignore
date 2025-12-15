@@ -1,1 +1,14 @@
 pt_br.subject.pdf
+obj/*
+.claude/
+.vscode/
+
+# Executável
+minishell
+
+# Libft
+libft/libft.a
+libft/obj/
+
+# Scripts de teste
+test_executor.sh

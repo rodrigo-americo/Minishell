@@ -131,3 +131,15 @@ int ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
         free(var_value);
     return (name_len);
 }
+
+/*
+** word_splitting - Divide palavras com base em IFS (STUB)
+**
+** Por enquanto não faz nada - implementação virá depois.
+**
+** @cmd: estrutura do comando
+*/
+void	word_splitting(t_cmd *cmd)
+{
+	(void)cmd;
+}

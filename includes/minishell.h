@@ -170,6 +170,7 @@ char	*expand_exit_status(char *str, int exit_status);
 
 /* Executor */
 void	executor(t_cmd *cmds, t_shell *shell);
+int		execute_simple_command(t_cmd *cmd, t_shell *shell);
 void	execute_command(t_cmd *cmd, t_shell *shell);
 void	execute_pipeline(t_cmd *cmds, t_shell *shell);
 
@@ -194,10 +195,12 @@ char	**get_paths(t_shell *shell);
 
 /* Environment */
 t_env	*create_env(char **envp);
+t_env	*create_env_node(char *key, char *value);
 char	*get_env_value(char *key, t_env *env);
 void	set_env_value(char *key, char *value, t_env **env);
 void	unset_env_value(char *key, t_env **env);
 void	free_env(t_env *env);
+char	**env_to_array(t_env *env);
 
 /* Utils */
 void	error_exit(char *msg);

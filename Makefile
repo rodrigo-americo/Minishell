@@ -15,11 +15,16 @@ SRC_FILES   = main.c \
 			  utils.c \
 			  lexer.c \
 			  token_utils.c \
-			  env.c \
+			  env/env.c \
+			  env/env_utils.c \
 			  expander/expander.c \
 			  expander/expander_utils.c \
 			  parser/parser.c \
-			  parser/parser_utils.c
+			  parser/parser_utils.c \
+			  executor/executor.c \
+			  executor/path_resolution.c \
+			  executor/env_conversion.c \
+			  builtins/builtins.c
 
 # Transforma .c em .o mantendo a estrutura ou simplificando
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))

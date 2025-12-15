@@ -79,6 +79,7 @@ static t_cmd *parse_simple_command(t_list **token)
 	}
 	cmd->args = NULL;
 	cmd->redirs = NULL;
+	cmd->next = NULL;
 	current_node = *token;
 	current = current_node ? (t_token *)current_node->content : NULL;
 	while (current_node && ft_strcmp(current->value, "|") != 0 )
@@ -128,14 +129,12 @@ t_cmd *parser(t_list *tokens)
 	{
 		if (syntax_error(current_token, head))
 		{
-			tokens_list_clear(&tokens);
 			free_commands(head); // Libera os comandos construídos até agora
 			return (NULL);
 		}
 		new_cmd = parse_simple_command(&current_token);
 		if (!new_cmd)
 		{
-			tokens_list_clear(&tokens);
 			free_commands(head);
 			return (NULL);
 		}
@@ -152,6 +151,5 @@ t_cmd *parser(t_list *tokens)
 		if (current_token && ft_strcmp(((t_token *)current_token->content)->value, "|") == 0)
 			current_token = current_token->next; // Pula o '|'
 	}
-	tokens_list_clear(&tokens);
 	return (head);
 }

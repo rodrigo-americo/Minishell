@@ -30,37 +30,43 @@ void main_loop(t_shell *shell)
 
     while (1)
     {
-        display_prompt(shell); // Lê a entrada (e aloca shell->input)
-        if (!shell->input) // Trata EOF (Ctrl+D)
-            break ; 
-        if (shell->input && *shell->input) // Garante que a linha não está vazia
+        display_prompt(shell);
+        if (!shell->input)
+            break ;
+        if (shell->input && *shell->input)
         {
-            // 1. Lexer: Quebra em tokens
             tokens = lexer(shell->input);
 			if (!tokens)
-				continue ; 
-            // 2. Parser (Próxima Fase)
-    		cmds = parser(tokens);
-			if (!cmds)
+			{
+				free(shell->input);
+				shell->input = NULL;
 				continue ;
-            // ... etc.
-
-            // if (cmds)
-            // {
-            //     // 3. Executor
-            //     // execute_pipeline(cmds, shell);
-            //     // free_commands(cmds);
-            // }
+			}
+    		cmds = parser(tokens);
+			tokens_list_clear(&tokens);
+			if (!cmds)
+			{
+				free(shell->input);
+				shell->input = NULL;
+				continue ;
+			}
+			// expander(cmds, shell);
+			executor(cmds, shell);
+			free_commands(cmds);
         }
-        free(shell->input); // Libera se for uma linha vazia (apenas enter)
+        if (shell->input)
+			free(shell->input);
+		shell->input = NULL;
     }
     printf("exit\n"); // Mensagem de saída para Ctrl+D
 }
 
-int main(void)
+int	main(int argc, char **argv, char **envp)
 {
-	t_shell				*shell;
+	t_shell	*shell;
 
+	(void)argc;
+	(void)argv;
 	setup_signals();
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
@@ -68,7 +74,17 @@ int main(void)
 		perror(ERR_MALLOC);
 		exit(1);
 	}
-    // crirar _shell_init
+	shell->input = NULL;
+	shell->tokens = NULL;
+	shell->cmds = NULL;
+	shell->env = create_env(envp);
+	shell->exit_status = 0;
+	shell->stdin_backup = dup(STDIN_FILENO);
+	shell->stdout_backup = dup(STDOUT_FILENO);
 	main_loop(shell);
+	free_env(shell->env);
+	close(shell->stdin_backup);
+	close(shell->stdout_backup);
+	free(shell);
 	return (0);
 }

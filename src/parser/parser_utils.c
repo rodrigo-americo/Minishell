@@ -83,12 +83,12 @@ char **ft_add_to_array(char **arr, char *new_str)
 	if (!new_arr)
 	{
 		if (arr)
-			free_array(arr);
-		return (NULL);	
+			free(arr);
+		return (NULL);
 	}
 	if (arr)
 		free(arr);
-	return (new_arr);	
+	return (new_arr);
 }
 
 void	free_cmd(t_cmd *cmd)
@@ -111,6 +111,7 @@ void	free_cmd(t_cmd *cmd)
 	}
 	free(cmd);
 }
+
 void free_commands(t_cmd *cmds)
 {
     t_cmd *current;

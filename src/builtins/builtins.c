@@ -22,6 +22,27 @@
 ** Return: 1 se é builtin, 0 senão
 */
 
+int	is_builtin(char *cmd)
+{
+	if (!cmd)
+		return (0);
+	if (ft_strcmp(cmd, "echo") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "cd") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "pwd") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "export") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "unset") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "env") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "exit") == 0)
+		return (1);
+	return (0);
+}
+
 /*
 ** execute_builtin - Executa comando built-in (STUB por enquanto)
 **
@@ -33,3 +54,11 @@
 **
 ** Return: Exit status (0 por enquanto)
 */
+int	execute_builtin(t_cmd *cmd, t_shell *shell)
+{
+	(void)shell;
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (0);
+	printf("Built-in '%s' not yet implemented\n", cmd->args[0]);
+	return (0);
+}

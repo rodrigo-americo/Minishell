@@ -29,7 +29,7 @@ void	setup_signals(void)
 	struct sigaction	sa_quit;
 
 	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0;
+	sa_int.sa_flags = SA_RESTART;
 	sa_int.sa_handler = signal_handler;
 	if (sigaction(SIGINT, &sa_int, NULL) == -1)
 	{
@@ -37,7 +37,7 @@ void	setup_signals(void)
 		exit(1);
 	}
 	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
+	sa_quit.sa_flags = SA_RESTART;
 	sa_quit.sa_handler = SIG_IGN;
 	if (sigaction(SIGQUIT, &sa_quit, NULL) == -1)
 	{

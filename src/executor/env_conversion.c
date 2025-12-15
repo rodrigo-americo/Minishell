@@ -27,3 +27,59 @@
 **   Input: env = {USER=john} -> {HOME=/home/john} -> NULL
 **   Output: ["USER=john", "HOME=/home/john", NULL]
 */
+
+static int	count_env_nodes(t_env *env)
+{
+	int		count;
+	t_env	*current;
+
+	count = 0;
+	current = env;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+static char	*create_env_string(char *key, char *value)
+{
+	char	*temp;
+	char	*result;
+
+	temp = ft_strjoin(key, "=");
+	if (!temp)
+		return (NULL);
+	result = ft_strjoin(temp, value);
+	free(temp);
+	return (result);
+}
+
+char	**env_to_array(t_env *env)
+{
+	char	**array;
+	t_env	*current;
+	int		count;
+	int		i;
+
+	count = count_env_nodes(env);
+	array = malloc(sizeof(char *) * (count + 1));
+	if (!array)
+		return (NULL);
+	current = env;
+	i = 0;
+	while (current)
+	{
+		array[i] = create_env_string(current->key, current->value);
+		if (!array[i])
+		{
+			free_array(array);
+			return (NULL);
+		}
+		current = current->next;
+		i++;
+	}
+	array[i] = NULL;
+	return (array);
+}
