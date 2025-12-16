@@ -21,32 +21,36 @@ static char	get_quote_state(char s, char state)
 	return (state);
 }
 
-char	*process_string_content(char *original_str, t_shell *shell)
+static char	*append_char_safe(char *str, char c, char quote_state)
+{
+	if (quote_state && (c == ' ' || c == '\t'))
+		c = 0x1F;
+	return (ft_strjoin_char(str, c));
+}
+
+char	*process_string_content(char *str, t_shell *shell)
 {
 	char	*new_str;
-	char	quote_state;
-	char	c;
+	char	quote;
 	int		i;
 
 	new_str = ft_strdup("");
-	quote_state = 0;
+	if (!new_str)
+		return (NULL);
+	quote = 0;
 	i = 0;
-	while (original_str[i])
+	while (str[i])
 	{
-		if (original_str[i] == '\'' || original_str[i] == '\"')
+		if (str[i] == '\'' || str[i] == '\"')
 		{
-			quote_state = get_quote_state(original_str[i], quote_state);
+			quote = get_quote_state(str[i], quote);
 			i++;
-			continue ;
 		}
-		if (original_str[i] == '$' && quote_state != '\'')
-			i += ft_handle_expansion(&new_str, original_str + i, shell);
+		else if (str[i] == '$' && quote != '\'')
+			i += ft_handle_expansion(&new_str, str + i, shell);
 		else
 		{
-			c = original_str[i];
-			if (quote_state && (c == ' ' || c == '\t'))
-				c = 0x1F;
-			new_str = ft_strjoin_char(new_str, c);
+			new_str = append_char_safe(new_str, str[i], quote);
 			i++;
 		}
 	}
@@ -55,26 +59,25 @@ char	*process_string_content(char *original_str, t_shell *shell)
 
 static void	expand_and_dequote(t_cmd *cmd, t_shell *shell)
 {
-	t_redir	*current_redir;
-	char	*old_file;
-	char	*old_arg;
+	t_redir	*curr;
+	char	*tmp;
 	int		i;
 
 	i = 0;
 	while (cmd->args && cmd->args[i])
 	{
-		old_arg = cmd->args[i];
-		cmd->args[i] = process_string_content(old_arg, shell);
-		free(old_arg);
+		tmp = cmd->args[i];
+		cmd->args[i] = process_string_content(tmp, shell);
+		free(tmp);
 		i++;
 	}
-	current_redir = cmd->redirs;
-	while (current_redir)
+	curr = cmd->redirs;
+	while (curr)
 	{
-		old_file = current_redir->file;
-		current_redir->file = process_string_content(old_file, shell);
-		free(old_file);
-		current_redir = current_redir->next;
+		tmp = curr->file;
+		curr->file = process_string_content(tmp, shell);
+		free(tmp);
+		curr = curr->next;
 	}
 }
 
