@@ -22,9 +22,31 @@ void	display_prompt(t_shell *shell)
 		add_history(shell->input);
 }
 
+t_cmd	*main_loop_handle(t_shell *shell)
+{
+	t_list  *tokens;
+	t_cmd	*cmds;
+
+	tokens = lexer(shell->input);
+	if (!tokens)
+	{
+		free(shell->input);
+		shell->input = NULL;
+		return (NULL);
+	}
+    cmds = parser(tokens);
+	tokens_list_clear(&tokens);
+	if (!cmds)
+	{
+		free(shell->input);
+		shell->input = NULL;
+		return (NULL) ;
+	}
+	return (cmds);
+}
+
 void main_loop(t_shell *shell)
 {
-    t_list  *tokens;
     t_cmd	*cmds;
 
     while (1)
@@ -34,25 +56,12 @@ void main_loop(t_shell *shell)
             break ;
         if (shell->input && *shell->input)
         {
-            tokens = lexer(shell->input);
-			if (!tokens)
-			{
-				free(shell->input);
-				shell->input = NULL;
-				continue ;
-			}
-    		cmds = parser(tokens);
-			tokens_list_clear(&tokens);
+            cmds = main_loop_handle(shell);
 			if (!cmds)
-			{
-				free(shell->input);
-				shell->input = NULL;
 				continue ;
-			}
 			expander(cmds, shell);
 			executor(cmds, shell);
 			free_commands(cmds);
-			write(STDOUT_FILENO, "\n", 1);
         }
         if (shell->input)
 			free(shell->input);
@@ -61,13 +70,10 @@ void main_loop(t_shell *shell)
     printf("exit\n");
 }
 
-int	main(int argc, char **argv, char **envp)
+t_shell	*shell_init(char **envp)
 {
 	t_shell	*shell;
 
-	(void)argc;
-	(void)argv;
-	setup_signals();
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 	{
@@ -81,6 +87,17 @@ int	main(int argc, char **argv, char **envp)
 	shell->exit_status = 0;
 	shell->stdin_backup = dup(STDIN_FILENO);
 	shell->stdout_backup = dup(STDOUT_FILENO);
+	return (shell);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	*shell;
+
+	(void)argc;
+	(void)argv;
+	setup_signals();
+	shell = shell_init(envp);
 	main_loop(shell);
 	free_env(shell->env);
 	close(shell->stdin_backup);

@@ -88,6 +88,14 @@ typedef struct s_token
 	int				type;
 }	t_token;
 
+/* Operator Lookup Structure */
+typedef struct s_operator
+{
+	char			*symbol;
+	int				type;
+	int				len;
+}	t_operator;
+
 /* Redirection Structure */
 typedef struct s_redir
 {
@@ -152,11 +160,6 @@ void	signal_handler(int signum);
 /* Global variable for signal handling (only allowed global) */
 extern volatile sig_atomic_t	g_signal_received;
 
-/* Lexer */
-/* Tokens are stored as `t_list *` where each node's `content` is a `t_token *`.
- * Use helpers `token_node_new`, `tokens_list_add_back` and `tokens_list_clear`
- * from `src/token_utils.c`.
- */
 t_list	*lexer(char *input);
 // t_token	*create_token(char *value, int type);
 void	tokens_list_clear(t_list **tokens);
@@ -165,6 +168,9 @@ t_token *token_new(const char *value, int type);
 void    token_del(void *p);
 t_list  *token_node_new(char *value, int type);
 void    tokens_list_add_back(t_list **head, t_list *new_node);
+
+/* Operator initialization */
+void	init_operators(t_operator operators[6]);
 
 /* Parser */
 t_cmd	*parser(t_list *tokens);

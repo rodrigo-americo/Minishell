@@ -15,6 +15,7 @@ SRC_FILES   = main.c \
 			  utils.c \
 			  lexer.c \
 			  token_utils.c \
+			  inits.c \
 			  env/env.c \
 			  env/env_utils.c \
 			  expander/expander.c \

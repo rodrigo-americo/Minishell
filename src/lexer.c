@@ -19,40 +19,39 @@ int	is_operator_start(char c)
 	return (0);
 }
 
-t_list *extract_operator_token(char **input)
+static t_list	*try_match_operator(char **input, t_operator *op)
 {
-	if (**input == '>' && *(*input + 1) == '>')
+	int	i;
+
+	i = 0;
+	while (i < op->len)
 	{
-		*input += 2;
-		return (token_node_new(">>", TOKEN_REDIR_APPEND));
+		if ((*input)[i] != op->symbol[i])
+			return (NULL);
+		i++;
 	}
-	else if (**input == '<' && *(*input + 1) == '<')
+	*input += op->len;
+	return (token_node_new(op->symbol, op->type));
+}
+
+t_list	*extract_operator_token(char **input)
+{
+	t_operator	operators[6];
+	t_list		*result;
+	int			i;
+
+	init_operators(operators);
+	i = 0;
+	while (operators[i].symbol)
 	{
-		*input += 2;
-		return (token_node_new("<<", TOKEN_REDIR_HEREDOC));
-	}
-	else if (**input == '>')
-	{
-		*input += 1;
-		return (token_node_new(">", TOKEN_REDIR_OUT));
-	}
-	else if (**input == '<')
-	{
-		*input += 1;
-		return (token_node_new("<", TOKEN_REDIR_IN));
-	}
-	else if (**input == '|')
-	{
-		*input += 1;
-		return (token_node_new("|", TOKEN_PIPE));
+		result = try_match_operator(input, &operators[i]);
+		if (result)
+			return (result);
+		i++;
 	}
 	return (NULL);
 }
 
-/*
-** Retorna o tamanho da palavra até o próximo separador ou fim da string.
-** Retorna -1 se encontrar aspas não fechadas (Erro Léxico).
-*/
 static int get_word_len(char *input)
 {
     int i;
@@ -63,11 +62,11 @@ static int get_word_len(char *input)
     {
         if (input[i] == '\'' || input[i] == '\"')
         {
-            quote = input[i++]; // Guarda qual aspa abriu
+            quote = input[i++];
             while (input[i] && input[i] != quote)
                 i++;
-            if (!input[i]) // Chegou ao fim sem fechar
-                return (-1); // Código de erro
+            if (!input[i])
+                return (-1);
         }
         i++;
     }
