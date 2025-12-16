@@ -98,6 +98,8 @@ static char *expand_env_var(char *str_at_dollar, t_shell *shell, int *name_len)
     var_value = get_env_value(var_name, shell->env);
     free(var_name);
     (*name_len)++;
+    if (!var_value)
+        return (ft_strdup(""));
     return (var_value);
 }
 
@@ -118,7 +120,14 @@ int ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
     {
         var_value = expand_env_var(str_at_dollar, shell, &name_len);
         if (!var_value)
-            return (1);
+        {
+            if (name_len == 0)
+            {
+                *new_str = ft_strjoin_char(*new_str, '$');
+                return (1);
+            }
+            return (name_len);
+        }
     }
     if (var_value && *var_value)
     {

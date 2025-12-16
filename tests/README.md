@@ -4,13 +4,20 @@ Esta pasta contém os testes automatizados para o projeto Minishell.
 
 ## Estrutura dos Testes
 
+### Testes em C (Componentes Internos)
 - **test_token.c**: Testes básicos de tokens e listas
 - **test_lexer.c**: Testes abrangentes do analisador léxico (lexer)
 - **test_parser.c**: Testes do analisador sintático (parser)
 - **test_expander.c**: Testes de expansão de variáveis e remoção de aspas
 - **test_utils.c**: Testes das funções utilitárias
 
-## Como Compilar
+### Testes em Bash (Funcionalidade End-to-End) 🆕
+- **test_executor.sh**: Testes de execução de comandos (PATH, caminhos absolutos/relativos, command not found, exit status)
+- **test_pipes.sh**: Testes de pipes (simples, múltiplos comandos, argumentos, edge cases)
+- **test_expansion.sh**: Testes de expansão de variáveis ($VAR, $?, aspas, múltiplas expansões)
+- **run_all_tests.sh**: Script master que executa todos os testes bash com sumário completo
+
+## Como Compilar (Testes em C)
 
 Para compilar todos os testes:
 ```bash
@@ -96,11 +103,36 @@ No final, um resumo é exibido com:
 - Número de testes que passaram
 - Número de testes que falharam
 
+## Como Executar (Testes em Bash) 🆕
+
+Para executar TODOS os testes bash de uma vez:
+```bash
+cd tests
+bash run_all_tests.sh
+```
+
+Para executar um teste bash específico:
+```bash
+cd tests
+bash test_executor.sh     # Testa execução de comandos
+bash test_pipes.sh         # Testa pipes
+bash test_expansion.sh     # Testa expansão de variáveis
+```
+
+**Nota**: Os scripts bash testam o minishell compilado em `../minishell`, então certifique-se de compilar antes:
+```bash
+cd ..
+make
+cd tests
+bash run_all_tests.sh
+```
+
 ## Notas
 
 - O teste `test_expander` está comentado no Makefile até que as funções `env.c` e `word_splitting` sejam totalmente implementadas
 - Todos os testes verificam corretamente a memória alocada e fazem cleanup apropriado
 - Os testes são independentes e podem ser executados em qualquer ordem
+- Os testes bash comparam a saída do minishell com a do bash real para garantir compatibilidade
 
 ## Limpeza
 

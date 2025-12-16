@@ -22,7 +22,6 @@ void	display_prompt(t_shell *shell)
 		add_history(shell->input);
 }
 
-/* src/main.c */
 void main_loop(t_shell *shell)
 {
     t_list  *tokens;
@@ -53,12 +52,13 @@ void main_loop(t_shell *shell)
 			expander(cmds, shell);
 			executor(cmds, shell);
 			free_commands(cmds);
+			write(STDOUT_FILENO, "\n", 1);
         }
         if (shell->input)
 			free(shell->input);
 		shell->input = NULL;
     }
-    printf("exit\n"); // Mensagem de saída para Ctrl+D
+    printf("exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)

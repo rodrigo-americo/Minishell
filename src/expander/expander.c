@@ -26,6 +26,7 @@ char	*process_string_content(char *original_str, t_shell *shell)
 {
 	char	*new_str;
 	char	quote_state;
+	char	c;
 	int		i;
 
 	new_str = ft_strdup("");
@@ -40,10 +41,13 @@ char	*process_string_content(char *original_str, t_shell *shell)
 			continue;
 		}
 		if (original_str[i] == '$' && quote_state != '\'')
-			i += ft_handle_expansion(&new_str, original_str + i, shell); // ft_handle_expansion avança o índice 'i'
+			i += ft_handle_expansion(&new_str, original_str + i, shell);
 		else
 		{
-			new_str = ft_strjoin_char(new_str, original_str[i]);
+			c = original_str[i];
+			if (quote_state && (c == ' ' || c == '\t'))
+				c = 0x1F;
+			new_str = ft_strjoin_char(new_str, c);
 			i++;
 		}
 	}
@@ -75,6 +79,25 @@ static void expand_and_dequote(t_cmd *cmd, t_shell *shell)
 	}
 }
 
+static void	restore_spaces(char **args)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (args && args[i])
+	{
+		j = 0;
+		while (args[i][j])
+		{
+			if (args[i][j] == 0x1F)
+				args[i][j] = ' ';
+			j++;
+		}
+		i++;
+	}
+}
+
 void	expander(t_cmd *cmds, t_shell *shell)
 {
 	t_cmd *current;
@@ -82,8 +105,9 @@ void	expander(t_cmd *cmds, t_shell *shell)
 	current = cmds;
 	while (current)
 	{
-		expand_and_dequote(current, shell); 
-		word_splitting(current); 
+		expand_and_dequote(current, shell);
+		word_splitting(current);
+		restore_spaces(current->args);
 		current = current->next;
 	}
 }
