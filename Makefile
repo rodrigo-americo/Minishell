@@ -8,15 +8,15 @@ OBJ_DIR     = ./obj
 INC_DIR     = ./includes
 
 # --- Arquivos ---
-# Liste aqui todos os seus arquivos .c que estão dentro de src/
-# Estou colocando os que você me enviou + lexer_utils (que vamos precisar)
 SRC_FILES   = main.c \
 			  signal.c \
 			  utils.c \
-			  lexer.c \
+			  lexer/lexer.c \
+			  lexer/lexer_utils.c \
 			  token_utils.c \
 			  inits.c \
 			  env/env.c \
+			  env/env_set.c \
 			  env/env_utils.c \
 			  expander/expander.c \
 			  expander/expander_utils.c \

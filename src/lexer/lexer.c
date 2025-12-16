@@ -6,18 +6,11 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:35:38 by rgregori          #+#    #+#             */
-/*   Updated: 2025/11/25 11:25:33 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/16 12:07:21 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_operator_start(char c)
-{
-	if (c == '|' || c == '<' || c == '>')
-		return (1);
-	return (0);
-}
 
 static t_list	*try_match_operator(char **input, t_operator *op)
 {
@@ -52,46 +45,47 @@ t_list	*extract_operator_token(char **input)
 	return (NULL);
 }
 
-static int get_word_len(char *input)
+static int	get_word_len(char *input)
 {
-    int i;
-    char quote;
+	int		i;
+	char	quote;
 
-    i = 0;
-    while (input[i] && !is_separator(input[i]))
-    {
-        if (input[i] == '\'' || input[i] == '\"')
-        {
-            quote = input[i++];
-            while (input[i] && input[i] != quote)
-                i++;
-            if (!input[i])
-                return (-1);
-        }
-        i++;
-    }
-    return (i);
+	i = 0;
+	while (input[i] && !is_separator(input[i]))
+	{
+		if (input[i] == '\'' || input[i] == '\"')
+		{
+			quote = input[i++];
+			while (input[i] && input[i] != quote)
+				i++;
+			if (!input[i])
+				return (-1);
+		}
+		i++;
+	}
+	return (i);
 }
 
-static t_list *extract_word_token(char **input)
+static t_list	*extract_word_token(char **input)
 {
-    int     len;
-    char    *value;
+	int		len;
+	char	*value;
 
-    len = get_word_len(*input);
-    if (len == -1)
-    {
-        print_error("minishell", "syntax error: unclosed quotes\n");
-        return (NULL); 
-    }
-    value = ft_substr(*input, 0, len);
-    *input += len;
+	len = get_word_len(*input);
+	if (len == -1)
+	{
+		print_error("minishell", "syntax error: unclosed quotes\n");
+		return (NULL);
+	}
+	value = ft_substr(*input, 0, len);
+	*input += len;
 	return (token_node_new(value, TOKEN_WORD));
 }
+
 t_list	*lexer(char *input)
 {
-	t_list  *head;
-	t_list  *new_node;
+	t_list	*head;
+	t_list	*new_node;
 
 	head = NULL;
 	while (*input)

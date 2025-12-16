@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char *ft_strjoin_char(char *s, char c)
+char	*ft_strjoin_char(char *s, char c)
 {
 	char	*new_s;
 	int		len;
@@ -23,10 +23,10 @@ char *ft_strjoin_char(char *s, char c)
 		len = ft_strlen(s);
 	new_s = malloc(len + 2);
 	if (!new_s)
-    {
-        free(s);
+	{
+		free(s);
 		return (NULL);
-    }
+	}
 	if (s)
 		ft_memcpy(new_s, s, len);
 	new_s[len] = c;
@@ -36,109 +36,107 @@ char *ft_strjoin_char(char *s, char c)
 	return (new_s);
 }
 
-static char *get_pid_str(void)
+static char	*get_pid_str(void)
 {
-    int		fd;
-    int		i;
-    char	buf[64];
-    ssize_t	n;
+	int		fd;
+	int		i;
+	char	buf[64];
+	ssize_t	n;
 
-    fd = open("/proc/self/stat", O_RDONLY);
-    if (fd < 0)
-        return (ft_strdup("0"));
-    n = read(fd, buf, sizeof(buf) - 1);
-    close(fd);
-    if (n <= 0)
-        return (ft_strdup("0"));
-    buf[n] = '\0';
-    i = 0;
-    /* primeiro campo de /proc/<pid>/stat é o PID */
-    while (buf[i] && buf[i] != ' ' && buf[i] != '\n' && i < (int)sizeof(buf) - 1)
-        i++;
-    buf[i] = '\0';
-    return (ft_strdup(buf));
+	fd = open("/proc/self/stat", O_RDONLY);
+	if (fd < 0)
+		return (ft_strdup("0"));
+	n = read(fd, buf, sizeof(buf) - 1);
+	close(fd);
+	if (n <= 0)
+		return (ft_strdup("0"));
+	buf[n] = '\0';
+	i = 0;
+	while (buf[i] && buf[i] != ' ' && buf[i] != '\n' && i < (int)sizeof(buf) - 1)
+		i++;
+	buf[i] = '\0';
+	return (ft_strdup(buf));
 }
 
-static char *expansion_special(t_shell *shell, char c)
+static char	*expansion_special(t_shell *shell, char c)
 {
-    if (c == '?')
-        return (ft_itoa(shell->exit_status));
-    return (get_pid_str());
+	if (c == '?')
+		return (ft_itoa(shell->exit_status));
+	return (get_pid_str());
 }
 
-static int ft_get_varname_len(char *str_at_dollar)
+static int	ft_get_varname_len(char *str_at_dollar)
 {
-    int	i;
+	int	i;
 
-    i = 0;
-    if (str_at_dollar[0] == '\0')
-        return (0);
-    if (ft_isdigit(str_at_dollar[0]))
-        return (1);
-    while (str_at_dollar[i])
-    {
-        if (ft_isalnum(str_at_dollar[i]) || str_at_dollar[i] == '_')
-            i++;
-        else
-            break ;
-    }
-    return (i);
-    
+	i = 0;
+	if (str_at_dollar[0] == '\0')
+		return (0);
+	if (ft_isdigit(str_at_dollar[0]))
+		return (1);
+	while (str_at_dollar[i])
+	{
+		if (ft_isalnum(str_at_dollar[i]) || str_at_dollar[i] == '_')
+			i++;
+		else
+		break ;
+	}
+	return (i);
 }
 
-static char *expand_env_var(char *str_at_dollar, t_shell *shell, int *name_len)
+static char	*expand_env_var(char *str_at_dollar, t_shell *shell, int *name_len)
 {
-    char	*var_name;
-    char	*var_value;
+	char	*var_name;
+	char	*var_value;
 
-    *name_len = ft_get_varname_len(str_at_dollar + 1);
-    if (*name_len == 0)
-        return (NULL);
-    var_name = ft_substr(str_at_dollar, 1, *name_len);
-    var_value = get_env_value(var_name, shell->env);
-    free(var_name);
-    (*name_len)++;
-    if (!var_value)
-        return (ft_strdup(""));
-    return (var_value);
+	*name_len = ft_get_varname_len(str_at_dollar + 1);
+	if (*name_len == 0)
+		return (NULL);
+	var_name = ft_substr(str_at_dollar, 1, *name_len);
+	var_value = get_env_value(var_name, shell->env);
+	free(var_name);
+	(*name_len)++;
+	if (!var_value)
+		return (ft_strdup(""));
+	return (var_value);
 }
 
-int ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
+int	ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
 {
-    char	*var_value;
-    char	*temp;
-    int		name_len;
+	char	*var_value;
+	char	*temp;
+	int		name_len;
 
-    var_value = NULL;
-    name_len = 0;
-    if (str_at_dollar[1] == '?' || str_at_dollar[1] == '$')
-    {
-        var_value = expansion_special(shell, str_at_dollar[1]);
-        name_len = 2;
-    }
-    else
-    {
-        var_value = expand_env_var(str_at_dollar, shell, &name_len);
-        if (!var_value)
-        {
-            if (name_len == 0)
-            {
-                *new_str = ft_strjoin_char(*new_str, '$');
-                return (1);
-            }
-            return (name_len);
-        }
-    }
-    if (var_value && *var_value)
-    {
-        temp = *new_str;
-        *new_str = ft_strjoin(*new_str, var_value);
-        free(temp);
-        free(var_value);
-    }
-    else if (var_value)
-        free(var_value);
-    return (name_len);
+	var_value = NULL;
+	name_len = 0;
+	if (str_at_dollar[1] == '?' || str_at_dollar[1] == '$')
+	{
+		var_value = expansion_special(shell, str_at_dollar[1]);
+		name_len = 2;
+	}
+	else
+	{
+		var_value = expand_env_var(str_at_dollar, shell, &name_len);
+		if (!var_value)
+		{
+			if (name_len == 0)
+			{
+				*new_str = ft_strjoin_char(*new_str, '$');
+				return (1);
+			}
+			return (name_len);
+		}
+	}
+	if (var_value && *var_value)
+	{
+		temp = *new_str;
+		*new_str = ft_strjoin(*new_str, var_value);
+		free(temp);
+		free(var_value);
+	}
+	else if (var_value)
+		free(var_value);
+	return (name_len);
 }
 
 static char **split_single_arg(char *arg)
@@ -191,14 +189,6 @@ static char **rebuild_args(char **old_args)
 	return (new_args);
 }
 
-/*
-** word_splitting - Divide palavras com base em IFS
-**
-** Percorre cmd->args e divide argumentos que contêm espaços/tabs
-** em múltiplos argumentos separados.
-**
-** @cmd: estrutura do comando
-*/
 void	word_splitting(t_cmd *cmd)
 {
 	char	**new_args;

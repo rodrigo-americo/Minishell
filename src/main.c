@@ -24,7 +24,7 @@ void	display_prompt(t_shell *shell)
 
 t_cmd	*main_loop_handle(t_shell *shell)
 {
-	t_list  *tokens;
+	t_list	*tokens;
 	t_cmd	*cmds;
 
 	tokens = lexer(shell->input);
@@ -34,60 +34,40 @@ t_cmd	*main_loop_handle(t_shell *shell)
 		shell->input = NULL;
 		return (NULL);
 	}
-    cmds = parser(tokens);
+	cmds = parser(tokens);
 	tokens_list_clear(&tokens);
 	if (!cmds)
 	{
 		free(shell->input);
 		shell->input = NULL;
-		return (NULL) ;
+		return (NULL);
 	}
 	return (cmds);
 }
 
-void main_loop(t_shell *shell)
+void	main_loop(t_shell *shell)
 {
-    t_cmd	*cmds;
+	t_cmd	*cmds;
 
-    while (1)
-    {
-        display_prompt(shell);
-        if (!shell->input)
-            break ;
-        if (shell->input && *shell->input)
-        {
-            cmds = main_loop_handle(shell);
+	while (1)
+	{
+		display_prompt(shell);
+		if (!shell->input)
+			break ;
+		if (shell->input && *shell->input)
+		{
+			cmds = main_loop_handle(shell);
 			if (!cmds)
 				continue ;
 			expander(cmds, shell);
 			executor(cmds, shell);
 			free_commands(cmds);
-        }
-        if (shell->input)
+		}
+		if (shell->input)
 			free(shell->input);
 		shell->input = NULL;
-    }
-    printf("exit\n");
-}
-
-t_shell	*shell_init(char **envp)
-{
-	t_shell	*shell;
-
-	shell = malloc(sizeof(t_shell));
-	if (!shell)
-	{
-		perror(ERR_MALLOC);
-		exit(1);
 	}
-	shell->input = NULL;
-	shell->tokens = NULL;
-	shell->cmds = NULL;
-	shell->env = create_env(envp);
-	shell->exit_status = 0;
-	shell->stdin_backup = dup(STDIN_FILENO);
-	shell->stdout_backup = dup(STDOUT_FILENO);
-	return (shell);
+	printf("exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)

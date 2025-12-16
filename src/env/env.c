@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-t_env *create_env_node(char *key, char *value)
+t_env	*create_env_node(char *key, char *value)
 {
 	t_env	*node;
 
 	node = malloc(sizeof(t_env));
-	if(!node)
+	if (!node)
 		return (NULL);
 	node->key = ft_strdup(key);
 	node->value = ft_strdup(value);

@@ -6,15 +6,15 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:06:07 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/02 14:41:30 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/16 11:14:12 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_redir *create_redir(char *file_name, t_redir_type type)
+t_redir	*create_redir(char *file_name, t_redir_type type)
 {
-	t_redir *redir;
+	t_redir	*redir;
 
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
@@ -32,9 +32,9 @@ t_redir *create_redir(char *file_name, t_redir_type type)
 	return (redir);
 }
 
-void add_redir_to_end(t_redir **head, t_redir *new_redir)
+void	add_redir_to_end(t_redir **head, t_redir *new_redir)
 {
-	t_redir *current;
+	t_redir	*current;
 
 	if(!new_redir)
 		return ;
@@ -49,9 +49,9 @@ void add_redir_to_end(t_redir **head, t_redir *new_redir)
 	current->next = new_redir;
 }
 
-static char **ft_coop_arry(char **arr, int len, char *new_str)
+static char	**ft_coop_arry(char **arr, int len, char *new_str)
 {
-	int 	i;
+	int		i;
 	char	**new_arr;
 
 	i = -1;
@@ -63,10 +63,10 @@ static char **ft_coop_arry(char **arr, int len, char *new_str)
 	new_arr[len] = new_str;
 	new_arr[len + 1] = NULL;
 	free(arr);
-	return (new_arr);		
+	return (new_arr);
 }
 
-char **ft_add_to_array(char **arr, char *new_str)
+char	**ft_add_to_array(char **arr, char *new_str)
 {
 	int		len;
 	char	**new_arr;
@@ -110,16 +110,16 @@ void	free_cmd(t_cmd *cmd)
 	free(cmd);
 }
 
-void free_commands(t_cmd *cmds)
+void	free_commands(t_cmd *cmds)
 {
-    t_cmd *current;
-    t_cmd *next;
+	t_cmd	*current;
+	t_cmd	*next;
 
-    current = cmds;
-    while (current)
-    {
-        next = current->next;
-        free_cmd(current);
-        current = next;
-    }
+	current = cmds;
+	while (current)
+	{
+		next = current->next;
+		free_cmd(current);
+		current = next;
+	}
 }

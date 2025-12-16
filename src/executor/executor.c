@@ -12,15 +12,20 @@
 
 #include "minishell.h"
 
-/*
-** execute_child_process - Executa comando no processo filho
-**
-** @cmd_path: caminho completo do executável
-** @cmd: estrutura do comando com args
-** @shell: ponteiro para estrutura shell
-**
-** Esta função NUNCA retorna (exit ou execve substitui o processo)
-*/
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/14 10:00:00 by rgregori          #+#    #+#             */
+/*   Updated: 2025/12/15 18:00:00 by rgregori         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
 static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 {
 	char	**envp;
@@ -37,62 +42,23 @@ static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 	exit(126);
 }
 
-/*
-** get_exit_status - Extrai exit status do waitpid
-**
-** @status: status retornado por waitpid
-**
-** Return: Exit status correto (0-255, ou 128+N se morto por sinal)
-*/
-int	get_exit_status(int status)
+static int	handle_fork_error(char *cmd_path)
 {
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
+	perror("minishell: fork");
+	free(cmd_path);
+	setup_signals_interactive();
 	return (1);
 }
 
-/*
-** execute_simple_command - Executa um comando simples (sem pipes)
-**
-** Algoritmo:
-** 1. Valida cmd e cmd->args[0]
-** 2. Se builtin: executa e retorna
-** 3. Busca executável com find_command()
-** 4. Fork + execve
-** 5. Aguarda filho e retorna exit status
-**
-** @cmd: estrutura do comando a executar
-** @shell: ponteiro para estrutura shell
-**
-** Return: Exit status do comando (0-255, ou 127 se não encontrado)
-*/
-int	execute_simple_command(t_cmd *cmd, t_shell *shell)
+static int	fork_and_execute(char *cmd_path, t_cmd *cmd, t_shell *shell)
 {
-	char	*cmd_path;
 	pid_t	pid;
 	int		status;
 
-	if (!cmd || !cmd->args || !cmd->args[0])
-		return (0);
-	if (is_builtin(cmd->args[0]))
-		return (execute_builtin(cmd, shell));
-	cmd_path = find_command(cmd->args[0], shell);
-	if (!cmd_path)
-	{
-		fprintf(stderr, "minishell: %s: command not found\n", cmd->args[0]);
-		return (127);
-	}
 	setup_signals_executing();
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("minishell: fork");
-		free(cmd_path);
-		setup_signals_interactive();
-		return (1);
-	}
+		return (handle_fork_error(cmd_path));
 	if (pid == 0)
 		execute_child_process(cmd_path, cmd, shell);
 	free(cmd_path);
@@ -101,23 +67,26 @@ int	execute_simple_command(t_cmd *cmd, t_shell *shell)
 	return (get_exit_status(status));
 }
 
-/*
-** executor - Ponto de entrada principal da execução
-**
-** Decide se executa comando simples ou pipeline.
-** Se houver cmds->next, usa execute_pipeline().
-** Caso contrário, usa execute_simple_command().
-**
-** @cmds: lista encadeada de comandos
-** @shell: ponteiro para estrutura shell
-*/
-void executor(t_cmd *cmds, t_shell *shell)
+int	execute_simple_command(t_cmd *cmd, t_shell *shell)
 {
-    if (!cmds)
-        return;
+	char	*cmd_path;
 
-    if (cmds->next)
-        shell->exit_status = execute_pipeline(cmds, shell);
-    else
-        shell->exit_status = execute_simple_command(cmds, shell);
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (0);
+	if (is_builtin(cmd->args[0]))
+		return (execute_builtin(cmd, shell));
+	cmd_path = find_command(cmd->args[0], shell);
+	if (!cmd_path)
+		return (handle_command_not_found(cmd->args[0]));
+	return (fork_and_execute(cmd_path, cmd, shell));
+}
+
+void	executor(t_cmd *cmds, t_shell *shell)
+{
+	if (!cmds)
+		return ;
+	if (cmds->next)
+		shell->exit_status = execute_pipeline(cmds, shell);
+	else
+		shell->exit_status = execute_simple_command(cmds, shell);
 }

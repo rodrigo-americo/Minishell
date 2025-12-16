@@ -67,3 +67,18 @@ char	**env_to_array(t_env *env)
 	array[i] = NULL;
 	return (array);
 }
+
+int	get_exit_status(int status)
+{
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (1);
+}
+
+int	handle_command_not_found(char *cmd_name)
+{
+	fprintf(stderr, "minishell: %s: command not found\n", cmd_name);
+	return (127);
+}

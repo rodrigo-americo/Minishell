@@ -21,7 +21,6 @@ static char	get_quote_state(char s, char state)
 	return (state);
 }
 
-
 char	*process_string_content(char *original_str, t_shell *shell)
 {
 	char	*new_str;
@@ -38,7 +37,7 @@ char	*process_string_content(char *original_str, t_shell *shell)
 		{
 			quote_state = get_quote_state(original_str[i], quote_state);
 			i++;
-			continue;
+			continue ;
 		}
 		if (original_str[i] == '$' && quote_state != '\'')
 			i += ft_handle_expansion(&new_str, original_str + i, shell);
@@ -54,7 +53,7 @@ char	*process_string_content(char *original_str, t_shell *shell)
 	return (new_str);
 }
 
-static void expand_and_dequote(t_cmd *cmd, t_shell *shell)
+static void	expand_and_dequote(t_cmd *cmd, t_shell *shell)
 {
 	t_redir	*current_redir;
 	char	*old_file;
@@ -65,7 +64,7 @@ static void expand_and_dequote(t_cmd *cmd, t_shell *shell)
 	while (cmd->args && cmd->args[i])
 	{
 		old_arg = cmd->args[i];
-		cmd->args[i] = process_string_content(old_arg, shell); 
+		cmd->args[i] = process_string_content(old_arg, shell);
 		free(old_arg);
 		i++;
 	}
@@ -73,7 +72,7 @@ static void expand_and_dequote(t_cmd *cmd, t_shell *shell)
 	while (current_redir)
 	{
 		old_file = current_redir->file;
-		current_redir->file = process_string_content(old_file, shell); 
+		current_redir->file = process_string_content(old_file, shell);
 		free(old_file);
 		current_redir = current_redir->next;
 	}
@@ -100,7 +99,7 @@ static void	restore_spaces(char **args)
 
 void	expander(t_cmd *cmds, t_shell *shell)
 {
-	t_cmd *current;
+	t_cmd	*current;
 
 	current = cmds;
 	while (current)

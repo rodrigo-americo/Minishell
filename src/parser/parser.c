@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 11:30:33 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/02 14:32:09 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/16 11:16:23 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	redirection_error(t_list *node)
 {
-	t_token *tok;
+	t_token	*tok;
 
 	if (!node)
 		return (0);
@@ -37,39 +37,39 @@ static int	redirection_error(t_list *node)
 
 static int	syntax_error(t_list *node, t_cmd *head)
 {
-	t_token *tok;
+	t_token	*tok;
 
 	if (!node)
 		return (0);
 	tok = (t_token *)node->content;
 	if (head == NULL && ft_strcmp(tok->value, "|") == 0)
-    {
-        print_error("minishell: syntax error", "unexpected token '|'\n");
-        return (1); 
-    }
+	{
+		print_error("minishell: syntax error", "unexpected token '|'\n");
+		return (1); 
+	}
 	if (ft_strcmp(tok->value, "|") == 0)
-    {
+	{
 		if (node->next == NULL)
-        {
-            print_error("minishell: syntax error", "unexpected token (EOF)\n");
-            return (1);
-        }
+		{
+			print_error("minishell: syntax error", "unexpected token (EOF)\n");
+			return (1);
+		}
 		else if (ft_strcmp(((t_token *)node->next->content)->value, "|") == 0)
-        {
-            print_error("minishell: syntax error", "unexpected token '|'\n");
-            return (1);
-        }
-    }
+		{
+			print_error("minishell: syntax error", "unexpected token '|'\n");
+			return (1);
+		}
+	}
 	if (redirection_error(node))
 		return (1);
 	return (0);
 }
 
-static t_cmd *parse_simple_command(t_list **token)
+static t_cmd	*parse_simple_command(t_list **token)
 {
 	t_cmd	*cmd;
-	t_list  *current_node;
-	t_token *current;
+	t_list	*current_node;
+	t_token	*current;
 
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
