@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:17:33 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/17 12:06:19 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/17 14:02:29 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,20 @@ t_token	*token_new(const char *value, int type)
 	return (create_token((char *)value, type));
 }
 
-void	token_del(void *p)
-{
-	t_token	*t;
 
-	if (!p)
-		return ;
-	t = (t_token *)p;
-	if (t->value)
-		free(t->value);
-	free(t);
+void    token_del(void *content)
+{
+    t_token *token;
+
+    token = (t_token *)content;
+    if (!token)
+        return ;
+    if (token->value)
+    {
+        free(token->value);
+        token->value = NULL;
+    }
+    free(token);
 }
 
 t_list	*token_node_new(char *value, int type)
