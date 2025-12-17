@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env_set.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 14:24:02 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/16 14:28:47 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:41:44 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	update_existing_env(t_env *current, char *value)
+int	update_existing_env(t_env *current, char *value)
 {
 	char	*new_value;
 

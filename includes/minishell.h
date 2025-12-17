@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/15 16:21:56 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:42:14 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@
 # define TOKEN_REDIR_OUT 4
 # define TOKEN_REDIR_APPEND 5
 # define TOKEN_REDIR_HEREDOC 6
+
 /* Global variable for signal handling (only allowed global) */
 extern volatile sig_atomic_t	g_signal_received;
 
@@ -86,8 +87,8 @@ extern volatile sig_atomic_t	g_signal_received;
 /* Token Structure */
 typedef struct s_token
 {
-	char			*value;
-	int				type;
+	char	*value;
+	int		type;
 }	t_token;
 
 /* Operator Lookup Structure */
@@ -158,15 +159,15 @@ typedef struct s_exec
 
 /* Main Loop */
 void	main_loop(t_shell *shell);
-void	init_shell(t_shell *shell, char **envp);
-void	cleanup_shell(t_shell *shell);
+void	init_shell(t_shell *shell, char **envp);  //?
+void	cleanup_shell(t_shell *shell); //?
 
 /* Signal Handling */
 void	setup_signals(void);
 void	setup_signals_interactive(void);
 void	setup_signals_executing(void);
 void	setup_signals_child(void);
-void	signal_handler(int signum);
+// void	signal_handler(int signum); //?
 
 t_list	*lexer(char *input);
 int		is_operator_start(char c);
@@ -185,13 +186,13 @@ void	free_commands(t_cmd *cmds);
 int		check_syntax(t_list *node, t_cmd *head);
 
 /* Expansion */
-char	*expand_variables(char *str, t_shell *shell);
-char	*expand_exit_status(char *str, int exit_status);
+char	*expand_variables(char *str, t_shell *shell); //?
+char	*expand_exit_status(char *str, int exit_status); //?
 
 /* Executor */
 void	executor(t_cmd *cmds, t_shell *shell);
 int		execute_simple_command(t_cmd *cmd, t_shell *shell);
-void	execute_command(t_cmd *cmd, t_shell *shell);
+void	execute_command(t_cmd *cmd, t_shell *shell); //?
 int		execute_pipeline(t_cmd *cmds, t_shell *shell);
 int		get_exit_status(int status);
 int		handle_command_not_found(char *cmd_name);
@@ -208,8 +209,8 @@ int		builtin_env(t_shell *shell);
 int		builtin_exit(char **args, t_shell *shell);
 
 /* Redirections */
-int		setup_redirections(t_redir *redirs);
-int		handle_heredoc(char *delimiter);
+int		setup_redirections(t_redir *redirs); //?
+int		handle_heredoc(char *delimiter); //?
 
 /* Path Resolution */
 char	*find_command(char *cmd, t_shell *shell);
@@ -221,6 +222,7 @@ t_env	*create_env_node(char *key, char *value);
 char	*get_env_value(char *key, t_env *env);
 void	set_env_value(char *key, char *value, t_env **env);
 void	unset_env_value(char *key, t_env **env);
+int		update_existing_env(t_env *current, char *value);
 void	free_env(t_env *env);
 char	**env_to_array(t_env *env);
 
@@ -240,4 +242,5 @@ char	*process_string_content(char *original_str, t_shell *shell);
 void	expander(t_cmd *cmds, t_shell *shell);
 t_redir	*create_redir(char *file_name, t_redir_type type);
 t_shell	*shell_init(char **envp);
+
 #endif
