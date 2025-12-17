@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:04:46 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/17 12:06:13 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/17 12:06:58 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,3 @@ void	tokens_list_clear(t_list **head)
 		return ;
 	ft_lstclear(head, token_del);
 }
-
-
