@@ -79,6 +79,7 @@ int	main(int argc, char **argv, char **envp)
 	setup_signals();
 	shell = shell_init(envp);
 	main_loop(shell);
+	rl_clear_history();
 	free_env(shell->env);
 	close(shell->stdin_backup);
 	close(shell->stdout_backup);
