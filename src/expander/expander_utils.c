@@ -5,36 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/26 13:20:41 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/02 14:10:15 by rgregori         ###   ########.fr       */
+/*   Created: 2025/12/17 11:18:57 by rgregori          #+#    #+#             */
+/*   Updated: 2025/12/17 11:18:57 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*ft_strjoin_char(char *s, char c)
-{
-	char	*new_s;
-	int		len;
-
-	if (!s)
-		len = 0;
-	else
-		len = ft_strlen(s);
-	new_s = malloc(len + 2);
-	if (!new_s)
-	{
-		free(s);
-		return (NULL);
-	}
-	if (s)
-		ft_memcpy(new_s, s, len);
-	new_s[len] = c;
-	new_s[len + 1] = '\0';
-	if (s)
-		free(s);
-	return (new_s);
-}
 
 static char	*get_pid_str(void)
 {
@@ -46,159 +22,92 @@ static char	*get_pid_str(void)
 	fd = open("/proc/self/stat", O_RDONLY);
 	if (fd < 0)
 		return (ft_strdup("0"));
-	n = read(fd, buf, sizeof(buf) - 1);
+	ft_bzero(buf, 64);
+	n = read(fd, buf, 63);
 	close(fd);
 	if (n <= 0)
 		return (ft_strdup("0"));
-	buf[n] = '\0';
 	i = 0;
-	while (buf[i] && buf[i] != ' ' && buf[i] != '\n' && i < (int)sizeof(buf) - 1)
+	while (buf[i] && buf[i] != ' ')
 		i++;
 	buf[i] = '\0';
 	return (ft_strdup(buf));
 }
 
-static char	*expansion_special(t_shell *shell, char c)
+static void	join_and_free(char **str, char *to_add)
 {
-	if (c == '?')
-		return (ft_itoa(shell->exit_status));
-	return (get_pid_str());
+	char	*temp;
+
+	if (!to_add)
+		return ;
+	temp = *str;
+	*str = ft_strjoin(*str, to_add);
+	free(temp);
+	free(to_add);
 }
 
-static int	ft_get_varname_len(char *str_at_dollar)
+static int	get_var_len(char *str)
 {
 	int	i;
 
 	i = 0;
-	if (str_at_dollar[0] == '\0')
-		return (0);
-	if (ft_isdigit(str_at_dollar[0]))
+	if (ft_isdigit(str[i]))
 		return (1);
-	while (str_at_dollar[i])
-	{
-		if (ft_isalnum(str_at_dollar[i]) || str_at_dollar[i] == '_')
-			i++;
-		else
-		break ;
-	}
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
 	return (i);
 }
 
-static char	*expand_env_var(char *str_at_dollar, t_shell *shell, int *name_len)
+static char	*get_expanded_value(char *str, t_shell *shell, int *len)
 {
-	char	*var_name;
-	char	*var_value;
+	char	*key;
+	char	*val;
+	char	*env_val;
 
-	*name_len = ft_get_varname_len(str_at_dollar + 1);
-	if (*name_len == 0)
+	if (str[0] == '?')
+	{
+		*len = 1;
+		return (ft_itoa(shell->exit_status));
+	}
+	if (str[0] == '$')
+	{
+		*len = 1;
+		return (get_pid_str());
+	}
+	*len = get_var_len(str);
+	if (*len == 0)
 		return (NULL);
-	var_name = ft_substr(str_at_dollar, 1, *name_len);
-	var_value = get_env_value(var_name, shell->env);
-	free(var_name);
-	(*name_len)++;
-	if (!var_value)
-		return (ft_strdup(""));
-	return (var_value);
+	key = ft_substr(str, 0, *len);
+	env_val = get_env_value(key, shell->env);
+	if (env_val)
+		val = ft_strdup(env_val);
+	else
+		val = NULL;
+	free(key);
+	return (val);
 }
 
 int	ft_handle_expansion(char **new_str, char *str_at_dollar, t_shell *shell)
 {
-	char	*var_value;
-	char	*temp;
-	int		name_len;
+	char	*value;
+	int		len;
 
-	var_value = NULL;
-	name_len = 0;
-	if (str_at_dollar[1] == '?' || str_at_dollar[1] == '$')
+	len = 0;
+	if (!str_at_dollar[1] || str_at_dollar[1] == ' ' || str_at_dollar[1] == '"')
 	{
-		var_value = expansion_special(shell, str_at_dollar[1]);
-		name_len = 2;
+		join_and_free(new_str, ft_strdup("$"));
+		return (1);
 	}
+	value = get_expanded_value(str_at_dollar + 1, shell, &len);
+	if (value)
+		join_and_free(new_str, value);
 	else
 	{
-		var_value = expand_env_var(str_at_dollar, shell, &name_len);
-		if (!var_value)
+		if (len == 0)
 		{
-			if (name_len == 0)
-			{
-				*new_str = ft_strjoin_char(*new_str, '$');
-				return (1);
-			}
-			return (name_len);
+			join_and_free(new_str, ft_strdup("$"));
+			return (1);
 		}
 	}
-	if (var_value && *var_value)
-	{
-		temp = *new_str;
-		*new_str = ft_strjoin(*new_str, var_value);
-		free(temp);
-		free(var_value);
-	}
-	else if (var_value)
-		free(var_value);
-	return (name_len);
-}
-
-static char **split_single_arg(char *arg)
-{
-	char	**parts;
-	int		i;
-
-	parts = ft_split(arg, ' ');
-	if (!parts)
-		return (NULL);
-	i = 0;
-	while (parts[i])
-	{
-		if (ft_strlen(parts[i]) == 0)
-		{
-			free(parts[i]);
-			parts[i] = NULL;
-		}
-		i++;
-	}
-	return (parts);
-}
-
-static char **rebuild_args(char **old_args)
-{
-	char	**new_args;
-	char	**parts;
-	int		i;
-	int		j;
-
-	new_args = NULL;
-	i = 0;
-	while (old_args && old_args[i])
-	{
-		if (ft_strchr(old_args[i], ' ') || ft_strchr(old_args[i], '\t'))
-		{
-			parts = split_single_arg(old_args[i]);
-			j = 0;
-			while (parts && parts[j])
-			{
-				new_args = ft_add_to_array(new_args, ft_strdup(parts[j]));
-				j++;
-			}
-			free_array(parts);
-		}
-		else
-			new_args = ft_add_to_array(new_args, ft_strdup(old_args[i]));
-		i++;
-	}
-	return (new_args);
-}
-
-void	word_splitting(t_cmd *cmd)
-{
-	char	**new_args;
-
-	if (!cmd || !cmd->args)
-		return ;
-	new_args = rebuild_args(cmd->args);
-	if (new_args)
-	{
-		free_array(cmd->args);
-		cmd->args = new_args;
-	}
+	return (len + 1);
 }

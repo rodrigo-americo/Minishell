@@ -20,8 +20,12 @@ SRC_FILES   = main.c \
 			  env/env_utils.c \
 			  expander/expander.c \
 			  expander/expander_utils.c \
+			  expander/process_string.c \
+			  expander/word_splitting.c \
 			  parser/parser.c \
 			  parser/parser_utils.c \
+			  parser/syntax_check.c \
+			  parser/redir.c \
 			  executor/executor.c \
 			  executor/path_resolution.c \
 			  executor/env_conversion.c \

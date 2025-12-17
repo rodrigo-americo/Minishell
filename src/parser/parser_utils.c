@@ -6,48 +6,11 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:06:07 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/16 11:14:12 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/17 11:44:20 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_redir	*create_redir(char *file_name, t_redir_type type)
-{
-	t_redir	*redir;
-
-	redir = malloc(sizeof(t_redir));
-	if (!redir)
-		return (NULL);
-	redir->file = file_name;
-	if (type == TOKEN_REDIR_IN)
-		redir->type = REDIR_IN;
-	else if (type == TOKEN_REDIR_OUT)
-		redir->type = REDIR_OUT;
-	else if (type == TOKEN_REDIR_APPEND)
-		redir->type = REDIR_APPEND;
-	else if (type == TOKEN_REDIR_HEREDOC)
-		redir->type = REDIR_HEREDOC;
-	redir->next = NULL;
-	return (redir);
-}
-
-void	add_redir_to_end(t_redir **head, t_redir *new_redir)
-{
-	t_redir	*current;
-
-	if(!new_redir)
-		return ;
-	if (!*head)
-	{
-		*head = new_redir;
-		return ;
-	}
-	current = *head;
-	while (current->next)
-		current = current->next;
-	current->next = new_redir;
-}
 
 static char	**ft_coop_arry(char **arr, int len, char *new_str)
 {
@@ -95,7 +58,7 @@ void	free_cmd(t_cmd *cmd)
 	t_redir	*next;
 
 	if (!cmd)
-		return;
+		return ;
 	if (cmd->args)
 		free_array(cmd->args);
 	redir = cmd->redirs;

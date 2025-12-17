@@ -182,6 +182,7 @@ void	init_operators(t_operator operators[6]);
 /* Parser */
 t_cmd	*parser(t_list *tokens);
 void	free_commands(t_cmd *cmds);
+int		check_syntax(t_list *node, t_cmd *head);
 
 /* Expansion */
 char	*expand_variables(char *str, t_shell *shell);
