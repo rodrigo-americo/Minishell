@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:17:33 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/16 11:59:41 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/17 12:06:19 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,18 +61,4 @@ t_list	*token_node_new(char *value, int type)
 	if (!node)
 		token_del(t);
 	return (node);
-}
-
-void	tokens_list_add_back(t_list **head, t_list *new_node)
-{
-	if (!new_node)
-		return ;
-	ft_lstadd_back(head, new_node);
-}
-
-void	tokens_list_clear(t_list **head)
-{
-	if (!head)
-		return ;
-	ft_lstclear(head, token_del);
 }

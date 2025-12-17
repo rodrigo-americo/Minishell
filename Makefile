@@ -14,6 +14,7 @@ SRC_FILES   = main.c \
 			  lexer/lexer.c \
 			  lexer/lexer_utils.c \
 			  token_utils.c \
+			  wrappers.c \
 			  inits.c \
 			  env/env.c \
 			  env/env_set.c \
