@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/17 17:42:14 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/18 10:55:30 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,9 @@ int		builtin_export(char **args, t_shell *shell);
 int		builtin_unset(char **args, t_shell *shell);
 int		builtin_env(t_shell *shell);
 int		builtin_exit(char **args, t_shell *shell);
+/* Built-ins utils*/
+char	*get_target_path(char **args, t_env *env);
+void	list_sorted_env(t_env *env);
 
 /* Redirections */
 int		setup_redirections(t_redir *redirs); //?
