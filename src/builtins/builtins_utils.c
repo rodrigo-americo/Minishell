@@ -82,14 +82,17 @@ int	list_sorted_env(t_env *env)
 
 	copy = copy_env_list(env);
 	sort_env_list(copy);
-	
+
 	tmp = copy;
 	while (tmp)
 	{
-		printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+		if (tmp->value)
+			printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+		else
+			printf("declare -x %s\n", tmp->key);
 		tmp = tmp->next;
 	}
-	
+
 	free_env(copy);
 	return (0);
 }
