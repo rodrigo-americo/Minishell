@@ -16,22 +16,31 @@ static void	process_redir(t_cmd *cmd, t_list **current)
 {
 	t_token	*redir_tok;
 	t_token	*file_tok;
+	t_redir	*new_redir;
 
 	redir_tok = (t_token *)(*current)->content;
 	file_tok = (t_token *)(*current)->next->content;
-	add_redir_to_end(&cmd->redirs,
-		create_redir(file_tok->value, redir_tok->type));
-	file_tok->value = NULL;
+	new_redir = create_redir(file_tok->value, redir_tok->type);
+	if (new_redir)
+	{
+		add_redir_to_end(&cmd->redirs, new_redir);
+		file_tok->value = NULL;
+	}
 	*current = (*current)->next->next;
 }
 
 static void	process_arg(t_cmd *cmd, t_list **current)
 {
 	t_token	*tok;
+	char	**new_args;
 
 	tok = (t_token *)(*current)->content;
-	cmd->args = ft_add_to_array(cmd->args, tok->value);
-	tok->value = NULL;
+	new_args = ft_add_to_array(cmd->args, tok->value);
+	if (new_args)
+	{
+		cmd->args = new_args;
+		tok->value = NULL;
+	}
 	*current = (*current)->next;
 }
 

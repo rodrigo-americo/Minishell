@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 15:44:37 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/18 11:08:22 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/18 11:25:25 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,13 @@ int		builtin_env(t_shell *shell)
 {
 	t_env	*tmp;
 
+	if (!shell || !shell->env)
+		return (1);
 	tmp = shell->env;
 	while (tmp)
 	{
 		if (tmp->value)
-			ft_printf("%s=%s\n", tmp->key, tmp->value);
+			printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
 	return (0);

@@ -70,6 +70,7 @@ static t_list	*extract_word_token(char **input)
 {
 	int		len;
 	char	*value;
+	t_list	*node;
 
 	len = get_word_len(*input);
 	if (len == -1)
@@ -78,8 +79,16 @@ static t_list	*extract_word_token(char **input)
 		return (NULL);
 	}
 	value = ft_substr(*input, 0, len);
+	if (!value)
+		return (NULL);
 	*input += len;
-	return (token_node_new(value, TOKEN_WORD));
+	node = token_node_new(value, TOKEN_WORD);
+	if (!node)
+	{
+		free(value);
+		return (NULL);
+	}
+	return (node);
 }
 
 t_list	*lexer(char *input)
