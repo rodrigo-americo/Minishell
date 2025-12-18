@@ -31,6 +31,7 @@ static char	*append_char_safe(char *str, char c, char quote_state)
 char	*process_string_content(char *str, t_shell *shell)
 {
 	char	*new_str;
+	char	*temp;
 	char	quote;
 	int		i;
 
@@ -50,7 +51,10 @@ char	*process_string_content(char *str, t_shell *shell)
 			i += ft_handle_expansion(&new_str, str + i, shell);
 		else
 		{
-			new_str = append_char_safe(new_str, str[i], quote);
+			temp = append_char_safe(new_str, str[i], quote);
+			if (!temp)
+				return (free(new_str), NULL);
+			new_str = temp;
 			i++;
 		}
 	}

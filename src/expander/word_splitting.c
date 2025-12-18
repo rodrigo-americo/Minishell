@@ -74,13 +74,27 @@ static char	**rebuild_args(char **old_args)
 			j = 0;
 			while (parts && parts[j])
 			{
-				new_args = ft_add_to_array(new_args, ft_strdup(parts[j]));
+				char *dup = ft_strdup(parts[j]);
+				if (!dup)
+					return (free_array(parts), free_array(new_args), NULL);
+				char **temp = ft_add_to_array(new_args, dup);
+				if (!temp)
+					return (free(dup), free_array(parts), free_array(new_args), NULL);
+				new_args = temp;
 				j++;
 			}
 			free_array(parts);
 		}
 		else
-			new_args = ft_add_to_array(new_args, ft_strdup(old_args[i]));
+		{
+			char *dup = ft_strdup(old_args[i]);
+			if (!dup)
+				return (free_array(new_args), NULL);
+			char **temp = ft_add_to_array(new_args, dup);
+			if (!temp)
+				return (free(dup), free_array(new_args), NULL);
+			new_args = temp;
+		}
 		i++;
 	}
 	return (new_args);

@@ -39,6 +39,9 @@ static void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
 	env = env_to_array(shell->env);
 	execve(path, cmd->args, env);
 	exit(126);
+	/* NOTE: path and env are NOT freed before exit() - this is intentional.
+	** Child processes that call exit() don't need to free memory.
+	** The OS automatically cleans up the entire address space on exit. */
 }
 
 static void	parent_process(t_exec *ex, int has_next)
@@ -93,6 +96,11 @@ int	execute_pipeline(t_cmd *cmds, t_shell *shell)
 		if (ex.pid == -1)
 		{
 			perror("minishell: fork");
+			if (curr->next)
+			{
+				close(ex.fd[0]);
+				close(ex.fd[1]);
+			}
 			if (ex.prev_fd != -1)
 				close(ex.prev_fd);
 			return (1);
