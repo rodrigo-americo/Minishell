@@ -32,7 +32,14 @@ int	builtin_echo(char **args)
 		i++;
 	}
 	if (!n_flag)
-		write(1, '\n', 1);
+		write(1, "\n", 1);
+	return (0);
+}
+
+int	builtin_cd(char **args, t_shell *shell)
+{
+	(void)args;
+	(void)shell;
 	return (0);
 }
 
@@ -48,7 +55,7 @@ int	builtin_echo(char **args)
 // 	i = 1;
 // 	if (!args[i])
 // 	{
-// 		path = 
+// 		path =
 // 		chdir()
 // 	}
 // 	else
@@ -69,7 +76,7 @@ int	builtin_pwd(void)
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
-		ft_printf("%s\n", cwd);
+		printf("%s\n", cwd);
 		return (0);
 	}
 	print_error("pwd", "failed to getcwd");

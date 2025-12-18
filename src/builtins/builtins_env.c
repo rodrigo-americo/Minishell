@@ -14,23 +14,29 @@
 
 int		builtin_export(char **args, t_shell *shell)
 {
-	
+	(void)args;
+	(void)shell;
+	return (0);
 }
 
 int		builtin_unset(char **args, t_shell *shell)
 {
-
+	(void)args;
+	(void)shell;
+	return (0);
 }
 
 int		builtin_env(t_shell *shell)
 {
 	t_env	*tmp;
 
-	tmp = env;
+	if (!shell || !shell->env)
+		return (1);
+	tmp = shell->env;
 	while (tmp)
 	{
 		if (tmp->value)
-			ft_printf("%s=%s\n", tmp->key, tmp->value);
+			printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
 	return (0);
@@ -38,5 +44,7 @@ int		builtin_env(t_shell *shell)
 
 int		builtin_exit(char **args, t_shell *shell)
 {
-	
+	(void)args;
+	(void)shell;
+	return (0);
 }

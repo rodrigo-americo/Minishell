@@ -44,21 +44,36 @@ int	is_builtin(char *cmd)
 }
 
 /*
-** execute_builtin - Executa comando built-in (STUB por enquanto)
+** execute_builtin - Executa comando built-in
 **
-** Por enquanto apenas imprime mensagem que não está implementado.
-** Implementação completa virá depois.
+** Faz o dispatch para a função correta baseado no nome do comando.
+** Cada built-in retorna seu próprio exit status.
 **
 ** @cmd: estrutura do comando
 ** @shell: ponteiro para estrutura shell
 **
-** Return: Exit status (0 por enquanto)
+** Return: Exit status do built-in executado
 */
 int	execute_builtin(t_cmd *cmd, t_shell *shell)
 {
-	(void)shell;
+	char	*cmd_name;
+
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
-	printf("Built-in '%s' not yet implemented\n", cmd->args[0]);
+	cmd_name = cmd->args[0];
+	if (ft_strcmp(cmd_name, "echo") == 0)
+		return (builtin_echo(cmd->args));
+	if (ft_strcmp(cmd_name, "cd") == 0)
+		return (builtin_cd(cmd->args, shell));
+	if (ft_strcmp(cmd_name, "pwd") == 0)
+		return (builtin_pwd());
+	if (ft_strcmp(cmd_name, "export") == 0)
+		return (builtin_export(cmd->args, shell));
+	if (ft_strcmp(cmd_name, "unset") == 0)
+		return (builtin_unset(cmd->args, shell));
+	if (ft_strcmp(cmd_name, "env") == 0)
+		return (builtin_env(shell));
+	if (ft_strcmp(cmd_name, "exit") == 0)
+		return (builtin_exit(cmd->args, shell));
 	return (0);
 }
