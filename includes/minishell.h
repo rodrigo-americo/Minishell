@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/18 10:55:30 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/18 11:46:23 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,10 @@ int		builtin_env(t_shell *shell);
 int		builtin_exit(char **args, t_shell *shell);
 /* Built-ins utils*/
 char	*get_target_path(char **args, t_env *env);
-void	list_sorted_env(t_env *env);
+int		list_sorted_env(t_env *env);
+int		is_valid_identifier(char *str);
+void	swap_nodes_data(t_env *a, t_env *b);
+t_env	*copy_env_list(t_env *env);
 
 /* Redirections */
 int		setup_redirections(t_redir *redirs); //?

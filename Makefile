@@ -34,6 +34,7 @@ SRC_FILES   = main.c \
 			  builtins/builtins.c \
 			  builtins/builtins_env.c \
 			  builtins/builtins_print.c \
+			  builtins/builtins_utils.c \
 
 # Transforma .c em .o mantendo a estrutura ou simplificando
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))

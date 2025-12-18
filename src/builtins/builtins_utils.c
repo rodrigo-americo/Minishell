@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 10:46:22 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/18 11:14:43 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/18 11:48:37 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_target_path(char **args, t_env *env)
 
 	if (!args[1] || ft_strcmp(args[1], "~") == 0)
 	{
-		path = get_env_value(env, "HOME");
+		path = get_env_value("HOME", env);
 		if (!path)
 			print_error("cd", "HOME not set");
 		return (path);
@@ -40,6 +40,16 @@ int is_valid_identifier(char *str)
 		i++;
 	}
 	return (1);
+}
+
+void swap_nodes_data(t_env *a, t_env *b)
+{
+	char *tmp_key = a->key;
+	char *tmp_val = a->value;
+	a->key = b->key;
+	a->value = b->value;
+	b->key = tmp_key;
+	b->value = tmp_val;
 }
 
 static void	sort_env_list(t_env *head)
@@ -76,10 +86,33 @@ int	list_sorted_env(t_env *env)
 	tmp = copy;
 	while (tmp)
 	{
-		ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+		printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
 	
 	free_env(copy);
 	return (0);
+}
+
+
+t_env *copy_env_list(t_env *env)
+{
+    t_env *new_list = NULL;
+    t_env *curr = env;
+    t_env *new_node;
+    t_env *last = NULL;
+
+    while (curr)
+    {
+        new_node = create_env_node(curr->key, curr->value);
+        if (!new_node)
+            return (free_env(new_list), NULL);
+        if (!new_list)
+            new_list = new_node;
+        else
+            last->next = new_node;
+        last = new_node;
+        curr = curr->next;
+    }
+    return (new_list);
 }

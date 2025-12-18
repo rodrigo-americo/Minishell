@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 15:17:40 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/18 11:25:52 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/18 11:42:35 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,9 @@ int	builtin_echo(char **args)
 
 int	builtin_cd(char **args, t_shell *shell)
 {
-	(void)args;
-	(void)shell;
-	return (0);
-}
-
-int	builtin_cd(char **args, t_shell *shell)
-{
 	char	*path;
 	char	old_path[PATH_MAX_LEN];
-	char new_pwd[PATH_MAX_LEN];
+	char	new_pwd[PATH_MAX_LEN];
 	
 	if (getcwd(old_path, PATH_MAX_LEN) == NULL)
 		return (1);
@@ -60,9 +53,9 @@ int	builtin_cd(char **args, t_shell *shell)
 		free(path);
 		return (1);
 	}
-	update_env_var(shell, "OLDPWD", old_path);
+	update_existing_env(shell->env, old_path);
 	if (getcwd(new_pwd, PATH_MAX_LEN))
-		update_env_var(shell, "PWD", new_pwd);
+		update_existing_env(shell->env, new_pwd);
 	free(path);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 15:44:37 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/18 11:25:25 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/18 11:47:17 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int	builtin_unset(char **args, t_shell *shell)
 		}
 		else
 		{
-			print_error("unset", "not a valid identifier");        }
+			print_error("unset", "not a valid identifier");        
+		}
 		i++;
 	}
 	return (0);
