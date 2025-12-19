@@ -28,6 +28,11 @@ static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 	char	**envp;
 
 	setup_signals_child();
+	if (cmd->redirs)
+	{
+		if (cmd->redirs && setup_redirections(cmd, shell) == -1)
+			exit(1);
+	}
 	envp = env_to_array(shell->env);
 	if (!envp)
 	{
@@ -60,6 +65,7 @@ static int	fork_and_execute(char *cmd_path, t_cmd *cmd, t_shell *shell)
 		execute_child_process(cmd_path, cmd, shell);
 	free(cmd_path);
 	waitpid(pid, &status, 0);
+	close_heredocs(cmd);
 	setup_signals_interactive();
 	return (get_exit_status(status));
 }
@@ -82,8 +88,10 @@ void	executor(t_cmd *cmds, t_shell *shell)
 {
 	if (!cmds)
 		return ;
+	pre_process_heredocs(cmds, shell);
 	if (cmds->next)
 		shell->exit_status = execute_pipeline(cmds, shell);
 	else
 		shell->exit_status = execute_simple_command(cmds, shell);
+	close_heredocs(cmds);
 }

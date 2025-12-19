@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 15:44:37 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/18 11:47:17 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/19 01:12:25 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,10 @@ int	builtin_exit(char **args, t_shell *shell)
 	ft_putendl_fd("exit", 2);
 	if (args[1])
 	{
-		i = (args[1][0] == '-' || args[1][0] == '+') ? 1 : 0;
+		if (args[1][0] == '-' || args[1][0] == '+')
+			i = 1;
+		else
+			i = 0;
 		while (args[1][i])
 		{
 			if (!ft_isdigit(args[1][i]))

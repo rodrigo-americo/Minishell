@@ -31,6 +31,8 @@ SRC_FILES   = main.c \
 			  executor/path_resolution.c \
 			  executor/env_conversion.c \
 			  executor/pipes.c \
+			  executor/heredoc.c \
+			  executor/redirections.c \
 			  builtins/builtins.c \
 			  builtins/builtins_env.c \
 			  builtins/builtins_print.c \

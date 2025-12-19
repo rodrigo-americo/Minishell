@@ -62,6 +62,8 @@ void	main_loop(t_shell *shell)
 			expander(cmds, shell);
 			executor(cmds, shell);
 			free_commands(cmds);
+			dup2(shell->stdin_backup, STDIN_FILENO);
+			dup2(shell->stdout_backup, STDOUT_FILENO);
 		}
 		if (shell->input)
 			free(shell->input);

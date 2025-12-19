@@ -57,7 +57,7 @@ char	*find_command(char *cmd, t_shell *shell)
 {
 	if (!cmd || !shell)
 		return (NULL);
-	if (strchr(cmd, '/'))
+	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));

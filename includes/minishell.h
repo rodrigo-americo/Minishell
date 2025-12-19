@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/18 11:46:23 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/19 00:36:49 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct s_redir
 {
 	int				type;
 	char			*file;
+	int				hrdc_fd;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -196,6 +197,7 @@ void	execute_command(t_cmd *cmd, t_shell *shell); //?
 int		execute_pipeline(t_cmd *cmds, t_shell *shell);
 int		get_exit_status(int status);
 int		handle_command_not_found(char *cmd_name);
+void	pre_process_heredocs(t_cmd *cmds, t_shell *shell);
 
 /* Built-ins */
 int		is_builtin(char *cmd);
@@ -215,8 +217,9 @@ void	swap_nodes_data(t_env *a, t_env *b);
 t_env	*copy_env_list(t_env *env);
 
 /* Redirections */
-int		setup_redirections(t_redir *redirs); //?
-int		handle_heredoc(char *delimiter); //?
+int		setup_redirections(t_cmd *cmd, t_shell *shell);
+int		handle_heredoc(char *delimiter, t_shell *shell);
+void	close_heredocs(t_cmd *cmds);
 
 /* Path Resolution */
 char	*find_command(char *cmd, t_shell *shell);
