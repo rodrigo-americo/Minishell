@@ -1,0 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
+/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LEXER_H
+# define LEXER_H
+
+# include "types.h"
+
+/* Lexer Main Function */
+t_list	*lexer(char *input);
+
+/* Lexer Utilities */
+int		is_operator_start(char c);
+void	init_operators(t_operator operators[6]);
+
+/* Token Management */
+t_token	*token_new(const char *value, int type);
+void	token_del(void *p);
+t_list	*token_node_new(char *value, int type);
+void	tokens_list_add_back(t_list **head, t_list *new_node);
+void	tokens_list_clear(t_list **tokens);
+
+#endif

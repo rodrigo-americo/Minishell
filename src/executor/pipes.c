@@ -28,7 +28,7 @@ static void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
 		dup2(ex->fd[1], STDOUT_FILENO);
 		close(ex->fd[1]);
 	}
-	if (cmd->redirs && setup_redirections(cmd, shell) == -1)
+	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
 		exit(1);
 	if (is_builtin(cmd->args[0]))
 		exit(execute_builtin(cmd, shell));

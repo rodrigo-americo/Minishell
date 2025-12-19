@@ -28,11 +28,8 @@ static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 	char	**envp;
 
 	setup_signals_child();
-	if (cmd->redirs)
-	{
-		if (cmd->redirs && setup_redirections(cmd, shell) == -1)
-			exit(1);
-	}
+	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
+		exit(1);
 	envp = env_to_array(shell->env);
 	if (!envp)
 	{
@@ -73,11 +70,31 @@ static int	fork_and_execute(char *cmd_path, t_cmd *cmd, t_shell *shell)
 int	execute_simple_command(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
+	int		stdin_backup;
+	int		stdout_backup;
+	int		ret;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 	if (is_builtin(cmd->args[0]))
-		return (execute_builtin(cmd, shell));
+	{
+		stdin_backup = dup(STDIN_FILENO);
+		stdout_backup = dup(STDOUT_FILENO);
+		if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
+		{
+			dup2(stdin_backup, STDIN_FILENO);
+			dup2(stdout_backup, STDOUT_FILENO);
+			close(stdin_backup);
+			close(stdout_backup);
+			return (1);
+		}
+		ret = execute_builtin(cmd, shell);
+		dup2(stdin_backup, STDIN_FILENO);
+		dup2(stdout_backup, STDOUT_FILENO);
+		close(stdin_backup);
+		close(stdout_backup);
+		return (ret);
+	}
 	cmd_path = find_command(cmd->args[0], shell);
 	if (!cmd_path)
 		return (handle_command_not_found(cmd->args[0]));
