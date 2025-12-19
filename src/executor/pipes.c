@@ -28,6 +28,8 @@ static void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
 		dup2(ex->fd[1], STDOUT_FILENO);
 		close(ex->fd[1]);
 	}
+	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
+		exit(1);
 	if (is_builtin(cmd->args[0]))
 		exit(execute_builtin(cmd, shell));
 	path = find_command(cmd->args[0], shell);
@@ -39,9 +41,6 @@ static void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
 	env = env_to_array(shell->env);
 	execve(path, cmd->args, env);
 	exit(126);
-	/* NOTE: path and env are NOT freed before exit() - this is intentional.
-	** Child processes that call exit() don't need to free memory.
-	** The OS automatically cleans up the entire address space on exit. */
 }
 
 static void	parent_process(t_exec *ex, int has_next)
