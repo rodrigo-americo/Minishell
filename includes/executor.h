@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/19 01:28:25 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int		execute_pipeline(t_cmd *cmds, t_shell *shell);
 /* Redirections */
 int		setup_redirections(t_redir *redirs);
 int		handle_heredoc(char *delimiter);
+void	close_heredocs(t_cmd *cmds);
 
 /* Path Resolution */
 char	*find_command(char *cmd, t_shell *shell);

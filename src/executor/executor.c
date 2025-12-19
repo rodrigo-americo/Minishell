@@ -105,7 +105,6 @@ void	executor(t_cmd *cmds, t_shell *shell)
 {
 	if (!cmds)
 		return ;
-	pre_process_heredocs(cmds, shell);
 	if (cmds->next)
 		shell->exit_status = execute_pipeline(cmds, shell);
 	else
