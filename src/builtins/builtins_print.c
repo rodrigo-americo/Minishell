@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_print.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 15:17:40 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/18 11:42:35 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/19 09:40:44 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	builtin_cd(char **args, t_shell *shell)
 	char	*path;
 	char	old_path[PATH_MAX_LEN];
 	char	new_pwd[PATH_MAX_LEN];
-	
+
 	if (getcwd(old_path, PATH_MAX_LEN) == NULL)
 		return (1);
 	path = get_target_path(args, shell->env);

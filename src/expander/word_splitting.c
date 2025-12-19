@@ -6,7 +6,7 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 10:51:18 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/17 10:54:11 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/19 10:59:44 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,78 +23,57 @@ char	*ft_strjoin_char(char *s, char c)
 		len = ft_strlen(s);
 	new_s = malloc(len + 2);
 	if (!new_s)
-	{
-		free(s);
 		return (NULL);
-	}
 	if (s)
 		ft_memcpy(new_s, s, len);
 	new_s[len] = c;
 	new_s[len + 1] = '\0';
-	if (s)
-		free(s);
 	return (new_s);
 }
 
-static char	**split_single_arg(char *arg)
+static char	**add_split_parts(char **new_args, char *arg)
 {
 	char	**parts;
+	char	*dup;
 	int		i;
 
 	parts = ft_split(arg, ' ');
 	if (!parts)
-		return (NULL);
+		return (new_args);
 	i = 0;
 	while (parts[i])
 	{
-		if (ft_strlen(parts[i]) == 0)
-		{
-			free(parts[i]);
-			parts[i] = NULL;
-		}
+		dup = ft_strdup(parts[i]);
+		if (dup)
+			new_args = ft_add_to_array(new_args, dup);
 		i++;
 	}
-	return (parts);
+	free_array(parts);
+	return (new_args);
+}
+
+static char	**process_arg_token(char **new_args, char *arg)
+{
+	char	*dup;
+
+	if (ft_strchr(arg, ' ') || ft_strchr(arg, '\t'))
+		return (add_split_parts(new_args, arg));
+	dup = ft_strdup(arg);
+	if (!dup)
+		return (new_args);
+	return (ft_add_to_array(new_args, dup));
 }
 
 static char	**rebuild_args(char **old_args)
 {
 	char	**new_args;
-	char	**parts;
 	int		i;
-	int		j;
 
 	new_args = NULL;
 	i = 0;
 	while (old_args && old_args[i])
 	{
-		if (ft_strchr(old_args[i], ' ') || ft_strchr(old_args[i], '\t'))
-		{
-			parts = split_single_arg(old_args[i]);
-			j = 0;
-			while (parts && parts[j])
-			{
-				char *dup = ft_strdup(parts[j]);
-				if (!dup)
-					return (free_array(parts), free_array(new_args), NULL);
-				char **temp = ft_add_to_array(new_args, dup);
-				if (!temp)
-					return (free(dup), free_array(parts), free_array(new_args), NULL);
-				new_args = temp;
-				j++;
-			}
-			free_array(parts);
-		}
-		else
-		{
-			char *dup = ft_strdup(old_args[i]);
-			if (!dup)
-				return (free_array(new_args), NULL);
-			char **temp = ft_add_to_array(new_args, dup);
-			if (!temp)
-				return (free(dup), free_array(new_args), NULL);
-			new_args = temp;
-		}
+		new_args = process_arg_token(new_args, old_args[i]);
 		i++;
 	}
 	return (new_args);

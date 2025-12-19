@@ -12,36 +12,29 @@
 
 #include "minishell.h"
 
-void	display_prompt(t_shell *shell)
+static int	get_input(t_shell *shell)
 {
 	char	*prompt;
 
 	prompt = "minishell> ";
 	shell->input = readline(prompt);
-	if (shell->input && *shell->input)
+	if (!shell->input)
+		return (0);
+	if (*shell->input)
 		add_history(shell->input);
+	return (1);
 }
 
-t_cmd	*main_loop_handle(t_shell *shell)
+static t_cmd	*parse_input(t_shell *shell)
 {
 	t_list	*tokens;
 	t_cmd	*cmds;
 
 	tokens = lexer(shell->input);
 	if (!tokens)
-	{
-		free(shell->input);
-		shell->input = NULL;
 		return (NULL);
-	}
 	cmds = parser(tokens);
 	tokens_list_clear(&tokens);
-	if (!cmds)
-	{
-		free(shell->input);
-		shell->input = NULL;
-		return (NULL);
-	}
 	return (cmds);
 }
 
@@ -51,40 +44,41 @@ void	main_loop(t_shell *shell)
 
 	while (1)
 	{
-		display_prompt(shell);
-		if (!shell->input)
+		if (!get_input(shell))
 			break ;
-		if (shell->input && *shell->input)
+		if (*shell->input)
 		{
-			cmds = main_loop_handle(shell);
-			if (!cmds)
-				continue ;
-			expander(cmds, shell);
-			executor(cmds, shell);
-			free_commands(cmds);
-			dup2(shell->stdin_backup, STDIN_FILENO);
-			dup2(shell->stdout_backup, STDOUT_FILENO);
+			cmds = parse_input(shell);
+			if (cmds)
+			{
+				expander(cmds, shell);
+				executor(cmds, shell);
+				free_commands(cmds);
+			}
 		}
-		if (shell->input)
-			free(shell->input);
+		free(shell->input);
 		shell->input = NULL;
 	}
-	printf("exit\n");
+	ft_putendl_fd("exit", 1);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	*shell;
+	int		exit_code;
 
 	(void)argc;
 	(void)argv;
 	setup_signals();
 	shell = shell_init(envp);
 	main_loop(shell);
+	exit_code = shell->exit_status;
 	rl_clear_history();
 	free_env(shell->env);
-	close(shell->stdin_backup);
-	close(shell->stdout_backup);
+	if (shell->stdin_backup != -1)
+		close(shell->stdin_backup);
+	if (shell->stdout_backup != -1)
+		close(shell->stdout_backup);
 	free(shell);
-	return (0);
+	return (exit_code);
 }

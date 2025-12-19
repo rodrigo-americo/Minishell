@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_env.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rgregori     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 15:44:37 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/19 01:12:25 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/19 10:15:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ static void	process_export_arg(char *arg, t_shell *shell)
 {
 	char	*key;
 	char	*value;
-	char	*equal_sign;
+	char	*eq_sign;
 
-	equal_sign = ft_strchr(arg, '=');
-	if (equal_sign)
+	eq_sign = ft_strchr(arg, '=');
+	if (eq_sign)
 	{
-		key = ft_substr(arg, 0, equal_sign - arg);
-		value = ft_strdup(equal_sign + 1);
+		key = ft_substr(arg, 0, eq_sign - arg);
+		value = ft_strdup(eq_sign + 1);
 	}
 	else
 	{
@@ -34,7 +34,8 @@ static void	process_export_arg(char *arg, t_shell *shell)
 	else
 		print_error("export", "not a valid identifier");
 	free(key);
-	free(value);
+	if (value)
+		free(value);
 }
 
 int	builtin_export(char **args, t_shell *shell)
@@ -52,7 +53,7 @@ int	builtin_export(char **args, t_shell *shell)
 		process_export_arg(args[i], shell);
 		i++;
 	}
-    return (0);
+	return (0);
 }
 
 int	builtin_unset(char **args, t_shell *shell)
@@ -64,25 +65,21 @@ int	builtin_unset(char **args, t_shell *shell)
 		return (0);
 	while (args[i])
 	{
-	if (is_valid_identifier(args[i]))
-		{
+		if (is_valid_identifier(args[i]))
 			unset_env_value(args[i], &shell->env);
-		}
 		else
-		{
-			print_error("unset", "not a valid identifier");        
-		}
+			print_error("unset", "not a valid identifier");
 		i++;
 	}
 	return (0);
 }
 
-int		builtin_env(t_shell *shell)
+int	builtin_env(t_shell *shell)
 {
 	t_env	*tmp;
 
 	if (!shell || !shell->env)
-		return (1);
+		return (0);
 	tmp = shell->env;
 	while (tmp)
 	{
@@ -95,30 +92,28 @@ int		builtin_env(t_shell *shell)
 
 int	builtin_exit(char **args, t_shell *shell)
 {
-	int i;
+	int	i;
 
 	ft_putendl_fd("exit", 2);
-	if (args[1])
+	if (!args[1])
+		exit(shell->exit_status);
+	i = 0;
+	if (args[1][0] == '-' || args[1][0] == '+')
+		i++;
+	if (!args[1][i])
 	{
-		if (args[1][0] == '-' || args[1][0] == '+')
-			i = 1;
-		else
-			i = 0;
-		while (args[1][i])
-		{
-			if (!ft_isdigit(args[1][i]))
-			{
-				print_error("exit", "numeric argument required");
-				exit(255);
-			}
-			i++;
-		}
-		if (args[2])
-		{
-			print_error("exit", "too many arguments");
-			return (1);
-		}
-		exit(ft_atoi(args[1]));
+		print_error("exit", "numeric argument required");
+		exit(255);
 	}
-	exit(shell->exit_status);
+	while (args[1][i])
+	{
+		if (!ft_isdigit(args[1][i++]))
+		{
+			print_error("exit", "numeric argument required");
+			exit(255);
+		}
+	}
+	if (args[2])
+		return (print_error("exit", "too many arguments"), 1);
+	exit(ft_atoi(args[1]));
 }
