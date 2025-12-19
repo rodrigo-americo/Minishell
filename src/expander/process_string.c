@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_string.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 10:58:07 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 10:56:47 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/19 17:55:19 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static char	get_quote_state(char s, char state)
 {
 	if (s == state)
 		state = 0;
-	else if (state == 0)
-		state = s;
+	else if (state == 0 && (s == '\'' || s == '\"'))
+		return (s);
 	return (state);
 }
 
@@ -31,6 +31,16 @@ static char	*append_char_safe(char *str, char c, char quote_state)
 	if (str)
 		free(str);
 	return (new_str);
+}
+
+static void	handle_quote_char(char **new_str, char c, char *quote)
+{
+	if (*quote == '\"' && c == '\'')
+		*new_str = append_char_safe(*new_str, c, *quote);
+	else if (*quote == '\'' && c == '\"')
+		*new_str = append_char_safe(*new_str, c, *quote);
+	else
+		*quote = get_quote_state(c, *quote);
 }
 
 char	*process_string_content(char *str, t_shell *shell)
@@ -49,7 +59,7 @@ char	*process_string_content(char *str, t_shell *shell)
 		else
 		{
 			if (str[i] == '\'' || str[i] == '\"')
-				quote = get_quote_state(str[i], quote);
+				handle_quote_char(&new_str, str[i], &quote);
 			else
 				new_str = append_char_safe(new_str, str[i], quote);
 			i++;
