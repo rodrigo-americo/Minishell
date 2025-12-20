@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   executor_bonus.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
+#ifndef EXECUTOR_BONUS_H
+#  define EXECUTOR_BONUS_H
 
-# include "types.h"
+#  include "types_bonus.h"
 
 /* Main Execution */
 void	executor(t_cmd *cmds, t_shell *shell);
@@ -36,5 +36,12 @@ char	**env_to_array(t_env *env);
 /* Exit Status */
 int		get_exit_status(int status);
 int		handle_command_not_found(char *cmd_name);
+
+/* ************************************************************************** */
+/*                         BONUS: AST EXECUTOR                                */
+/* ************************************************************************** */
+
+/* AST Executor Main Function */
+int		execute_ast(t_ast_node *ast, t_shell_bonus *shell);
 
 #endif

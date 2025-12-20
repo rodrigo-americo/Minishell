@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   minishell_bonus.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 01:24:33 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/20 10:06:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MINISHELL_BONUS_H
+# define MINISHELL_BONUS_H
 
 /* ************************************************************************** */
 /*                         STANDARD LIBRARY INCLUDES                          */
@@ -52,15 +52,15 @@
 # include "libft.h"
 
 /* Project Headers */
-# include "defines.h"
-# include "types.h"
-# include "signals.h"
-# include "lexer.h"
-# include "parser.h"
-# include "expander.h"
-# include "executor.h"
-# include "builtins.h"
-# include "env.h"
-# include "utils.h"
+# include "defines_bonus.h"
+# include "types_bonus.h"
+# include "signals_bonus.h"
+# include "lexer_bonus.h"
+# include "parser_bonus.h"
+# include "expander_bonus.h"
+# include "executor_bonus.h"
+# include "builtins_bonus.h"
+# include "env_bonus.h"
+# include "utils_bonus.h"
 
 #endif

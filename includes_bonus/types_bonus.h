@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   types.h                                            :+:      :+:    :+:   */
+/*   types_bonus.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 01:30:46 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/20 10:08:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TYPES_H
-# define TYPES_H
+#ifndef TYPES_BONUS_H
+# define TYPES_BONUS_H
 
 # include "libft.h"
 
@@ -93,5 +93,41 @@ typedef struct s_exec
 	pid_t	last_pid;
 	int		status;
 }	t_exec;
+
+/* ************************************************************************** */
+/*                         BONUS: AST STRUCTURES                              */
+/* ************************************************************************** */
+
+/* AST Node Types */
+typedef enum e_node_type
+{
+	NODE_CMD,
+	NODE_PIPE,
+	NODE_AND,
+	NODE_OR,
+	NODE_SUBSHELL
+}	t_node_type;
+
+/* AST Node Structure */
+typedef struct s_ast_node
+{
+	t_node_type			type;
+	char				**args;
+	t_redir				*redirs;
+	struct s_ast_node	*left;
+	struct s_ast_node	*right;
+}	t_ast_node;
+
+/* Shell Structure with AST (Bonus) */
+typedef struct s_shell_bonus
+{
+	char		*input;
+	t_list		*tokens;
+	t_ast_node	*ast;
+	t_env		*env;
+	int			exit_status;
+	int			stdin_backup;
+	int			stdout_backup;
+}	t_shell_bonus;
 
 #endif

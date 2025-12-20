@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   utils_bonus.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,22 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#ifndef UTILS_BONUS_H
+#  define UTILS_BONUS_H
 
-# include "types.h"
+#  include "types_bonus.h"
 
-/* Environment Creation and Management */
-t_env	*create_env(char **envp);
-t_env	*create_env_node(char *key, char *value);
+/* Error Handling */
+void	error_exit(char *msg);
+void	print_error(char *cmd, char *msg);
 
-/* Environment Operations */
-char	*get_env_value(char *key, t_env *env);
-void	set_env_value(char *key, char *value, t_env **env);
-void	unset_env_value(char *key, t_env **env);
-int		update_existing_env(t_env *current, char *value);
+/* String Utilities */
+char	*skip_whitespace(char *input);
+char	*ft_strjoin_char(char *s, char c);
 
-/* Environment Cleanup */
-void	free_env(t_env *env);
+/* Array Utilities */
+void	free_array(char **arr);
+char	**ft_add_to_array(char **arr, char *new_str);
+
+/* Character Checks */
+int		is_separator(char c);
+
+/* Shell Initialization */
+t_shell	*shell_init(char **envp);
+void	init_shell(t_shell *shell, char **envp);
+void	cleanup_shell(t_shell *shell);
 
 #endif

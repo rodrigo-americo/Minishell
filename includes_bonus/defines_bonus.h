@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   defines.h                                          :+:      :+:    :+:   */
+/*   defines_bonus.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/20 10:08:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEFINES_H
-# define DEFINES_H
+#ifndef DEFINES_BONUS_H
+# define DEFINES_BONUS_H
 
 /* ************************************************************************** */
 /*                              EXIT STATUS                                   */
@@ -37,6 +37,15 @@
 # define TOKEN_REDIR_OUT 4
 # define TOKEN_REDIR_APPEND 5
 # define TOKEN_REDIR_HEREDOC 6
+
+/* ************************************************************************** */
+/*                         BONUS TOKEN TYPES                                  */
+/* ************************************************************************** */
+
+# define TOKEN_AND 7
+# define TOKEN_OR 8
+# define TOKEN_LPAREN 9
+# define TOKEN_RPAREN 10
 
 /* ************************************************************************** */
 /*                              ERROR MESSAGES                                */

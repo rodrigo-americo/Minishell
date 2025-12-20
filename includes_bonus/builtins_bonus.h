@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.h                                         :+:      :+:    :+:   */
+/*   builtins_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/20 10:08:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTINS_H
-# define BUILTINS_H
+#ifndef BUILTINS_BONUS_H
+# define BUILTINS_BONUS_H
 
-# include "types.h"
+# include "types_bonus.h"
 
 /* Built-in Detection and Execution */
 int		is_builtin(char *cmd);
-int		execute_builtin(t_cmd *cmd, t_shell *shell);
+int		execute_builtin(char **args, t_shell_bonus *shell);
 
 /* Built-in Commands */
 int		builtin_echo(char **args);

@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_utils.c                                       :+:      :+:    :+:   */
+/*   signals_bonus.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/19 10:41:45 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 10:45:45 by rgregori         ###   ########.fr       */
+/*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
+/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef SIGNALS_BONUS_H
+#  define SIGNALS_BONUS_H
 
-void	fork_error_cleanup(t_exec *ex, t_cmd *curr)
-{
-	if (ex->prev_fd != -1)
-		close(ex->prev_fd);
-	if (curr->next)
-	{
-		close(ex->fd[0]);
-		close(ex->fd[1]);
-	}
-}
+# include <signal.h>
+
+/* Global variable for signal handling (only allowed global) */
+extern volatile sig_atomic_t	g_signal_received;
+
+/* Signal Setup Functions */
+void	setup_signals(void);
+void	setup_signals_interactive(void);
+void	setup_signals_executing(void);
+void	setup_signals_child(void);
+
+#endif

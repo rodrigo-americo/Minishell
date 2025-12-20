@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   expander_bonus.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#ifndef EXPANDER_BONUS_H
+#  define EXPANDER_BONUS_H
 
-# include "types.h"
+#  include "types_bonus.h"
 
 /* Main Expansion */
 void	expander(t_cmd *cmds, t_shell *shell);
@@ -25,5 +25,12 @@ int		ft_handle_expansion(char **new_str,
 
 /* Word Splitting */
 void	word_splitting(t_cmd *cmd);
+
+/* ************************************************************************** */
+/*                         BONUS: AST EXPANDER                                */
+/* ************************************************************************** */
+
+/* AST Node Expansion */
+void	expand_ast_node(t_ast_node *node, t_shell_bonus *shell);
 
 #endif
