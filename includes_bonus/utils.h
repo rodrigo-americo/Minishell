@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 11:03:47 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#ifndef UTILS_H
+# define UTILS_H
 
 # include "types.h"
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
+/* Error Handling */
+void	error_exit(char *msg);
+void	print_error(char *cmd, char *msg);
 
-/* String Processing */
-char	*process_string_content(char *original_str, t_shell *shell);
-int		ft_handle_expansion(char **new_str,
-			char *str_at_dollar, t_shell *shell);
+/* String Utilities */
+char	*skip_whitespace(char *input);
+char	*ft_strjoin_char(char *s, char c);
 
-/* Word Splitting */
-void	word_splitting(t_cmd *cmd);
+/* Array Utilities */
+void	free_array(char **arr);
+char	**ft_add_to_array(char **arr, char *new_str);
+
+/* Character Checks */
+int		is_separator(char c);
+
+/* Shell Initialization */
+t_shell	*shell_init(char **envp);
+void	init_shell(t_shell *shell, char **envp);
+void	cleanup_shell(t_shell *shell);
 
 #endif

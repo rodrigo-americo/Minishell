@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 11:03:47 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#ifndef SIGNALS_H
+# define SIGNALS_H
 
-# include "types.h"
+# include <signal.h>
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
+/* Global variable for signal handling (only allowed global) */
+extern volatile sig_atomic_t	g_signal_received;
 
-/* String Processing */
-char	*process_string_content(char *original_str, t_shell *shell);
-int		ft_handle_expansion(char **new_str,
-			char *str_at_dollar, t_shell *shell);
-
-/* Word Splitting */
-void	word_splitting(t_cmd *cmd);
+/* Signal Setup Functions */
+void	setup_signals(void);
+void	setup_signals_interactive(void);
+void	setup_signals_executing(void);
+void	setup_signals_child(void);
 
 #endif

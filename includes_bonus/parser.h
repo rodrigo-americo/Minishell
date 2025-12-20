@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 11:03:47 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#ifndef PARSER_H
+# define PARSER_H
 
 # include "types.h"
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
+/* Parser Main Function */
+t_cmd	*parser(t_list *tokens);
 
-/* String Processing */
-char	*process_string_content(char *original_str, t_shell *shell);
-int		ft_handle_expansion(char **new_str,
-			char *str_at_dollar, t_shell *shell);
+/* Syntax Checking */
+int		check_syntax(t_list *node, t_cmd *head);
 
-/* Word Splitting */
-void	word_splitting(t_cmd *cmd);
+/* Redirection Management */
+t_redir	*create_redir(char *file_name, t_redir_type type);
+void	add_redir_to_end(t_redir **head, t_redir *new_redir);
+
+/* Command Management */
+void	free_cmd(t_cmd *cmd);
+void	free_commands(t_cmd *cmds);
 
 #endif

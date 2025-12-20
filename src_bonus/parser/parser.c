@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 11:30:33 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 16:43:40 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/17 11:50:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,7 @@ static t_cmd	*parse_block(t_list **token)
 	{
 		tok = (t_token *)(*token)->content;
 		if (ft_strcmp(tok->value, "|") == 0)
-		{
-			printf("%s", ERR_SYNTAX);
-			return (NULL);
-		}
+			break ;
 		if (tok->type >= TOKEN_REDIR_IN)
 			process_redir(cmd, token);
 		else

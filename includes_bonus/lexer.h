@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 11:03:47 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#ifndef LEXER_H
+# define LEXER_H
 
 # include "types.h"
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
+/* Lexer Main Function */
+t_list	*lexer(char *input);
 
-/* String Processing */
-char	*process_string_content(char *original_str, t_shell *shell);
-int		ft_handle_expansion(char **new_str,
-			char *str_at_dollar, t_shell *shell);
+/* Lexer Utilities */
+int		is_operator_start(char c);
+void	init_operators(t_operator operators[6]);
 
-/* Word Splitting */
-void	word_splitting(t_cmd *cmd);
+/* Token Management */
+t_token	*token_new(const char *value, int type);
+void	token_del(void *p);
+t_list	*token_node_new(char *value, int type);
+void	tokens_list_add_back(t_list **head, t_list *new_node);
+void	tokens_list_clear(t_list **tokens);
 
 #endif

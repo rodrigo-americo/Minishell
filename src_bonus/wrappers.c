@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   wrappers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 11:03:47 by rgregori         ###   ########.fr       */
+/*   Created: 2025/12/17 12:04:46 by rgregori          #+#    #+#             */
+/*   Updated: 2025/12/17 15:08:56 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#include "minishell.h"
 
-# include "types.h"
+void	tokens_list_add_back(t_list **head, t_list *new_node)
+{
+	if (!new_node)
+		return ;
+	ft_lstadd_back(head, new_node);
+}
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
-
-/* String Processing */
-char	*process_string_content(char *original_str, t_shell *shell);
-int		ft_handle_expansion(char **new_str,
-			char *str_at_dollar, t_shell *shell);
-
-/* Word Splitting */
-void	word_splitting(t_cmd *cmd);
-
-#endif
+void	tokens_list_clear(t_list **tokens)
+{
+	if (!tokens || !*tokens)
+		return ;
+	ft_lstclear(tokens, token_del);
+}

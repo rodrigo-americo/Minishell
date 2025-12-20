@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 11:03:47 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#ifndef ENV_H
+# define ENV_H
 
 # include "types.h"
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
+/* Environment Creation and Management */
+t_env	*create_env(char **envp);
+t_env	*create_env_node(char *key, char *value);
 
-/* String Processing */
-char	*process_string_content(char *original_str, t_shell *shell);
-int		ft_handle_expansion(char **new_str,
-			char *str_at_dollar, t_shell *shell);
+/* Environment Operations */
+char	*get_env_value(char *key, t_env *env);
+void	set_env_value(char *key, char *value, t_env **env);
+void	unset_env_value(char *key, t_env **env);
+int		update_existing_env(t_env *current, char *value);
 
-/* Word Splitting */
-void	word_splitting(t_cmd *cmd);
+/* Environment Cleanup */
+void	free_env(t_env *env);
 
 #endif
