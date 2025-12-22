@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   lexer_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/24 13:35:38 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/17 15:33:41 by rgregori         ###   ########.fr       */
+/*   Created: 2025/12/20 00:00:00 by rgregori          #+#    #+#             */
+/*   Updated: 2025/12/20 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_bonus.h"
 
 static t_list	*try_match_operator(char **input, t_operator *op)
 {
@@ -29,11 +29,11 @@ static t_list	*try_match_operator(char **input, t_operator *op)
 
 t_list	*extract_operator_token(char **input)
 {
-	t_operator	operators[6];
+	t_operator	operators[10];
 	t_list		*result;
 	int			i;
 
-	init_operators(operators);
+	init_operators_bonus(operators);
 	i = 0;
 	while (operators[i].symbol)
 	{
