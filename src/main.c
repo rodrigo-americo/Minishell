@@ -55,6 +55,8 @@ void	main_loop(t_shell *shell)
 				executor(cmds, shell);
 				free_commands(cmds);
 			}
+			else
+				shell->exit_status = 2;
 		}
 		free(shell->input);
 		shell->input = NULL;

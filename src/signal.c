@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:54:24 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/16 11:50:03 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/22 18:06:04 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/* Global variable for signal handling (only allowed global) */
 volatile sig_atomic_t	g_signal_received = 0;
 
 static void	signal_handler_interactive(int signum)
@@ -73,7 +74,7 @@ void	setup_signals_executing(void)
 	}
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = SA_RESTART;
-	sa_quit.sa_handler = signal_handler_executing;
+	sa_quit.sa_handler = SIG_IGN;
 	if (sigaction(SIGQUIT, &sa_quit, NULL) == -1)
 	{
 		perror("minishell: sigaction SIGQUIT");

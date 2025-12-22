@@ -12,6 +12,15 @@
 
 #include "minishell.h"
 
+static void	free_expander(char *val, char *key)
+{
+	if (val || key)
+	{
+		free(val);
+		free(key);
+	}
+}
+
 static char	*get_pid_str(void)
 {
 	int		fd;
@@ -83,7 +92,7 @@ static char	*get_expanded_value(char *str, t_shell *shell, int *len)
 		val = ft_strdup(env_val);
 	else
 		val = NULL;
-	free(key);
+	free_expander(env_val, key);
 	return (val);
 }
 

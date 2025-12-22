@@ -101,7 +101,7 @@ echo "=== UNDEFINED VARIABLES ==="
 echo ""
 
 # Test undefined variable (should expand to empty)
-test_expansion "/bin/echo \$NONEXISTENT_VAR_12345" "Undefined variable" ""
+test_expansion "/bin/echo \$NONEXISTENTVAR12345" "Undefined variable" ""
 
 # Test undefined variable with text
 test_expansion "/bin/echo before\$NONEXISTENT_VAR_12345""after" "Undefined var with text" "beforeafter"
