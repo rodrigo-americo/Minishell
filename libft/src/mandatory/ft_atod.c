@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atod.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 13:41:19 by rgregori          #+#    #+#             */
-/*   Updated: 2025/08/29 13:50:42 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/23 19:08:09 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
 
 static int	ft_atod_sign(const char *str, int *i)
 {
