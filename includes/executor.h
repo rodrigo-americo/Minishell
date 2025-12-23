@@ -28,6 +28,7 @@ void	close_heredocs(t_cmd *cmds);
 
 /* Path Resolution */
 char	*find_command(char *cmd, t_shell *shell);
+int		execute_external_cmd(char **args, t_cmd *cmd, t_shell *shell);
 char	**get_paths(t_shell *shell);
 
 /* Environment Conversion */

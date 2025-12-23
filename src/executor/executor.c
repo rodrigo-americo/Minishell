@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
-{
-	char	**envp;
-
-	setup_signals_child();
-	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
-		exit(1);
-	envp = env_to_array(shell->env);
-	if (!envp)
-	{
-		perror("minishell: env_to_array");
-		exit(1);
-	}
-	execve(cmd_path, cmd->args, envp);
-	perror("minishell");
-	exit(126);
-}
-
 static int	exec_builtin_wrapper(t_cmd *cmd, t_shell *shell)
 {
 	int	bkp[2];
@@ -53,44 +35,27 @@ static int	exec_builtin_wrapper(t_cmd *cmd, t_shell *shell)
 	return (ret);
 }
 
-static int	fork_and_execute(char *cmd_path, t_cmd *cmd, t_shell *shell)
-{
-	pid_t	pid;
-	int		status;
-
-	setup_signals_executing();
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("minishell: fork");
-		free(cmd_path);
-		setup_signals_interactive();
-		return (1);
-	}
-	if (pid == 0)
-		execute_child_process(cmd_path, cmd, shell);
-	free(cmd_path);
-	waitpid(pid, &status, 0);
-	setup_signals_interactive();
-	return (get_exit_status(status));
-}
-
 int	execute_simple_command(t_cmd *cmd, t_shell *shell)
 {
-	char	*cmd_path;
+	char	**orig_args;
 	int		i;
+	int		ret;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 	i = process_all_assignments(cmd->args, shell);
+	while (cmd->args[i] && cmd->args[i][0] == '\0')
+		i++;
 	if (!cmd->args[i])
 		return (0);
+	orig_args = cmd->args;
+	cmd->args = &cmd->args[i];
 	if (is_builtin(cmd->args[0]))
-		return (exec_builtin_wrapper(cmd, shell));
-	cmd_path = find_command(cmd->args[0], shell);
-	if (!cmd_path)
-		return (handle_command_not_found(cmd->args[0]));
-	return (fork_and_execute(cmd_path, cmd, shell));
+		ret = exec_builtin_wrapper(cmd, shell);
+	else
+		ret = execute_external_cmd(cmd->args, cmd, shell);
+	cmd->args = orig_args;
+	return (ret);
 }
 
 void	executor(t_cmd *cmds, t_shell *shell)

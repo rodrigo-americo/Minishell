@@ -31,6 +31,7 @@ SRC_FILES   = main.c \
 			  parser/redir.c \
 			  executor/executor.c \
 			  executor/path_resolution.c \
+			  executor/path_execution.c \
 			  executor/env_conversion.c \
 			  executor/pipes.c \
 			  executor/pipe_utils.c \

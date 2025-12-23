@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 10:46:22 by ccavalca          #+#    #+#             */
-/*   Updated: 2025/12/19 10:04:30 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/23 18:59:17 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@ char	*get_target_path(char **args, t_env *env)
 {
 	char	*path;
 
+	if (args[2])
+	{
+		print_error("cd", "too many arguments");
+		return (NULL);
+	}
 	if (!args[1] || ft_strcmp(args[1], "~") == 0)
 	{
 		path = get_env_value("HOME", env);

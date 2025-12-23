@@ -55,6 +55,25 @@ static void	restore_spaces(char **args)
 	}
 }
 
+static void	restore_spaces_in_redirs(t_redir *redirs)
+{
+	t_redir	*curr;
+	int		j;
+
+	curr = redirs;
+	while (curr)
+	{
+		j = 0;
+		while (curr->file && curr->file[j])
+		{
+			if (curr->file[j] == 0x1F)
+				curr->file[j] = ' ';
+			j++;
+		}
+		curr = curr->next;
+	}
+}
+
 void	expander(t_cmd *cmds, t_shell *shell)
 {
 	t_cmd	*current;
@@ -65,6 +84,7 @@ void	expander(t_cmd *cmds, t_shell *shell)
 		expand_and_dequote(current, shell);
 		word_splitting(current);
 		restore_spaces(current->args);
+		restore_spaces_in_redirs(current->redirs);
 		current = current->next;
 	}
 }

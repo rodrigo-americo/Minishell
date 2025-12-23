@@ -12,48 +12,52 @@
 
 #include "minishell.h"
 
-static void	process_export_arg(char *arg, t_shell *shell)
+static int	process_export_arg(char *arg, t_shell *shell)
 {
 	char	*key;
 	char	*value;
-	char	*eq_sign;
+	int		result;
 
-	eq_sign = ft_strchr(arg, '=');
-	if (eq_sign)
-	{
-		key = ft_substr(arg, 0, eq_sign - arg);
-		value = ft_strdup(eq_sign + 1);
-	}
-	else
-	{
-		key = ft_strdup(arg);
-		value = NULL;
-	}
+	key = NULL;
+	value = NULL;
+	extract_key_value(arg, &key, &value);
+	if (!validate_export_key(key, value))
+		return (0);
 	if (is_valid_identifier(key))
+	{
 		set_env_value(key, value, &shell->env);
+		result = 1;
+	}
 	else
+	{
 		print_error("export", "not a valid identifier");
+		result = 0;
+	}
 	free(key);
 	if (value)
 		free(value);
+	return (result);
 }
 
 int	builtin_export(char **args, t_shell *shell)
 {
 	int	i;
+	int	status;
 
 	if (!args[1])
 	{
 		list_sorted_env(shell->env);
 		return (0);
 	}
+	status = 0;
 	i = 1;
 	while (args[i])
 	{
-		process_export_arg(args[i], shell);
+		if (!process_export_arg(args[i], shell))
+			status = 1;
 		i++;
 	}
-	return (0);
+	return (status);
 }
 
 int	builtin_unset(char **args, t_shell *shell)
@@ -102,15 +106,15 @@ int	builtin_exit(char **args, t_shell *shell)
 		i++;
 	if (!args[1][i])
 	{
-		print_error("exit", "numeric argument required");
-		exit(255);
+		ft_putstr_fd("exit :  numeric argument required\n", 2);
+		exit(2);
 	}
 	while (args[1][i])
 	{
 		if (!ft_isdigit(args[1][i++]))
 		{
-			print_error("exit", "numeric argument required");
-			exit(255);
+			ft_putstr_fd("exit :  numeric argument required\n", 2);
+			exit(2);
 		}
 	}
 	if (args[2])
