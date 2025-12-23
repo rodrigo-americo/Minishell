@@ -78,8 +78,12 @@ static int	fork_and_execute(char *cmd_path, t_cmd *cmd, t_shell *shell)
 int	execute_simple_command(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_path;
+	int		i;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
+		return (0);
+	i = process_all_assignments(cmd->args, shell);
+	if (!cmd->args[i])
 		return (0);
 	if (is_builtin(cmd->args[0]))
 		return (exec_builtin_wrapper(cmd, shell));

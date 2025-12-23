@@ -6,7 +6,7 @@
 /*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 13:07:53 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/15 15:24:48 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:41:37 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,4 @@ int	is_separator(char c)
 {
 	return ((c == ' ' || c == '\t' || c == '|'
 			|| c == '<' || c == '>' || c == '\0'));
-}
-
-void	free_array(char **arr)
-{
-	int	i;
-
-	i = 0;
-	if (!arr)
-		return ;
-	while (arr[i])
-	{
-		if (arr[i])
-			free(arr[i]);
-		i++;
-	}
-	free(arr);
 }

@@ -12,15 +12,6 @@
 
 #include "minishell.h"
 
-static void	free_expander(char *val, char *key)
-{
-	if (val || key)
-	{
-		free(val);
-		free(key);
-	}
-}
-
 static char	*get_pid_str(void)
 {
 	int		fd;

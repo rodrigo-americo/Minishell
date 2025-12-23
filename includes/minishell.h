@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 11:02:03 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/19 01:24:33 by ccavalca         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:59:08 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@
 # include "builtins.h"
 # include "env.h"
 # include "utils.h"
+# include "assignment.h"
 
 #endif

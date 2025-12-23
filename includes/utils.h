@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:44:28 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ char	*ft_strjoin_char(char *s, char c);
 /* Array Utilities */
 void	free_array(char **arr);
 char	**ft_add_to_array(char **arr, char *new_str);
+
+/* Free expander*/
+void	free_expander(char *val, char *key);
 
 /* Character Checks */
 int		is_separator(char c);

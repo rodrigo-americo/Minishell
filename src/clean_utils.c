@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.h                                         :+:      :+:    :+:   */
+/*   clean_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccavalca <ccavalca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/23 16:44:21 by ccavalca         ###   ########.fr       */
+/*   Created: 2025/12/23 16:41:24 by ccavalca          #+#    #+#             */
+/*   Updated: 2025/12/23 16:42:55 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANDER_H
-# define EXPANDER_H
+#include "minishell.h"
 
-# include "types.h"
+void	free_array(char **arr)
+{
+	int	i;
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
+	i = 0;
+	if (!arr)
+		return ;
+	while (arr[i])
+	{
+		if (arr[i])
+			free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
 
-/* String Processing */
-char	*process_string_content(char *original_str, t_shell *shell);
-int		ft_handle_expansion(char **new_str,
-			char *str_at_dollar, t_shell *shell);
-
-/* Word Splitting */
-void	word_splitting(t_cmd *cmd);
-
-#endif
+void	free_expander(char *val, char *key)
+{
+	if (val || key)
+	{
+		free(val);
+		free(key);
+	}
+}

@@ -11,6 +11,8 @@ INC_DIR     = ./includes
 SRC_FILES   = main.c \
 			  signal.c \
 			  utils.c \
+			  clean_utils.c \
+			  assignment.c \
 			  lexer/lexer.c \
 			  lexer/lexer_utils.c \
 			  token_utils.c \
