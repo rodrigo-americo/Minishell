@@ -26,6 +26,7 @@ static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 		exit(1);
 	}
 	execve(cmd_path, cmd->args, envp);
+	free_array(envp);
 	perror("minishell");
 	exit(126);
 }

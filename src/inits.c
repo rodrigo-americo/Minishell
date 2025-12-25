@@ -49,11 +49,5 @@ t_shell	*shell_init(char **envp)
 	shell->cmds = NULL;
 	shell->env = create_env(envp);
 	shell->exit_status = 0;
-	shell->stdin_backup = dup(STDIN_FILENO);
-	if (shell->stdin_backup == -1)
-		perror("minishell: dup stdin");
-	shell->stdout_backup = dup(STDOUT_FILENO);
-	if (shell->stdout_backup == -1)
-		perror("minishell: dup stdout");
 	return (shell);
 }

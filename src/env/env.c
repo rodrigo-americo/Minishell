@@ -70,6 +70,7 @@ t_env	*create_env(char **envp)
 	int		i;
 
 	head = NULL;
+	current = NULL;
 	i = 0;
 	while (envp[i])
 	{

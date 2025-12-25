@@ -29,6 +29,7 @@ t_redir	*create_redir(char *file_name, t_redir_type type)
 	else if (type == TOKEN_REDIR_HEREDOC)
 		redir->type = REDIR_HEREDOC;
 	redir->hrdc_fd = -1;
+	redir->is_quoted = 0;
 	redir->next = NULL;
 	return (redir);
 }

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	process_redir(t_cmd *cmd, t_list **current)
+static void	process_redir(t_cmd *cmd, t_list **current, t_shell *shell)
 {
 	t_token	*redir_tok;
 	t_token	*file_tok;
@@ -23,6 +23,14 @@ static void	process_redir(t_cmd *cmd, t_list **current)
 	new_redir = create_redir(file_tok->value, redir_tok->type);
 	if (new_redir)
 	{
+		if (new_redir->type == REDIR_HEREDOC)
+		{
+			if (process_heredoc_at_parse_time(new_redir, shell) < 0)
+			{
+				free(new_redir);
+				return ;
+			}
+		}
 		add_redir_to_end(&cmd->redirs, new_redir);
 		file_tok->value = NULL;
 	}
@@ -44,7 +52,7 @@ static void	process_arg(t_cmd *cmd, t_list **current)
 	*current = (*current)->next;
 }
 
-static t_cmd	*parse_block(t_list **token)
+static t_cmd	*parse_block(t_list **token, t_shell *shell)
 {
 	t_cmd	*cmd;
 	t_token	*tok;
@@ -58,7 +66,7 @@ static t_cmd	*parse_block(t_list **token)
 		if (ft_strcmp(tok->value, "|") == 0)
 			break ;
 		if (tok->type >= TOKEN_REDIR_IN)
-			process_redir(cmd, token);
+			process_redir(cmd, token, shell);
 		else
 			process_arg(cmd, token);
 	}
@@ -70,7 +78,7 @@ static t_cmd	*parse_block(t_list **token)
 	return (cmd);
 }
 
-t_cmd	*parser(t_list *tokens)
+t_cmd	*parser(t_list *tokens, t_shell *shell)
 {
 	t_cmd	*head;
 	t_cmd	*last;
@@ -82,7 +90,7 @@ t_cmd	*parser(t_list *tokens)
 	{
 		if (check_syntax(tokens, head))
 			return (free_commands(head), NULL);
-		new = parse_block(&tokens);
+		new = parse_block(&tokens, shell);
 		if (!new)
 		{
 			print_error("syntax error", "unexpected token '|'\n");

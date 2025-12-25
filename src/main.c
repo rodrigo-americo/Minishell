@@ -33,7 +33,7 @@ static t_cmd	*parse_input(t_shell *shell)
 	tokens = lexer(shell->input);
 	if (!tokens)
 		return (NULL);
-	cmds = parser(tokens);
+	cmds = parser(tokens, shell);
 	tokens_list_clear(&tokens);
 	return (cmds);
 }
@@ -44,6 +44,11 @@ void	main_loop(t_shell *shell)
 
 	while (1)
 	{
+		if (g_signal_received == SIGINT)
+		{
+			g_signal_received = 0;
+			shell->exit_status = 130;
+		}
 		if (!get_input(shell))
 			break ;
 		if (*shell->input)
@@ -77,10 +82,6 @@ int	main(int argc, char **argv, char **envp)
 	exit_code = shell->exit_status;
 	rl_clear_history();
 	free_env(shell->env);
-	if (shell->stdin_backup != -1)
-		close(shell->stdin_backup);
-	if (shell->stdout_backup != -1)
-		close(shell->stdout_backup);
 	free(shell);
 	return (exit_code);
 }

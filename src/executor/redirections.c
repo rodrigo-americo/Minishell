@@ -50,31 +50,12 @@ static int	handle_file_redir(t_redir *redir)
 	return (0);
 }
 
-int	handle_heredoc(char *delimiter)
+int	handle_heredoc(t_redir *redir)
 {
-	int		fd[2];
-	char	*line;
-
-	if (pipe(fd) == -1)
-		return (perror("minishell: pipe"), -1);
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-			break ;
-		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write(fd[1], line, ft_strlen(line));
-		write(fd[1], "\n", 1);
-		free(line);
-	}
-	close(fd[1]);
-	if (dup2(fd[0], STDIN_FILENO) == -1)
-		return (close(fd[0]), perror("minishell: dup2"), -1);
-	close(fd[0]);
+	if (redir->hrdc_fd == -1)
+		return (perror("minishell: heredoc not processed"), -1);
+	if (dup2(redir->hrdc_fd, STDIN_FILENO) == -1)
+		return (perror("minishell: dup2"), -1);
 	return (0);
 }
 
@@ -87,7 +68,7 @@ int	setup_redirections(t_redir *redirs)
 	{
 		if (curr->type == REDIR_HEREDOC)
 		{
-			if (handle_heredoc(curr->file) < 0)
+			if (handle_heredoc(curr) < 0)
 				return (-1);
 		}
 		else

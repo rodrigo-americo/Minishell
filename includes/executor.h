@@ -23,7 +23,7 @@ void	fork_error_cleanup(t_exec *ex, t_cmd *curr);
 
 /* Redirections */
 int		setup_redirections(t_redir *redirs);
-int		handle_heredoc(char *delimiter);
+int		handle_heredoc(t_redir *redir);
 void	close_heredocs(t_cmd *cmds);
 
 /* Path Resolution */

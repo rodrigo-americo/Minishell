@@ -53,6 +53,7 @@ typedef struct s_redir
 	int				type;
 	char			*file;
 	int				hrdc_fd;
+	int				is_quoted;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -80,8 +81,6 @@ typedef struct s_shell
 	t_cmd	*cmds;
 	t_env	*env;
 	int		exit_status;
-	int		stdin_backup;
-	int		stdout_backup;
 }	t_shell;
 
 /* Execution Context Structure */

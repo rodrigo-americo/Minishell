@@ -95,7 +95,11 @@ int	execute_pipeline(t_cmd *cmds, t_shell *shell)
 	while (curr)
 	{
 		if (curr->next && pipe(ex.fd) == -1)
+		{
+			if (ex.prev_fd != -1)
+				close(ex.prev_fd);
 			return (perror("minishell: pipe"), 1);
+		}
 		ex.pid = fork();
 		if (ex.pid == -1)
 		{

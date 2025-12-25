@@ -15,8 +15,12 @@
 char	*get_target_path(char **args, t_env *env)
 {
 	char	*path;
+	int		i;
 
-	if (args[2])
+	i = 0;
+	while (args[i])
+		i++;
+	if (i > 2)
 	{
 		print_error("cd", "too many arguments");
 		return (NULL);
@@ -25,7 +29,21 @@ char	*get_target_path(char **args, t_env *env)
 	{
 		path = get_env_value("HOME", env);
 		if (!path)
+		{
 			print_error("cd", "HOME not set");
+			return (NULL);
+		}
+		return (path);
+	}
+	if (ft_strcmp(args[1], "-") == 0)
+	{
+		path = get_env_value("OLDPWD", env);
+		if (!path)
+		{
+			print_error("cd", "OLDPWD not set");
+			return (NULL);
+		}
+		printf("%s\n", path);
 		return (path);
 	}
 	return (ft_strdup(args[1]));

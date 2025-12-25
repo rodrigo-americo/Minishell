@@ -16,6 +16,8 @@ int	update_existing_env(t_env *current, char *value)
 {
 	char	*new_value;
 
+	if (!value)
+		return (1);
 	new_value = ft_strdup(value);
 	if (!new_value)
 		return (0);

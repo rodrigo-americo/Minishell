@@ -94,30 +94,54 @@ int	builtin_env(t_shell *shell)
 	return (0);
 }
 
+static int	validate_and_convert(char *str, int *exit_code)
+{
+	int			i;
+	long long	num;
+	int			sign;
+
+	i = 0;
+	sign = 1;
+	if (str[0] == '-' || str[0] == '+')
+	{
+		if (str[0] == '-')
+			sign = -1;
+		i++;
+	}
+	num = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		num = num * 10 + (str[i++] - '0');
+		if (num > 9223372036854775807LL / 10)
+			return (0);
+	}
+	*exit_code = (int)((num * sign) % 256);
+	if (*exit_code < 0)
+		*exit_code += 256;
+	return (1);
+}
+
 int	builtin_exit(char **args, t_shell *shell)
 {
-	int	i;
+	int	exit_code;
 
 	ft_putendl_fd("exit", 2);
 	if (!args[1])
 		exit(shell->exit_status);
-	i = 0;
-	if (args[1][0] == '-' || args[1][0] == '+')
-		i++;
-	if (!args[1][i])
+	if (!args[1][0] || (args[1][0] == '-' && !args[1][1])
+		|| (args[1][0] == '+' && !args[1][1]))
 	{
 		ft_putstr_fd("exit :  numeric argument required\n", 2);
 		exit(2);
 	}
-	while (args[1][i])
+	if (!validate_and_convert(args[1], &exit_code))
 	{
-		if (!ft_isdigit(args[1][i++]))
-		{
-			ft_putstr_fd("exit :  numeric argument required\n", 2);
-			exit(2);
-		}
+		ft_putstr_fd("exit :  numeric argument required\n", 2);
+		exit(2);
 	}
 	if (args[2])
 		return (print_error("exit", "too many arguments"), 1);
-	exit(ft_atoi(args[1]));
+	exit(exit_code);
 }

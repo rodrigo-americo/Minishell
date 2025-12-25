@@ -59,7 +59,10 @@ int	builtin_cd(char **args, t_shell *shell)
 	char	new_pwd[PATH_MAX_LEN];
 
 	if (getcwd(old_path, PATH_MAX_LEN) == NULL)
+	{
+		perror("cd: getcwd");
 		return (1);
+	}
 	path = get_target_path(args, shell->env);
 	if (!path)
 		return (1);
@@ -69,9 +72,11 @@ int	builtin_cd(char **args, t_shell *shell)
 		free(path);
 		return (1);
 	}
-	update_existing_env(shell->env, old_path);
-	if (getcwd(new_pwd, PATH_MAX_LEN))
-		update_existing_env(shell->env, new_pwd);
+	set_env_value("OLDPWD", old_path, &shell->env);
+	if (getcwd(new_pwd, PATH_MAX_LEN) != NULL)
+		set_env_value("PWD", new_pwd, &shell->env);
+	else
+		perror("cd: getcwd");
 	free(path);
 	return (0);
 }

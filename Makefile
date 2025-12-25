@@ -29,6 +29,7 @@ SRC_FILES   = main.c \
 			  parser/parser_utils.c \
 			  parser/syntax_check.c \
 			  parser/redir.c \
+			  parser/heredoc_parser.c \
 			  executor/executor.c \
 			  executor/path_resolution.c \
 			  executor/path_execution.c \

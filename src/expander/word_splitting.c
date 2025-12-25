@@ -34,6 +34,7 @@ char	*ft_strjoin_char(char *s, char c)
 static char	**add_split_parts(char **new_args, char *arg)
 {
 	char	**parts;
+	char	**temp;
 	char	*dup;
 	int		i;
 
@@ -44,8 +45,15 @@ static char	**add_split_parts(char **new_args, char *arg)
 	while (parts[i])
 	{
 		dup = ft_strdup(parts[i]);
-		if (dup)
-			new_args = ft_add_to_array(new_args, dup);
+		if (!dup)
+			break ;
+		temp = ft_add_to_array(new_args, dup);
+		if (!temp)
+		{
+			free(dup);
+			break ;
+		}
+		new_args = temp;
 		i++;
 	}
 	free_array(parts);
@@ -54,6 +62,7 @@ static char	**add_split_parts(char **new_args, char *arg)
 
 static char	**process_arg_token(char **new_args, char *arg)
 {
+	char	**temp;
 	char	*dup;
 
 	if (ft_strchr(arg, ' ') || ft_strchr(arg, '\t'))
@@ -61,7 +70,13 @@ static char	**process_arg_token(char **new_args, char *arg)
 	dup = ft_strdup(arg);
 	if (!dup)
 		return (new_args);
-	return (ft_add_to_array(new_args, dup));
+	temp = ft_add_to_array(new_args, dup);
+	if (!temp)
+	{
+		free(dup);
+		return (new_args);
+	}
+	return (temp);
 }
 
 static char	**rebuild_args(char **old_args)
