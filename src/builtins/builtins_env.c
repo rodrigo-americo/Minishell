@@ -123,25 +123,36 @@ static int	validate_and_convert(char *str, int *exit_code)
 	return (1);
 }
 
+static void	cleanup_and_exit(int code)
+{
+	int	fd;
+
+	fd = 3;
+	while (fd < 1024)
+		close(fd++);
+	exit(code);
+}
+
 int	builtin_exit(char **args, t_shell *shell)
 {
 	int	exit_code;
 
 	ft_putendl_fd("exit", 2);
 	if (!args[1])
-		exit(shell->exit_status);
+		cleanup_and_exit(shell->exit_status);
 	if (!args[1][0] || (args[1][0] == '-' && !args[1][1])
 		|| (args[1][0] == '+' && !args[1][1]))
 	{
 		ft_putstr_fd("exit :  numeric argument required\n", 2);
-		exit(2);
+		cleanup_and_exit(2);
 	}
 	if (!validate_and_convert(args[1], &exit_code))
 	{
 		ft_putstr_fd("exit :  numeric argument required\n", 2);
-		exit(2);
+		cleanup_and_exit(2);
 	}
 	if (args[2])
 		return (print_error("exit", "too many arguments"), 1);
-	exit(exit_code);
+	cleanup_and_exit(exit_code);
+	return (0);
 }
