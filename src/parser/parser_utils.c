@@ -61,6 +61,8 @@ void	free_cmd(t_cmd *cmd)
 		next = redir->next;
 		if (redir->file)
 			free(redir->file);
+		if (redir->hrdc_fd != -1)
+			close(redir->hrdc_fd);
 		free(redir);
 		redir = next;
 	}

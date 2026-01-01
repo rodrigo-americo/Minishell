@@ -12,43 +12,6 @@
 
 #include "minishell.h"
 
-char	*get_target_path(char **args, t_env *env)
-{
-	char	*path;
-	int		i;
-
-	i = 0;
-	while (args[i])
-		i++;
-	if (i > 2)
-	{
-		print_error("cd", "too many arguments");
-		return (NULL);
-	}
-	if (!args[1] || ft_strcmp(args[1], "~") == 0)
-	{
-		path = get_env_value("HOME", env);
-		if (!path)
-		{
-			print_error("cd", "HOME not set");
-			return (NULL);
-		}
-		return (path);
-	}
-	if (ft_strcmp(args[1], "-") == 0)
-	{
-		path = get_env_value("OLDPWD", env);
-		if (!path)
-		{
-			print_error("cd", "OLDPWD not set");
-			return (NULL);
-		}
-		printf("%s\n", path);
-		return (path);
-	}
-	return (ft_strdup(args[1]));
-}
-
 void	swap_nodes_data(t_env *a, t_env *b)
 {
 	char	*tmp_key;

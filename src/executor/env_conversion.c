@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <sys/stat.h>
 
 static int	count_env_nodes(t_env *env)
 {
@@ -79,6 +80,18 @@ int	get_exit_status(int status)
 
 int	handle_command_not_found(char *cmd_name)
 {
+	struct stat	path_stat;
+
+	if (ft_strchr(cmd_name, '/'))
+	{
+		if (stat(cmd_name, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+		{
+			fprintf(stderr, "minishell: %s: Is a directory\n", cmd_name);
+			return (126);
+		}
+		fprintf(stderr, "minishell: %s: No such file or directory\n", cmd_name);
+		return (127);
+	}
 	fprintf(stderr, "minishell: %s: command not found\n", cmd_name);
 	return (127);
 }

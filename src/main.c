@@ -6,18 +6,24 @@
 /*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 10:47:32 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/02 14:40:51 by rgregori         ###   ########.fr       */
+/*   Updated: 2026/01/01 00:00:00 by rgregori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void	handle_signal_status(t_shell *shell)
+{
+	if (g_signal_received == SIGINT)
+	{
+		g_signal_received = 0;
+		shell->exit_status = 130;
+	}
+}
+
 static int	get_input(t_shell *shell)
 {
-	char	*prompt;
-
-	prompt = "minishell> ";
-	shell->input = readline(prompt);
+	shell->input = read_with_continuation("minishell> ");
 	if (!shell->input)
 		return (0);
 	if (*shell->input)
@@ -44,11 +50,7 @@ void	main_loop(t_shell *shell)
 
 	while (1)
 	{
-		if (g_signal_received == SIGINT)
-		{
-			g_signal_received = 0;
-			shell->exit_status = 130;
-		}
+		handle_signal_status(shell);
 		if (!get_input(shell))
 			break ;
 		if (*shell->input)

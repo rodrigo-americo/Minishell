@@ -11,14 +11,24 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <errno.h>
+#include <sys/stat.h>
 
 static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 {
-	char	**envp;
+	char		**envp;
+	struct stat	path_stat;
 
 	setup_signals_child();
 	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
 		exit(1);
+	if (stat(cmd_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd_path, 2);
+		ft_putendl_fd(": Is a directory", 2);
+		exit(126);
+	}
 	envp = env_to_array(shell->env);
 	if (!envp)
 	{
@@ -27,6 +37,8 @@ static void	execute_child_process(char *cmd_path, t_cmd *cmd, t_shell *shell)
 	}
 	execve(cmd_path, cmd->args, envp);
 	free_array(envp);
+	if (errno == ENOEXEC)
+		exit(0);
 	perror("minishell");
 	exit(126);
 }

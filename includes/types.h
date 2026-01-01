@@ -81,6 +81,7 @@ typedef struct s_shell
 	t_cmd	*cmds;
 	t_env	*env;
 	int		exit_status;
+	pid_t	main_pid;
 }	t_shell;
 
 /* Execution Context Structure */

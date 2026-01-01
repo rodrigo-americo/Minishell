@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+static int	set_or_error(char *key, char *value, t_shell *shell)
+{
+	if (is_valid_identifier(key))
+	{
+		set_env_value(key, value, &shell->env);
+		return (1);
+	}
+	print_error("export", "not a valid identifier");
+	return (0);
+}
+
 static int	process_export_arg(char *arg, t_shell *shell)
 {
 	char	*key;
@@ -23,16 +34,7 @@ static int	process_export_arg(char *arg, t_shell *shell)
 	extract_key_value(arg, &key, &value);
 	if (!validate_export_key(key, value))
 		return (0);
-	if (is_valid_identifier(key))
-	{
-		set_env_value(key, value, &shell->env);
-		result = 1;
-	}
-	else
-	{
-		print_error("export", "not a valid identifier");
-		result = 0;
-	}
+	result = set_or_error(key, value, shell);
 	free(key);
 	if (value)
 		free(value);
@@ -91,68 +93,5 @@ int	builtin_env(t_shell *shell)
 			printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
-	return (0);
-}
-
-static int	validate_and_convert(char *str, int *exit_code)
-{
-	int			i;
-	long long	num;
-	int			sign;
-
-	i = 0;
-	sign = 1;
-	if (str[0] == '-' || str[0] == '+')
-	{
-		if (str[0] == '-')
-			sign = -1;
-		i++;
-	}
-	num = 0;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		num = num * 10 + (str[i++] - '0');
-		if (num > 9223372036854775807LL / 10)
-			return (0);
-	}
-	*exit_code = (int)((num * sign) % 256);
-	if (*exit_code < 0)
-		*exit_code += 256;
-	return (1);
-}
-
-static void	cleanup_and_exit(int code)
-{
-	int	fd;
-
-	fd = 3;
-	while (fd < 1024)
-		close(fd++);
-	exit(code);
-}
-
-int	builtin_exit(char **args, t_shell *shell)
-{
-	int	exit_code;
-
-	ft_putendl_fd("exit", 2);
-	if (!args[1])
-		cleanup_and_exit(shell->exit_status);
-	if (!args[1][0] || (args[1][0] == '-' && !args[1][1])
-		|| (args[1][0] == '+' && !args[1][1]))
-	{
-		ft_putstr_fd("exit :  numeric argument required\n", 2);
-		cleanup_and_exit(2);
-	}
-	if (!validate_and_convert(args[1], &exit_code))
-	{
-		ft_putstr_fd("exit :  numeric argument required\n", 2);
-		cleanup_and_exit(2);
-	}
-	if (args[2])
-		return (print_error("exit", "too many arguments"), 1);
-	cleanup_and_exit(exit_code);
 	return (0);
 }

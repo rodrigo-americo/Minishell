@@ -47,18 +47,11 @@ void	extract_key_value(char *arg, char **key, char **value)
 
 int	validate_export_key(char *key, char *value)
 {
-	int	result;
-
-	result = 0;
+	(void)value;
 	if (!key || key[0] == '\0')
 	{
 		print_error("export", "not a valid identifier");
-		free(key);
-		if (value)
-			free(value);
-		result = 0;
+		return (0);
 	}
-	else
-		result = 1;
-	return (result);
+	return (1);
 }

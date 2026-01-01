@@ -38,4 +38,15 @@ t_shell	*shell_init(char **envp);
 void	init_shell(t_shell *shell, char **envp);
 void	cleanup_shell(t_shell *shell);
 
+/* Line Continuation */
+int		skip_quotes(char *str, int i);
+int		ends_with_backslash(char *str);
+int		ends_with_pipe(char *str);
+int		needs_continuation(char *line);
+char	*read_with_continuation(char *prompt);
+
+/* Line Joining */
+char	*join_lines(char *acc, char *line);
+char	*join_lines_no_replace(char *acc, char *line);
+
 #endif

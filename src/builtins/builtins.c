@@ -12,16 +12,6 @@
 
 #include "minishell.h"
 
-/*
-** is_builtin - Verifica se comando é um built-in
-**
-** Built-ins são: echo, cd, pwd, export, unset, env, exit
-**
-** @cmd: nome do comando
-**
-** Return: 1 se é builtin, 0 senão
-*/
-
 int	is_builtin(char *cmd)
 {
 	if (!cmd)
@@ -43,17 +33,6 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-/*
-** execute_builtin - Executa comando built-in
-**
-** Faz o dispatch para a função correta baseado no nome do comando.
-** Cada built-in retorna seu próprio exit status.
-**
-** @cmd: estrutura do comando
-** @shell: ponteiro para estrutura shell
-**
-** Return: Exit status do built-in executado
-*/
 int	execute_builtin(t_cmd *cmd, t_shell *shell)
 {
 	char	*cmd_name;

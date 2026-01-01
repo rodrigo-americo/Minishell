@@ -13,6 +13,8 @@ SRC_FILES   = main.c \
 			  utils.c \
 			  clean_utils.c \
 			  assignment.c \
+			  utils/continuation.c \
+			  utils/line_join.c \
 			  lexer/lexer.c \
 			  lexer/lexer_utils.c \
 			  token_utils.c \
@@ -39,7 +41,10 @@ SRC_FILES   = main.c \
 			  executor/redirections.c \
 			  executor/heredoc.c \
 			  builtins/builtins.c \
+			  builtins/builtins_cd.c \
+			  builtins/builtins_cd_utils.c \
 			  builtins/builtins_env.c \
+			  builtins/builtins_exit.c \
 			  builtins/builtins_print.c \
 			  builtins/builtins_utils.c \
 			  builtins/builtins_valid.c \
