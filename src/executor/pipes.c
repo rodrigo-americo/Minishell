@@ -27,7 +27,7 @@ static void	conf_child_pipes(t_exec *ex, int has_next)
 	}
 }
 
-static void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
+void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
 {
 	char	*path;
 	char	**env;
@@ -51,7 +51,7 @@ static void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
 	exit(126);
 }
 
-static void	parent_process(t_exec *ex, int has_next)
+void	parent_process(t_exec *ex, int has_next)
 {
 	if (ex->prev_fd != -1)
 		close(ex->prev_fd);
@@ -94,23 +94,10 @@ int	execute_pipeline(t_cmd *cmds, t_shell *shell)
 	curr = cmds;
 	while (curr)
 	{
-		if (curr->next && pipe(ex.fd) == -1)
-		{
-			if (ex.prev_fd != -1)
-				close(ex.prev_fd);
-			return (perror("minishell: pipe"), 1);
-		}
-		ex.pid = fork();
-		if (ex.pid == -1)
-		{
-			perror("minishell: fork");
-			fork_error_cleanup(&ex, curr);
+		if (setup_pipe(&ex, curr) == -1)
 			return (1);
-		}
-		if (ex.pid == 0)
-			child_process(curr, shell, &ex, (curr->next != NULL));
-		ex.last_pid = ex.pid;
-		parent_process(&ex, (curr->next != NULL));
+		if (fork_and_exec(curr, shell, &ex) == -1)
+			return (1);
 		curr = curr->next;
 	}
 	return (close_heredocs(cmds), wait_all(&ex));

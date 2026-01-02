@@ -37,6 +37,7 @@ SRC_FILES   = main.c \
 			  executor/path_execution.c \
 			  executor/env_conversion.c \
 			  executor/pipes.c \
+			  executor/pipes_helpers.c \
 			  executor/pipe_utils.c \
 			  executor/redirections.c \
 			  executor/heredoc.c \

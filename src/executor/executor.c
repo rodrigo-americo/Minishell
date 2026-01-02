@@ -12,11 +12,8 @@
 
 #include "minishell.h"
 
-static int	exec_builtin_wrapper(t_cmd *cmd, t_shell *shell)
+static int	backup_fds(int *bkp)
 {
-	int	bkp[3];
-	int	ret;
-
 	bkp[0] = dup(STDIN_FILENO);
 	bkp[1] = dup(STDOUT_FILENO);
 	bkp[2] = dup(STDERR_FILENO);
@@ -28,22 +25,35 @@ static int	exec_builtin_wrapper(t_cmd *cmd, t_shell *shell)
 			close(bkp[1]);
 		if (bkp[2] != -1)
 			close(bkp[2]);
-		return (perror("minishell: dup"), 1);
+		return (perror("minishell: dup"), -1);
 	}
-	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
-	{
-		dup2(bkp[0], STDIN_FILENO);
-		dup2(bkp[1], STDOUT_FILENO);
-		dup2(bkp[2], STDERR_FILENO);
-		return (close(bkp[0]), close(bkp[1]), close(bkp[2]), 1);
-	}
-	ret = execute_builtin(cmd, shell);
+	return (0);
+}
+
+static void	restore_fds(int *bkp)
+{
 	dup2(bkp[0], STDIN_FILENO);
 	dup2(bkp[1], STDOUT_FILENO);
 	dup2(bkp[2], STDERR_FILENO);
 	close(bkp[0]);
 	close(bkp[1]);
 	close(bkp[2]);
+}
+
+static int	exec_builtin_wrapper(t_cmd *cmd, t_shell *shell)
+{
+	int	bkp[3];
+	int	ret;
+
+	if (backup_fds(bkp) == -1)
+		return (1);
+	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
+	{
+		restore_fds(bkp);
+		return (1);
+	}
+	ret = execute_builtin(cmd, shell);
+	restore_fds(bkp);
 	return (ret);
 }
 

@@ -56,36 +56,43 @@ static int	handle_quote_char(char **new_str, char c, char *quote)
 	return (1);
 }
 
+static int	process_char(char **new_str, char *str, t_proc *p, t_shell *sh)
+{
+	char	*temp;
+
+	if (str[p->i] == '$' && p->quote != '\'')
+		p->i += ft_handle_expansion(new_str, str + p->i, sh) - 1;
+	else if (str[p->i] == '\'' || str[p->i] == '\"')
+	{
+		if (!handle_quote_char(new_str, str[p->i], &p->quote))
+			return (0);
+	}
+	else
+	{
+		temp = append_char_safe(*new_str, str[p->i], p->quote);
+		if (!temp)
+			return (0);
+		*new_str = temp;
+	}
+	if (!*new_str)
+		return (0);
+	return (1);
+}
+
 char	*process_string_content(char *str, t_shell *shell)
 {
 	char	*new_str;
-	char	*temp;
-	char	quote;
-	int		i;
+	t_proc	p;
 
 	new_str = ft_strdup("");
 	if (!new_str)
 		return (NULL);
-	quote = 0;
-	i = -1;
-	while (str[++i])
+	p.quote = 0;
+	p.i = -1;
+	while (str[++p.i])
 	{
-		if (str[i] == '$' && quote != '\'')
-			i += ft_handle_expansion(&new_str, str + i, shell) - 1;
-		else if (str[i] == '\'' || str[i] == '\"')
-		{
-			if (!handle_quote_char(&new_str, str[i], &quote))
-				return (free(new_str), NULL);
-		}
-		else
-		{
-			temp = append_char_safe(new_str, str[i], quote);
-			if (!temp)
-				return (free(new_str), NULL);
-			new_str = temp;
-		}
-		if (!new_str)
-			return (NULL);
+		if (!process_char(&new_str, str, &p, shell))
+			return (free(new_str), NULL);
 	}
 	return (new_str);
 }

@@ -21,6 +21,12 @@ int		execute_simple_command(t_cmd *cmd, t_shell *shell);
 int		execute_pipeline(t_cmd *cmds, t_shell *shell);
 void	fork_error_cleanup(t_exec *ex, t_cmd *curr);
 
+/* Pipeline Helpers */
+int		setup_pipe(t_exec *ex, t_cmd *curr);
+int		fork_and_exec(t_cmd *curr, t_shell *shell, t_exec *ex);
+void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next);
+void	parent_process(t_exec *ex, int has_next);
+
 /* Redirections */
 int		setup_redirections(t_redir *redirs);
 int		handle_heredoc(t_redir *redir);

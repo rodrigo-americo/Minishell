@@ -45,11 +45,9 @@ char	**env_to_array(t_env *env)
 {
 	char	**array;
 	t_env	*current;
-	int		count;
 	int		i;
 
-	count = count_env_nodes(env);
-	array = malloc(sizeof(char *) * (count + 1));
+	array = malloc(sizeof(char *) * (count_env_nodes(env) + 1));
 	if (!array)
 		return (NULL);
 	current = env;
@@ -58,10 +56,7 @@ char	**env_to_array(t_env *env)
 	{
 		array[i] = create_env_string(current->key, current->value);
 		if (!array[i])
-		{
-			free_array(array);
-			return (NULL);
-		}
+			return (free_array(array), NULL);
 		current = current->next;
 		i++;
 	}

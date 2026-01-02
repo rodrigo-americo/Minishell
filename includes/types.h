@@ -94,4 +94,11 @@ typedef struct s_exec
 	int		status;
 }	t_exec;
 
+/* String Processing Context Structure */
+typedef struct s_proc
+{
+	char	quote;
+	int		i;
+}	t_proc;
+
 #endif

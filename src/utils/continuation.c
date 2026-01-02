@@ -71,6 +71,16 @@ int	needs_continuation(char *line)
 	return (0);
 }
 
+static char	*join_by_type(char *complete, char *line, int cont_type)
+{
+	if (cont_type == 1)
+		return (join_lines(complete, line));
+	else if (cont_type == 2)
+		return (join_lines_no_replace(complete, line));
+	else
+		return (join_lines(complete, line));
+}
+
 char	*read_with_continuation(char *prompt)
 {
 	char	*line;
@@ -87,12 +97,7 @@ char	*read_with_continuation(char *prompt)
 		if (!line)
 			return (complete);
 		cont_type = needs_continuation(line);
-		if (cont_type == 1)
-			complete = join_lines(complete, line);
-		else if (cont_type == 2)
-			complete = join_lines_no_replace(complete, line);
-		else
-			complete = join_lines(complete, line);
+		complete = join_by_type(complete, line, cont_type);
 		free(line);
 		if (!complete || cont_type == 0)
 			return (complete);
