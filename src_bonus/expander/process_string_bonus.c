@@ -27,6 +27,8 @@ static char	*append_char_safe(char *str, char c, char quote_state)
 
 	if (quote_state && (c == ' ' || c == '\t'))
 		c = 0x1F;
+	if (quote_state && c == '*')
+		c = 0x1E;
 	new_str = ft_strjoin_char(str, c);
 	if (str)
 		free(str);

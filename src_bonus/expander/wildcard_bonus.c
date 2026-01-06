@@ -12,6 +12,7 @@
 
 #include "minishell_bonus.h"
 #include <dirent.h>
+#include <locale.h>
 
 static void	free_partial_array(char **arr, int count)
 {
@@ -50,6 +51,11 @@ static char	**add_match(char **matches, char *match, int *count)
 	return (new_matches);
 }
 
+static int	compare_strings(const void *a, const void *b)
+{
+	return (strcoll(*(const char **)a, *(const char **)b));
+}
+
 static char	**expand_single_pattern(char *pattern)
 {
 	DIR				*dir;
@@ -76,6 +82,7 @@ static char	**expand_single_pattern(char *pattern)
 	closedir(dir);
 	if (count == 0)
 		return (NULL);
+	qsort(matches, count, sizeof(char *), compare_strings);
 	return (matches);
 }
 
@@ -89,7 +96,11 @@ static char	**build_expanded_array(char **args, char **expanded, int idx)
 	total = 0;
 	i = 0;
 	while (args[i])
-		total += (i == idx) ? 0 : 1 + (i++, 0);
+	{
+		if (i != idx)
+			total++;
+		i++;
+	}
 	i = 0;
 	while (expanded[i++])
 		total++;
@@ -140,10 +151,13 @@ char	**expand_wildcards(char **args)
 			{
 				result = build_expanded_array(args, expanded, i);
 				free_array(expanded);
-				return (result);
+				if (!result)
+					return (NULL);
+				free_array(args);
+				return (expand_wildcards(result));
 			}
 		}
 		i++;
 	}
-	return (NULL);
+	return (args);
 }

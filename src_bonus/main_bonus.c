@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
+#include <locale.h>
 
 static void	handle_signal_status(t_shell *shell)
 {
@@ -78,6 +79,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	setlocale(LC_COLLATE, "");
 	setup_signals();
 	shell = shell_init(envp);
 	main_loop(shell);

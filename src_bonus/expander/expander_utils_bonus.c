@@ -25,6 +25,8 @@ void	restore_spaces(char **args)
 		{
 			if (args[i][j] == 0x1F)
 				args[i][j] = ' ';
+			if (args[i][j] == 0x1E)
+				args[i][j] = '*';
 			j++;
 		}
 		i++;
@@ -44,6 +46,8 @@ void	restore_spaces_in_redirs(t_redir *redirs)
 		{
 			if (curr->file[j] == 0x1F)
 				curr->file[j] = ' ';
+			if (curr->file[j] == 0x1E)
+				curr->file[j] = '*';
 			j++;
 		}
 		curr = curr->next;

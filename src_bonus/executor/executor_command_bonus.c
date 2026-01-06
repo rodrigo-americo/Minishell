@@ -84,11 +84,61 @@ int	exec_external(char **args, t_redir *redirs, t_shell *shell)
 	return (get_exit_status(status));
 }
 
+static char	**duplicate_array(char **arr)
+{
+	char	**dup;
+	int		i;
+	int		len;
+
+	if (!arr)
+		return (NULL);
+	len = 0;
+	while (arr[len])
+		len++;
+	dup = malloc(sizeof(char *) * (len + 1));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		dup[i] = ft_strdup(arr[i]);
+		if (!dup[i])
+		{
+			while (--i >= 0)
+				free(dup[i]);
+			return (free(dup), NULL);
+		}
+		i++;
+	}
+	dup[i] = NULL;
+	return (dup);
+}
+
 int	execute_command(t_ast_node *node, t_shell *shell)
 {
+	char	**args_to_use;
+	char	**args_copy;
+	char	**expanded;
+	int		ret;
+
 	if (!node->args || !node->args[0])
 		return (0);
-	if (is_builtin(node->args[0]))
-		return (exec_builtin_with_redir(node->args, node->redirs, shell));
-	return (exec_external(node->args, node->redirs, shell));
+	args_copy = duplicate_array(node->args);
+	if (!args_copy)
+		return (1);
+	expanded = expand_wildcards(args_copy);
+	if (expanded)
+		args_to_use = expanded;
+	else
+		args_to_use = args_copy;
+	restore_spaces(args_to_use);
+	if (is_builtin(args_to_use[0]))
+		ret = exec_builtin_with_redir(args_to_use, node->redirs, shell);
+	else
+		ret = exec_external(args_to_use, node->redirs, shell);
+	if (expanded)
+		free_array(expanded);
+	else
+		free_array(args_copy);
+	return (ret);
 }
