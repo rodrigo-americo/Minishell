@@ -15,22 +15,27 @@
 
 #  include "types_bonus.h"
 
-/* Main Expansion */
-void	expander(t_cmd *cmds, t_shell *shell);
+/* AST Node Expansion */
+void	expander(t_ast_node *node, t_shell *shell);
 
 /* String Processing */
 char	*process_string_content(char *original_str, t_shell *shell);
 int		ft_handle_expansion(char **new_str,
 			char *str_at_dollar, t_shell *shell);
 
+/* Expander Value Utilities */
+char	*get_pid_str(void);
+int		get_var_len(char *str);
+char	*get_expanded_value(char *str, t_shell *shell, int *len);
+
+/* Wildcard Match Utilities */
+int		has_wildcard(char *str);
+int		match_pattern(char *pattern, char *str);
+
 /* Word Splitting */
-void	word_splitting(t_cmd *cmd);
-
-/* ************************************************************************** */
-/*                         BONUS: AST EXPANDER                                */
-/* ************************************************************************** */
-
-/* AST Node Expansion */
-void	expand_ast_node(t_ast_node *node, t_shell_bonus *shell);
+void	word_splitting_ast(t_ast_node *node);
+char	**expand_wildcards(char **args);
+void	restore_spaces(char **args);
+void	restore_spaces_in_redirs(t_redir *redirs);
 
 #endif

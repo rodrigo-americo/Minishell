@@ -35,4 +35,22 @@ t_shell	*shell_init(char **envp);
 void	init_shell(t_shell *shell, char **envp);
 void	cleanup_shell(t_shell *shell);
 
+/* Line Continuation */
+char	*read_with_continuation(char *prompt);
+int		needs_continuation(char *line);
+int		ends_with_backslash(char *str);
+int		ends_with_pipe(char *str);
+
+/* Line Joining */
+char	*join_lines(char *acc, char *line);
+char	*join_lines_no_replace(char *acc, char *line);
+
+/* Token Management */
+void	tokens_list_add_back(t_list **head, t_list *new_node);
+void	tokens_list_clear(t_list **tokens);
+int		skip_quotes(char *str, int i);
+
+/* Assignment Detection */
+int		is_assignment(char *str);
+
 #endif

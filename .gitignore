@@ -1,5 +1,6 @@
 pt_br.subject.pdf
 obj/*
+obj_bonus/*
 .claude/
 .vscode/
 

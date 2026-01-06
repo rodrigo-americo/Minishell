@@ -17,7 +17,7 @@
 
 /* Built-in Detection and Execution */
 int		is_builtin(char *cmd);
-int		execute_builtin(char **args, t_shell_bonus *shell);
+int		execute_builtin(char **args, t_shell *shell);
 
 /* Built-in Commands */
 int		builtin_echo(char **args);
@@ -34,5 +34,12 @@ int		list_sorted_env(t_env *env);
 int		is_valid_identifier(char *str);
 void	swap_nodes_data(t_env *a, t_env *b);
 t_env	*copy_env_list(t_env *env);
+void	extract_key_value(char *arg, char **key, char **value);
+int		validate_export_key(char *key, char *value);
+
+/* Exit Utilities */
+void	init_validation(char *str, int *i, int *sign);
+int		check_overflow(long long num, char digit);
+void	cleanup_and_exit(int code);
 
 #endif

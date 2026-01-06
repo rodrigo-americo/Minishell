@@ -15,16 +15,8 @@
 
 #  include "types_bonus.h"
 
-/* Main Execution */
-void	executor(t_cmd *cmds, t_shell *shell);
-int		execute_simple_command(t_cmd *cmd, t_shell *shell);
-int		execute_pipeline(t_cmd *cmds, t_shell *shell);
-void	fork_error_cleanup(t_exec *ex, t_cmd *curr);
-
 /* Redirections */
 int		setup_redirections(t_redir *redirs);
-int		handle_heredoc(char *delimiter);
-void	close_heredocs(t_cmd *cmds);
 
 /* Path Resolution */
 char	*find_command(char *cmd, t_shell *shell);
@@ -41,7 +33,23 @@ int		handle_command_not_found(char *cmd_name);
 /*                         BONUS: AST EXECUTOR                                */
 /* ************************************************************************** */
 
-/* AST Executor Main Function */
-int		execute_ast(t_ast_node *ast, t_shell_bonus *shell);
+/* Main Executor */
+int		executor(t_ast_node *node, t_shell *shell);
+
+/* Command Execution */
+int		execute_command(t_ast_node *node, t_shell *shell);
+int		exec_builtin_with_redir(char **args, t_redir *redirs, t_shell *shell);
+int		exec_external(char **args, t_redir *redirs, t_shell *shell);
+
+/* Logical Operators */
+int		execute_and(t_ast_node *node, t_shell *shell);
+int		execute_or(t_ast_node *node, t_shell *shell);
+
+/* Pipe and Subshell */
+int		execute_pipe(t_ast_node *node, t_shell *shell);
+int		execute_subshell(t_ast_node *node, t_shell *shell);
+
+/* Heredoc Cleanup for AST */
+void	close_heredocs_ast(t_ast_node *node);
 
 #endif

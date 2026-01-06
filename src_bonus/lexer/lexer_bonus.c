@@ -57,7 +57,12 @@ static int	get_word_len(char *input)
 		{
 			quote = input[i++];
 			while (input[i] && input[i] != quote)
-				i++;
+			{
+				if (input[i] == '\\' && input[i + 1])
+					i += 2;
+				else
+					i++;
+			}
 			if (!input[i])
 				return (-1);
 		}
@@ -88,6 +93,7 @@ static t_list	*extract_word_token(char **input)
 		free(value);
 		return (NULL);
 	}
+	free(value);
 	return (node);
 }
 

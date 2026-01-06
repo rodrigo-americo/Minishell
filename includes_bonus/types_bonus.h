@@ -15,6 +15,9 @@
 
 # include "libft.h"
 
+/* Forward declarations */
+typedef struct s_ast_node	t_ast_node;
+
 /* ************************************************************************** */
 /*                              ENUMERATIONS                                  */
 /* ************************************************************************** */
@@ -53,6 +56,7 @@ typedef struct s_redir
 	int				type;
 	char			*file;
 	int				hrdc_fd;
+	int				is_quoted;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -75,13 +79,13 @@ typedef struct s_env
 /* Main Shell Structure */
 typedef struct s_shell
 {
-	char	*input;
-	t_list	*tokens;
-	t_cmd	*cmds;
-	t_env	*env;
-	int		exit_status;
-	int		stdin_backup;
-	int		stdout_backup;
+	char		*input;
+	t_list		*tokens;
+	t_ast_node	*ast;
+	t_env		*env;
+	int			exit_status;
+	int			stdin_backup;
+	int			stdout_backup;
 }	t_shell;
 
 /* Execution Context Structure */
@@ -118,16 +122,11 @@ typedef struct s_ast_node
 	struct s_ast_node	*right;
 }	t_ast_node;
 
-/* Shell Structure with AST (Bonus) */
-typedef struct s_shell_bonus
+/* String Processing Context Structure */
+typedef struct s_proc
 {
-	char		*input;
-	t_list		*tokens;
-	t_ast_node	*ast;
-	t_env		*env;
-	int			exit_status;
-	int			stdin_backup;
-	int			stdout_backup;
-}	t_shell_bonus;
+	char	quote;
+	int		i;
+}	t_proc;
 
 #endif
