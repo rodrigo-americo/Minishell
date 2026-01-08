@@ -12,86 +12,76 @@
 
 #include "minishell_bonus.h"
 
-static int	set_or_error(char *key, char *value, t_shell *shell)
-{
-	if (is_valid_identifier(key))
-	{
-		set_env_value(key, value, &shell->env);
-		return (1);
-	}
-	print_error("export", "not a valid identifier");
-	return (0);
+static int set_or_error(char *key, char *value, t_shell *shell) {
+  if (is_valid_identifier(key)) {
+    set_env_value(key, value, &shell->env);
+    return (1);
+  }
+  print_error("export", "not a valid identifier");
+  return (0);
 }
 
-static int	process_export_arg(char *arg, t_shell *shell)
-{
-	char	*key;
-	char	*value;
-	int		result;
+static int process_export_arg(char *arg, t_shell *shell) {
+  char *key;
+  char *value;
+  int result;
 
-	key = NULL;
-	value = NULL;
-	extract_key_value(arg, &key, &value);
-	if (!validate_export_key(key, value))
-		return (0);
-	result = set_or_error(key, value, shell);
-	free(key);
-	if (value)
-		free(value);
-	return (result);
+  key = NULL;
+  value = NULL;
+  extract_key_value(arg, &key, &value);
+  if (!validate_export_key(key, value))
+    return (0);
+  result = set_or_error(key, value, shell);
+  free(key);
+  if (value)
+    free(value);
+  return (result);
 }
 
-int	builtin_export(char **args, t_shell *shell)
-{
-	int	i;
-	int	status;
+int builtin_export(char **args, t_shell *shell) {
+  int i;
+  int status;
 
-	if (!args[1])
-	{
-		list_sorted_env(shell->env);
-		return (0);
-	}
-	status = 0;
-	i = 1;
-	while (args[i])
-	{
-		if (!process_export_arg(args[i], shell))
-			status = 1;
-		i++;
-	}
-	return (status);
+  if (!args[1]) {
+    list_sorted_env(shell->env);
+    return (0);
+  }
+  status = 0;
+  i = 1;
+  while (args[i]) {
+    if (!process_export_arg(args[i], shell))
+      status = 1;
+    i++;
+  }
+  return (status);
 }
 
-int	builtin_unset(char **args, t_shell *shell)
-{
-	int	i;
+int builtin_unset(char **args, t_shell *shell) {
+  int i;
 
-	i = 1;
-	if (!args[i])
-		return (0);
-	while (args[i])
-	{
-		if (is_valid_identifier(args[i]))
-			unset_env_value(args[i], &shell->env);
-		else
-			print_error("unset", "not a valid identifier");
-		i++;
-	}
-	return (0);
+  i = 1;
+  if (!args[i])
+    return (0);
+  while (args[i]) {
+    if (is_valid_identifier(args[i]))
+      unset_env_value(args[i], &shell->env);
+    else
+      print_error("unset", "not a valid identifier");
+    i++;
+  }
+  return (0);
 }
 
-int	builtin_env(t_shell *shell)
-{
-	t_env	*tmp;
+int builtin_env(t_shell *shell) {
+  t_env *tmp;
 
-	if (!shell || !shell->env)
-		return (0);
-	tmp = shell->env;
-	while (tmp)
-	{
-		if (tmp->value)
-			printf("%s=%s\n", tmp->key, tmp->value);
-		tmp = tmp->next;
-	}
-	return (0);
+  if (!shell || !shell->env)
+    return (0);
+  tmp = shell->env;
+  while (tmp) {
+    if (tmp->value)
+      printf("%s=%s\n", tmp->key, tmp->value);
+    tmp = tmp->next;
+  }
+  return (0);
 }
