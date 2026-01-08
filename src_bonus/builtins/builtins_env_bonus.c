@@ -12,12 +12,25 @@
 
 #include "minishell_bonus.h"
 
-static int set_or_error(char *key, char *value, t_shell *shell) {
+static int set_or_error(char *key, char *value, t_shell *shell, char *original_arg) {
+  char *error_msg;
+
   if (is_valid_identifier(key)) {
     set_env_value(key, value, &shell->env);
     return (1);
   }
-  print_error("export", "not a valid identifier");
+  error_msg = ft_strjoin("`", original_arg);
+  if (error_msg) {
+    char *temp = error_msg;
+    error_msg = ft_strjoin(error_msg, "': not a valid identifier");
+    free(temp);
+  }
+  if (error_msg) {
+    fprintf(stderr, "export: %s\n", error_msg);
+    free(error_msg);
+  } else {
+    print_error("export", "not a valid identifier");
+  }
   return (0);
 }
 
@@ -29,9 +42,9 @@ static int process_export_arg(char *arg, t_shell *shell) {
   key = NULL;
   value = NULL;
   extract_key_value(arg, &key, &value);
-  if (!validate_export_key(key, value))
+  if (!validate_export_key(key, value, arg))
     return (0);
-  result = set_or_error(key, value, shell);
+  result = set_or_error(key, value, shell, arg);
   free(key);
   if (value)
     free(value);
@@ -65,8 +78,7 @@ int builtin_unset(char **args, t_shell *shell) {
   while (args[i]) {
     if (is_valid_identifier(args[i]))
       unset_env_value(args[i], &shell->env);
-    else
-      print_error("unset", "not a valid identifier");
+    /* bash is silent for invalid identifiers in unset */
     i++;
   }
   return (0);

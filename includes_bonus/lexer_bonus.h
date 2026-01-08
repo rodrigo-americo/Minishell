@@ -17,7 +17,8 @@
 
 t_list	*lexer(char *input);
 int		is_operator_start(char c);
-void	init_operators_bonus(t_operator operators[10]);
+int		is_redir_prefix(char *input);
+void	init_operators_bonus(t_operator operators[12]);
 t_list	*extract_operator_token(char **input);
 t_token	*token_new(const char *value, int type);
 void	token_del(void *p);

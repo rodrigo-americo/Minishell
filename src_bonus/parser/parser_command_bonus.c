@@ -25,7 +25,9 @@ static int	parse_cmd_loop(t_ast_node *node, t_list **tokens, t_shell *shell)
 	t_redir	*redir;
 
 	tok = peek_token(*tokens);
-	if (tok->type >= TOKEN_REDIR_IN && tok->type <= TOKEN_REDIR_HEREDOC)
+	if ((tok->type >= TOKEN_REDIR_IN && tok->type <= TOKEN_REDIR_HEREDOC)
+		|| tok->type == TOKEN_REDIR_STDERR_OUT
+		|| tok->type == TOKEN_REDIR_STDERR_APPEND)
 	{
 		redir = parse_redirection(tokens, shell);
 		if (!redir)

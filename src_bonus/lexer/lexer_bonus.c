@@ -29,7 +29,7 @@ static t_list	*try_match_operator(char **input, t_operator *op)
 
 t_list	*extract_operator_token(char **input)
 {
-	t_operator	operators[10];
+	t_operator	operators[12];
 	t_list		*result;
 	int			i;
 
@@ -53,6 +53,8 @@ static int	get_word_len(char *input)
 	i = 0;
 	while (input[i] && !is_separator(input[i]))
 	{
+		if (is_redir_prefix(&input[i]))
+			break ;
 		if (input[i] == '\'' || input[i] == '\"')
 		{
 			quote = input[i++];
@@ -108,7 +110,7 @@ t_list	*lexer(char *input)
 		input = skip_whitespace(input);
 		if (!*input)
 			break ;
-		if (is_operator_start(*input))
+		if (is_operator_start(*input) || is_redir_prefix(input))
 			new_node = extract_operator_token(&input);
 		else
 			new_node = extract_word_token(&input);

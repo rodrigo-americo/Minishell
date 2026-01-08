@@ -45,12 +45,28 @@ void	extract_key_value(char *arg, char **key, char **value)
 	}
 }
 
-int	validate_export_key(char *key, char *value)
+int	validate_export_key(char *key, char *value, char *original_arg)
 {
+	char	*error_msg;
+	char	*temp;
+
 	(void)value;
 	if (!key || key[0] == '\0')
 	{
-		print_error("export", "not a valid identifier");
+		error_msg = ft_strjoin("`", original_arg);
+		if (error_msg)
+		{
+			temp = error_msg;
+			error_msg = ft_strjoin(error_msg, "': not a valid identifier");
+			free(temp);
+		}
+		if (error_msg)
+		{
+			fprintf(stderr, "export: %s\n", error_msg);
+			free(error_msg);
+		}
+		else
+			print_error("export", "not a valid identifier");
 		return (0);
 	}
 	return (1);

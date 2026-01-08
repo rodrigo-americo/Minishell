@@ -16,9 +16,18 @@ static int	get_open_flags(int type)
 {
 	if (type == REDIR_IN)
 		return (O_RDONLY);
-	if (type == REDIR_OUT)
+	if (type == REDIR_OUT || type == TOKEN_REDIR_STDERR_OUT)
 		return (O_WRONLY | O_CREAT | O_TRUNC);
 	return (O_WRONLY | O_CREAT | O_APPEND);
+}
+
+static int	get_target_fd(int type)
+{
+	if (type == REDIR_IN)
+		return (STDIN_FILENO);
+	if (type == TOKEN_REDIR_STDERR_OUT || type == TOKEN_REDIR_STDERR_APPEND)
+		return (STDERR_FILENO);
+	return (STDOUT_FILENO);
 }
 
 static int	handle_file_redir(t_redir *redir)
@@ -31,10 +40,7 @@ static int	handle_file_redir(t_redir *redir)
 	fd = open(redir->file, flags, 0644);
 	if (fd < 0)
 		return (perror(redir->file), -1);
-	if (redir->type == REDIR_IN)
-		target_fd = STDIN_FILENO;
-	else
-		target_fd = STDOUT_FILENO;
+	target_fd = get_target_fd(redir->type);
 	if (dup2(fd, target_fd) == -1)
 	{
 		perror("minishell: dup2");

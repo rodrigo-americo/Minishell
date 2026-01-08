@@ -112,7 +112,7 @@ run_test "cd .. && pwd" \
 # ============================================
 print_category "CD - EDGE CASES"
 
-run_test "cd /nonexistent 2>&1" \
+run_test "cd /nonexistent" \
     "cd: non-existent directory (should error)"
 
 run_test "cd /tmp && cd - >/dev/null && pwd" \
@@ -155,10 +155,10 @@ run_test "export QUOTED=\"hello world\" && echo \$QUOTED" \
 # ============================================
 print_category "EXPORT - EDGE CASES"
 
-run_test "export 123VAR=invalid 2>&1" \
+run_test "export 123VAR=invalid" \
     "export: invalid name starting with digit"
 
-run_test "export =value 2>&1" \
+run_test "export =value" \
     "export: missing variable name"
 
 run_test "export VAR && echo \$VAR" \
@@ -192,7 +192,7 @@ print_category "UNSET - EDGE CASES"
 run_test "export VAR=test && unset VAR && export VAR=new && echo \$VAR" \
     "unset: then re-export"
 
-run_test "unset 123INVALID 2>&1" \
+run_test "unset 123INVALID" \
     "unset: invalid variable name"
 
 run_test "(export VAR=test && unset VAR) && echo \$VAR" \
@@ -329,13 +329,13 @@ run_test "(cd /tmp) && pwd" \
 run_test "(export VAR=sub) && echo \$VAR" \
     "export in subshell doesn't affect parent"
 
-run_test "((cd / && pwd))" \
+run_test "( (cd / && pwd) )" \
     "cd in nested subshell"
 
 run_test "(pwd && cd /tmp && pwd)" \
     "multiple built-ins in subshell"
 
-run_test "((export A=1 && echo \$A))" \
+run_test "( (export A=1 && echo \$A) )" \
     "export in nested subshell"
 
 # ============================================

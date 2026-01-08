@@ -26,7 +26,7 @@ static int	change_directory(char *path)
 {
 	if (chdir(path) != 0)
 	{
-		print_error("cd", "No such file or directory");
+		fprintf(stderr, "cd: %s: No such file or directory\n", path);
 		return (0);
 	}
 	return (1);

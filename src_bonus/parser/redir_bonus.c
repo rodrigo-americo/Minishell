@@ -28,6 +28,10 @@ t_redir	*create_redir(char *file_name, t_redir_type type)
 		redir->type = REDIR_APPEND;
 	else if (type == TOKEN_REDIR_HEREDOC)
 		redir->type = REDIR_HEREDOC;
+	else if (type == TOKEN_REDIR_STDERR_OUT)
+		redir->type = TOKEN_REDIR_STDERR_OUT;
+	else if (type == TOKEN_REDIR_STDERR_APPEND)
+		redir->type = TOKEN_REDIR_STDERR_APPEND;
 	redir->hrdc_fd = -1;
 	redir->next = NULL;
 	return (redir);

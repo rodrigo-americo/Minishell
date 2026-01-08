@@ -46,6 +46,8 @@
 # define TOKEN_OR 8
 # define TOKEN_LPAREN 9
 # define TOKEN_RPAREN 10
+# define TOKEN_REDIR_STDERR_OUT 11
+# define TOKEN_REDIR_STDERR_APPEND 12
 
 /* ************************************************************************** */
 /*                              NUMERIC LIMITS                                */

@@ -12,25 +12,32 @@
 
 #include "minishell_bonus.h"
 
-void error_exit(char *msg) {
+void error_exit(char *msg)
+{
   perror(msg);
   exit(1);
 }
 
-void print_error(char *cmd, char *msg) { printf("%s : %s\n", cmd, msg); }
+void print_error(char *cmd, char *msg)
+{
+	fprintf(stderr, "%s: %s\n", cmd, msg);
+}
 
-char *skip_whitespace(char *input) {
+char *skip_whitespace(char *input)
+{
   while (*input != '\0' && (*input == ' ' || *input == '\t'))
     input++;
   return (input);
 }
 
-int is_separator(char c) {
+int is_separator(char c)
+{
   return ((c == ' ' || c == '\t' || c == '|' || c == '<' || c == '>' ||
            c == '(' || c == ')' || c == '&' || c == '\0'));
 }
 
-void free_array(char **arr) {
+void free_array(char **arr)
+{
   int i;
 
   i = 0;

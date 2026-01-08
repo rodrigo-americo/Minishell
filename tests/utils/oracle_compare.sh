@@ -17,8 +17,32 @@ MINISHELL_PATH="$(cd "$SCRIPT_DIR_ABS/../.." && pwd)/minishell"
 
 # Filter minishell prompts and exit command from output
 filter_minishell_output() {
-    # Remove prompts, exit command, and empty lines
-    grep -v "^minishell>" | grep -v "^> " | grep -v "^exit$" | sed '/^$/d'
+    local original_cmd="$1"
+    perl -e '
+        my $cmd = shift;
+        my $content = do { local $/; <> };
+
+        # Remove all "minishell> " prompts
+        $content =~ s/minishell> //g;
+        # Remove continuation prompt
+        $content =~ s/^> //mg;
+
+        # Remove the echoed command (at the start only)
+        my $quoted_cmd = quotemeta($cmd);
+        $content =~ s/^$quoted_cmd\n//;
+
+        # Remove "exit\n" patterns
+        $content =~ s/exit\n//g;
+        # Remove standalone "exit" at end
+        $content =~ s/\nexit$//;
+
+        # Clean up blank lines
+        $content =~ s/\n\n+/\n/g;
+        $content =~ s/^\n+//;
+        $content =~ s/\n+$//;
+
+        print $content;
+    ' "$original_cmd"
 }
 
 # Filter bash prompts from output
@@ -29,8 +53,8 @@ filter_bash_output() {
 
 # Normalize output for comparison (trim whitespace, sort if needed)
 normalize_output() {
-    # Remove trailing whitespace from each line
-    sed 's/[[:space:]]*$//'
+    # Remove leading and trailing whitespace from each line, and empty lines
+    sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e '/^$/d'
 }
 
 # Execute command in bash (oracle)
@@ -51,7 +75,13 @@ execute_in_minishell() {
 
     (
         cd "$test_dir" 2>/dev/null || exit 1
-        printf "%s\nexit\n" "$cmd" | timeout 5 "$MINISHELL_PATH" 2>&1 | filter_minishell_output
+        # Capture both output and exit code
+        local output
+        local exit_code
+        output=$(printf "%s\nexit\n" "$cmd" | timeout 5 "$MINISHELL_PATH" 2>&1)
+        exit_code=$?
+        echo "$output" | filter_minishell_output "$cmd"
+        exit $exit_code
     )
 }
 

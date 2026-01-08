@@ -123,6 +123,7 @@ int execute_command(t_ast_node *node, t_shell *shell) {
   else
     args_to_use = args_copy;
   restore_spaces(args_to_use);
+  restore_spaces_in_redirs(node->redirs);
   if (is_builtin(args_to_use[0]))
     ret = exec_builtin_with_redir(args_to_use, node->redirs, shell);
   else

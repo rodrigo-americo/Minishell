@@ -68,6 +68,8 @@ int main(int argc, char **argv, char **envp) {
   (void)argc;
   (void)argv;
   setup_signals();
+  if (!isatty(STDIN_FILENO))
+    rl_outstream = fopen("/dev/null", "w");
   shell = shell_init(envp);
   main_loop(shell);
   exit_code = shell->exit_status;
