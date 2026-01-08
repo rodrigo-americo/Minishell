@@ -12,13 +12,6 @@
 
 #include "minishell.h"
 
-/*
-** Remove quotes from delimiter and sets is_quoted flag
-** Examples:
-**   'eof'  -> eof (is_quoted=1)
-**   "eof"  -> eof (is_quoted=1)
-**   eof    -> eof (is_quoted=0)
-*/
 static char	*remove_delimiter_quotes(char *str, int *is_quoted)
 {
 	int	len;
@@ -36,10 +29,6 @@ static char	*remove_delimiter_quotes(char *str, int *is_quoted)
 	return (ft_strdup(str));
 }
 
-/*
-** Expand variables in heredoc line if is_quoted == 0
-** Reuses existing expander logic
-*/
 static char	*expand_heredoc_line(char *line, t_shell *shell, int is_quoted)
 {
 	if (is_quoted)
@@ -47,10 +36,6 @@ static char	*expand_heredoc_line(char *line, t_shell *shell, int is_quoted)
 	return (process_string_content(line, shell));
 }
 
-/*
-** Write line to heredoc pipe
-** Returns 0 on success, -1 on error
-*/
 static int	write_heredoc_line(int fd, char *line)
 {
 	if (write(fd, line, ft_strlen(line)) == -1)
@@ -60,10 +45,6 @@ static int	write_heredoc_line(int fd, char *line)
 	return (0);
 }
 
-/*
-** Process heredoc at parse time
-** Reads lines from terminal, writes to pipe, saves fd
-*/
 int	process_heredoc_at_parse_time(t_redir *redir, t_shell *shell)
 {
 	int		fd[2];

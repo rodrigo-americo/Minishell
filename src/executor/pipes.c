@@ -27,7 +27,8 @@ static void	conf_child_pipes(t_exec *ex, int has_next)
 	}
 }
 
-void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
+void	child_process(t_cmd *cmd, t_cmd *cmds, t_shell *shell,
+	t_exec *ex, int has_next)
 {
 	char	*path;
 	char	**env;
@@ -35,6 +36,7 @@ void	child_process(t_cmd *cmd, t_shell *shell, t_exec *ex, int has_next)
 	conf_child_pipes(ex, has_next);
 	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
 		exit(1);
+	close_heredocs(cmds);
 	if (!cmd->args || !cmd->args[0])
 		exit(0);
 	if (is_builtin(cmd->args[0]))
@@ -96,7 +98,7 @@ int	execute_pipeline(t_cmd *cmds, t_shell *shell)
 	{
 		if (setup_pipe(&ex, curr) == -1)
 			return (1);
-		if (fork_and_exec(curr, shell, &ex) == -1)
+		if (fork_and_exec(curr, cmds, shell, &ex) == -1)
 			return (1);
 		curr = curr->next;
 	}

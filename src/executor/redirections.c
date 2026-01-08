@@ -56,6 +56,8 @@ int	handle_heredoc(t_redir *redir)
 		return (perror("minishell: heredoc not processed"), -1);
 	if (dup2(redir->hrdc_fd, STDIN_FILENO) == -1)
 		return (perror("minishell: dup2"), -1);
+	close(redir->hrdc_fd);
+	redir->hrdc_fd = -1;
 	return (0);
 }
 

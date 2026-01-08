@@ -23,7 +23,7 @@ int	setup_pipe(t_exec *ex, t_cmd *curr)
 	return (0);
 }
 
-int	fork_and_exec(t_cmd *curr, t_shell *shell, t_exec *ex)
+int	fork_and_exec(t_cmd *curr, t_cmd *cmds, t_shell *shell, t_exec *ex)
 {
 	ex->pid = fork();
 	if (ex->pid == -1)
@@ -33,7 +33,7 @@ int	fork_and_exec(t_cmd *curr, t_shell *shell, t_exec *ex)
 		return (-1);
 	}
 	if (ex->pid == 0)
-		child_process(curr, shell, ex, (curr->next != NULL));
+		child_process(curr, cmds, shell, ex, (curr->next != NULL));
 	ex->last_pid = ex->pid;
 	parent_process(ex, (curr->next != NULL));
 	return (0);
