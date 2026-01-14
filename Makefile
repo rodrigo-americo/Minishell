@@ -37,6 +37,8 @@ SRC_FILES   = main.c \
 			  parser/syntax_check.c \
 			  parser/redir.c \
 			  parser/heredoc_parser.c \
+			  parser/heredoc_parser_utils.c \
+			  parser/heredoc_delimiter.c \
 			  executor/executor.c \
 			  executor/path_resolution.c \
 			  executor/path_execution.c \

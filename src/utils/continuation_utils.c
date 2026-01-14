@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    #+#  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026-01-14 13:51:44 by rgregori          #+#    #+#             */
-/*   Updated: 2026-01-14 13:51:44 by rgregori         ###   ########.fr       */
+/*   Created: 2026/01/14 13:51:44 by rgregori          #+#    #+#             */
+/*   Updated: 2026/01/14 17:38:34 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,27 @@ int	ends_with_backslash(char *str)
 	return (str[len - 1] == '\\');
 }
 
+static int	has_valid_content(char *str, int len)
+{
+	int	i;
+	int	has_content;
+
+	i = 0;
+	has_content = 0;
+	while (i < len)
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+			i = skip_quotes(str, i);
+		else
+		{
+			if (str[i] != ' ' && str[i] != '\t' && str[i] != '|')
+				has_content = 1;
+			i++;
+		}
+	}
+	return (has_content);
+}
+
 int	ends_with_pipe(char *str)
 {
 	int	len;
@@ -32,14 +53,8 @@ int	ends_with_pipe(char *str)
 	if (!str)
 		return (0);
 	len = ft_strlen(str);
-	i = 0;
-	while (i < len)
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-			i = skip_quotes(str, i);
-		else
-			i++;
-	}
+	if (!has_valid_content(str, len))
+		return (0);
 	i = len - 1;
 	while (i >= 0 && (str[i] == ' ' || str[i] == '\t'))
 		i--;

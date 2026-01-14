@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2025/12/18 00:00:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2026/01/14 16:52:07 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,17 @@ int		process_redir(t_cmd *cmd, t_list **current, t_shell *shell);
 
 /* Heredoc Processing */
 int		process_heredoc_at_parse_time(t_redir *redir, t_shell *shell);
+
+/* Heredoc Delimiter */
+char	*remove_delimiter_quotes(char *str, int *is_quoted);
+
+/* Heredoc Utils */
+char	*expand_heredoc_line(char *line, t_shell *shell, int is_quoted);
+int		write_heredoc_line(int fd, char *line);
+char	*read_line_heredoc(void);
+int		check_line_signal(char *line);
+int		process_heredoc_line(int fd, char *line, t_redir *redir,
+			t_shell *sh);
 
 /* Command Management */
 void	free_cmd(t_cmd *cmd);

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-/* Helper para obter flags do open baseado no tipo */
+/* Helper to get open flags based on type */
 static int	get_open_flags(int type)
 {
 	if (type == REDIR_IN)
@@ -23,8 +23,8 @@ static int	get_open_flags(int type)
 }
 
 /* 
-** Função unificada para abrir arquivos e fazer dup2.
-** Trata Input, Output e Append de uma só vez.
+** Unified function to open files and perform dup2.
+** Handles Input, Output and Append at once.
 */
 static int	handle_file_redir(t_redir *redir)
 {

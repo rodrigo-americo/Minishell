@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2026/01/01 00:00:00 by rgregori         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:34:39 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ char	*read_with_continuation(char *prompt)
 		cont_type = needs_continuation(line);
 		complete = join_by_type(complete, line, cont_type);
 		free(line);
-		if (!complete || cont_type == 0)
+		if (!complete)
+			return (complete);
+		if (needs_continuation(complete) == 0)
 			return (complete);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgregori <rgregori@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: ccavalca <ccavalca@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/14 00:00:00 by rgregori          #+#    #+#             */
-/*   Updated: 2026/01/14 00:00:00 by rgregori         ###   ########.fr       */
+/*   Created: 2026/01/14 16:45:37 by ccavalca          #+#    #+#             */
+/*   Updated: 2026/01/14 16:45:39 by ccavalca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
