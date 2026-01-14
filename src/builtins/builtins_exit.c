@@ -73,7 +73,8 @@ int	builtin_exit(char **args, t_shell *shell)
 	{
 		if (pid == shell->main_pid)
 			ft_putendl_fd("exit", 2);
-		return (print_error("exit", "too many arguments"), 1);
+		ft_putstr_fd("exit: too many arguments\n", 2);
+		cleanup_and_exit(1);
 	}
 	cleanup_and_exit(exit_code);
 	return (0);
