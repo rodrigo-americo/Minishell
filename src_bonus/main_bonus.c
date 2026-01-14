@@ -41,17 +41,16 @@ static t_ast_node *parse_input(t_shell *shell) {
 }
 
 void main_loop(t_shell *shell) {
-  t_ast_node *ast;
-
   while (1) {
     handle_signal_status(shell);
     if (!get_input(shell))
       break;
     if (*shell->input) {
-      ast = parse_input(shell);
-      if (ast) {
-        executor(ast, shell);
-        free_ast(ast);
+      shell->ast = parse_input(shell);
+      if (shell->ast) {
+        executor(shell->ast, shell);
+        free_ast(shell->ast);
+        shell->ast = NULL;
       } else
         shell->exit_status = 2;
     }
@@ -64,12 +63,16 @@ void main_loop(t_shell *shell) {
 int main(int argc, char **argv, char **envp) {
   t_shell *shell;
   int exit_code;
+  FILE *null_out;
 
   (void)argc;
   (void)argv;
+  null_out = NULL;
   setup_signals();
-  if (!isatty(STDIN_FILENO))
-    rl_outstream = fopen("/dev/null", "w");
+  if (!isatty(STDIN_FILENO)) {
+    null_out = fopen("/dev/null", "w");
+    rl_outstream = null_out;
+  }
   shell = shell_init(envp);
   main_loop(shell);
   exit_code = shell->exit_status;
@@ -80,5 +83,7 @@ int main(int argc, char **argv, char **envp) {
   if (shell->stdout_backup != -1)
     close(shell->stdout_backup);
   free(shell);
+  if (null_out)
+    fclose(null_out);
   return (exit_code);
 }

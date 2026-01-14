@@ -46,8 +46,6 @@ static t_cmd	*parse_input(t_shell *shell)
 
 void	main_loop(t_shell *shell)
 {
-	t_cmd	*cmds;
-
 	while (1)
 	{
 		handle_signal_status(shell);
@@ -55,12 +53,13 @@ void	main_loop(t_shell *shell)
 			break ;
 		if (*shell->input)
 		{
-			cmds = parse_input(shell);
-			if (cmds)
+			shell->cmds = parse_input(shell);
+			if (shell->cmds)
 			{
-				expander(cmds, shell);
-				executor(cmds, shell);
-				free_commands(cmds);
+				expander(shell->cmds, shell);
+				executor(shell->cmds, shell);
+				free_commands(shell->cmds);
+				shell->cmds = NULL;
 			}
 			else
 				shell->exit_status = 2;

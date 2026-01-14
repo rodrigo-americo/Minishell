@@ -36,5 +36,6 @@ void	swap_nodes_data(t_env *a, t_env *b);
 t_env	*copy_env_list(t_env *env);
 int		validate_export_key(char *key, char *value);
 void	extract_key_value(char *arg, char **key, char **value);
-
+void	init_validation(char *str, int *i, int *sign);
+int		check_overflow(long long num, char digit);
 #endif

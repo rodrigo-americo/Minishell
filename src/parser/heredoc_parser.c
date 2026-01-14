@@ -45,32 +45,44 @@ static int	write_heredoc_line(int fd, char *line)
 	return (0);
 }
 
-int	process_heredoc_at_parse_time(t_redir *redir, t_shell *shell)
+static int	read_heredoc_loop(int *fd, char *delim, t_redir *redir, t_shell *sh)
 {
-	int		fd[2];
 	char	*line;
-	char	*delimiter;
 	char	*expanded;
 
-	delimiter = remove_delimiter_quotes(redir->file, &redir->is_quoted);
-	if (!delimiter || pipe(fd) == -1)
-		return (free(delimiter), -1);
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || ft_strcmp(line, delimiter) == 0)
+		if (!line || ft_strcmp(line, delim) == 0)
 		{
 			free(line);
-			break ;
+			return (0);
 		}
-		expanded = expand_heredoc_line(line, shell, redir->is_quoted);
+		expanded = expand_heredoc_line(line, sh, redir->is_quoted);
 		free(line);
 		if (!expanded || write_heredoc_line(fd[1], expanded) == -1)
 		{
 			free(expanded);
-			return (close(fd[0]), close(fd[1]), free(delimiter), -1);
+			return (-1);
 		}
 		free(expanded);
+	}
+}
+
+int	process_heredoc_at_parse_time(t_redir *redir, t_shell *shell)
+{
+	int		fd[2];
+	char	*delimiter;
+
+	delimiter = remove_delimiter_quotes(redir->file, &redir->is_quoted);
+	if (!delimiter || pipe(fd) == -1)
+		return (free(delimiter), -1);
+	if (read_heredoc_loop(fd, delimiter, redir, shell) == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		free(delimiter);
+		return (-1);
 	}
 	close(fd[1]);
 	redir->hrdc_fd = fd[0];

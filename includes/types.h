@@ -92,6 +92,7 @@ typedef struct s_exec
 	pid_t	pid;
 	pid_t	last_pid;
 	int		status;
+	int		has_next;
 }	t_exec;
 
 /* String Processing Context Structure */

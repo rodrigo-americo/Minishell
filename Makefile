@@ -18,6 +18,7 @@ SRC_FILES   = main.c \
 			  clean_utils.c \
 			  assignment.c \
 			  utils/continuation.c \
+			  utils/continuation_utils.c \
 			  utils/line_join.c \
 			  lexer/lexer.c \
 			  lexer/lexer_utils.c \
@@ -50,6 +51,7 @@ SRC_FILES   = main.c \
 			  builtins/builtins_cd_utils.c \
 			  builtins/builtins_env.c \
 			  builtins/builtins_exit.c \
+			  builtins/builtins_exit_utils.c \
 			  builtins/builtins_print.c \
 			  builtins/builtins_utils.c \
 			  builtins/builtins_valid.c
@@ -179,6 +181,16 @@ fclean_bonus: clean_bonus
 clean_bonus:
 	@echo "🧹 Limpando objetos bonus..."
 	@$(RM) $(OBJ_DIR_B)
+
+val: readline.supp all
+	@valgrind -q --suppressions=readline.supp \
+				--leak-check=full \
+				--show-leak-kinds=all \
+				--track-origins=yes \
+				--track-fds=yes \
+				--trace-children=yes \
+				--trace-children-skip='*/bin/*,*/sbin/*,/usr/bin/*' \
+				./${NAME}
 
 re_bonus: fclean_bonus bonus
 
