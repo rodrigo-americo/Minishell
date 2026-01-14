@@ -44,9 +44,9 @@ static void	cleanup_and_exit(int code)
 	exit(code);
 }
 
-static void	handle_invalid_arg(pid_t pid, pid_t main_pid)
+static void	handle_invalid_arg(int is_main)
 {
-	if (pid == main_pid)
+	if (is_main)
 		ft_putendl_fd("exit", 2);
 	ft_putstr_fd("exit :  numeric argument required\n", 2);
 	cleanup_and_exit(2);
@@ -55,25 +55,24 @@ static void	handle_invalid_arg(pid_t pid, pid_t main_pid)
 int	builtin_exit(char **args, t_shell *shell)
 {
 	int		exit_code;
-	pid_t	pid;
 
-	pid = getpid();
 	if (!args[1])
 	{
-		if (pid == shell->main_pid)
+		if (shell->is_main)
 			ft_putendl_fd("exit", 2);
 		cleanup_and_exit(shell->exit_status);
 	}
 	if (!args[1][0] || (args[1][0] == '-' && !args[1][1])
 		|| (args[1][0] == '+' && !args[1][1]))
-		handle_invalid_arg(pid, shell->main_pid);
+		handle_invalid_arg(shell->is_main);
 	if (!validate_and_convert(args[1], &exit_code))
-		handle_invalid_arg(pid, shell->main_pid);
+		handle_invalid_arg(shell->is_main);
 	if (args[2])
 	{
-		if (pid == shell->main_pid)
+		if (shell->is_main)
 			ft_putendl_fd("exit", 2);
-		return (print_error("exit", "too many arguments"), 1);
+		ft_putstr_fd("exit: too many arguments\n", 2);
+		cleanup_and_exit(1);
 	}
 	cleanup_and_exit(exit_code);
 	return (0);

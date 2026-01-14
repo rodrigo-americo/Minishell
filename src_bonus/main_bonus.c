@@ -63,16 +63,10 @@ void main_loop(t_shell *shell) {
 int main(int argc, char **argv, char **envp) {
   t_shell *shell;
   int exit_code;
-  FILE *null_out;
 
   (void)argc;
   (void)argv;
-  null_out = NULL;
   setup_signals();
-  if (!isatty(STDIN_FILENO)) {
-    null_out = fopen("/dev/null", "w");
-    rl_outstream = null_out;
-  }
   shell = shell_init(envp);
   main_loop(shell);
   exit_code = shell->exit_status;
@@ -83,7 +77,5 @@ int main(int argc, char **argv, char **envp) {
   if (shell->stdout_backup != -1)
     close(shell->stdout_backup);
   free(shell);
-  if (null_out)
-    fclose(null_out);
   return (exit_code);
 }

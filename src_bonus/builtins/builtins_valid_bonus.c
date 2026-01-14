@@ -62,7 +62,8 @@ int	validate_export_key(char *key, char *value, char *original_arg)
 		}
 		if (error_msg)
 		{
-			fprintf(stderr, "export: %s\n", error_msg);
+			ft_putstr_fd("export: ", 2);
+			ft_putendl_fd(error_msg, 2);
 			free(error_msg);
 		}
 		else

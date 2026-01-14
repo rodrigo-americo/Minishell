@@ -7,6 +7,42 @@
 }
 
 {
+	readline_definite_leaks
+	Memcheck:Leak
+	match-leak-kinds: definite,indirect
+	...
+	obj:*libreadline*
+}
+
+{
+	readline_undo_leaks
+	Memcheck:Leak
+	match-leak-kinds: definite,indirect
+	...
+	fun:xmalloc
+	fun:rl_add_undo
+	...
+}
+
+{
+	readline_rubout_leaks
+	Memcheck:Leak
+	match-leak-kinds: definite,indirect
+	...
+	fun:_rl_rubout_char
+	...
+}
+
+{
+	readline_copy_text_leaks
+	Memcheck:Leak
+	match-leak-kinds: definite,indirect
+	...
+	fun:rl_copy_text
+	...
+}
+
+{
 	history_internal_leaks
 	Memcheck:Leak
 	match-leak-kinds: reachable

@@ -49,6 +49,6 @@ t_shell	*shell_init(char **envp)
 	shell->cmds = NULL;
 	shell->env = create_env(envp);
 	shell->exit_status = 0;
-	shell->main_pid = getpid();
+	shell->is_main = 1;
 	return (shell);
 }

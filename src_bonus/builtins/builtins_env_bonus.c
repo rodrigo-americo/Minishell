@@ -26,7 +26,8 @@ static int set_or_error(char *key, char *value, t_shell *shell, char *original_a
     free(temp);
   }
   if (error_msg) {
-    fprintf(stderr, "export: %s\n", error_msg);
+    ft_putstr_fd("export: ", 2);
+    ft_putendl_fd(error_msg, 2);
     free(error_msg);
   } else {
     print_error("export", "not a valid identifier");

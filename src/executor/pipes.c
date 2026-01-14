@@ -54,6 +54,7 @@ void	child_process(t_cmd *cmd, t_cmd *cmds, t_shell *shell, t_exec *ex)
 	char	**env;
 	int		builtin_ret;
 
+	shell->is_main = 0;
 	conf_child_pipes(ex);
 	if (cmd->redirs && setup_redirections(cmd->redirs) < 0)
 		child_exit(cmds, shell, NULL, 1);

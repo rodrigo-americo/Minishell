@@ -79,6 +79,8 @@ int	get_exit_status(int status)
 
 int	handle_command_not_found(char *cmd_name)
 {
-	fprintf(stderr, "minishell: %s: command not found\n", cmd_name);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd_name, 2);
+	ft_putendl_fd(": command not found", 2);
 	return (127);
 }

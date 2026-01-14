@@ -34,7 +34,9 @@ static int	change_directory(char *path)
 {
 	if (chdir(path) != 0)
 	{
-		fprintf(stderr, "cd: %s: No such file or directory\n", path);
+		ft_putstr_fd("cd: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putendl_fd(": No such file or directory", 2);
 		return (0);
 	}
 	return (1);

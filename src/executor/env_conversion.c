@@ -81,12 +81,18 @@ int	handle_command_not_found(char *cmd_name)
 	{
 		if (stat(cmd_name, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 		{
-			fprintf(stderr, "minishell: %s: Is a directory\n", cmd_name);
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd_name, 2);
+			ft_putendl_fd(": Is a directory", 2);
 			return (126);
 		}
-		fprintf(stderr, "minishell: %s: No such file or directory\n", cmd_name);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd_name, 2);
+		ft_putendl_fd(": No such file or directory", 2);
 		return (127);
 	}
-	fprintf(stderr, "minishell: %s: command not found\n", cmd_name);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd_name, 2);
+	ft_putendl_fd(": command not found", 2);
 	return (127);
 }

@@ -20,7 +20,9 @@ void error_exit(char *msg)
 
 void print_error(char *cmd, char *msg)
 {
-	fprintf(stderr, "%s: %s\n", cmd, msg);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(msg, 2);
 }
 
 char *skip_whitespace(char *input)
