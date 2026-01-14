@@ -50,3 +50,29 @@ void	add_redir_to_end(t_redir **head, t_redir *new_redir)
 		current = current->next;
 	current->next = new_redir;
 }
+
+int	process_redir(t_cmd *cmd, t_list **current, t_shell *shell)
+{
+	t_token	*redir_tok;
+	t_token	*file_tok;
+	t_redir	*new_redir;
+
+	redir_tok = (t_token *)(*current)->content;
+	file_tok = (t_token *)(*current)->next->content;
+	new_redir = create_redir(file_tok->value, redir_tok->type);
+	if (new_redir)
+	{
+		if (new_redir->type == REDIR_HEREDOC)
+		{
+			if (process_heredoc_at_parse_time(new_redir, shell) < 0)
+			{
+				free(new_redir);
+				return (-1);
+			}
+		}
+		add_redir_to_end(&cmd->redirs, new_redir);
+		file_tok->value = NULL;
+	}
+	*current = (*current)->next->next;
+	return (0);
+}

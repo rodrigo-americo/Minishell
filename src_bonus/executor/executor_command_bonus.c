@@ -65,6 +65,7 @@ int exec_external(char **args, t_redir *redirs, t_shell *shell) {
   if (pid == -1)
     return (perror("minishell: fork"), free(path), 1);
   if (pid == 0) {
+    setup_signals_child();
     if (redirs && setup_redirections(redirs) < 0)
       exit(1);
     envp = env_to_array(shell->env);
@@ -73,7 +74,9 @@ int exec_external(char **args, t_redir *redirs, t_shell *shell) {
     exit(126);
   }
   free(path);
+  setup_signals_executing();
   waitpid(pid, &status, 0);
+  setup_signals_interactive();
   return (get_exit_status(status));
 }
 

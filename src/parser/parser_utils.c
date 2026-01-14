@@ -12,6 +12,35 @@
 
 #include "minishell.h"
 
+char	**copy_array(char **arr)
+{
+	char	**copy;
+	int		len;
+	int		i;
+
+	if (!arr)
+		return (NULL);
+	len = 0;
+	while (arr[len])
+		len++;
+	copy = malloc(sizeof(char *) * (len + 1));
+	if (!copy)
+		return (NULL);
+	i = -1;
+	while (++i < len)
+	{
+		copy[i] = ft_strdup(arr[i]);
+		if (!copy[i])
+		{
+			while (--i >= 0)
+				free(copy[i]);
+			return (free(copy), NULL);
+		}
+	}
+	copy[len] = NULL;
+	return (copy);
+}
+
 static char	**ft_realloc_array(char **old, int len, char *new_str)
 {
 	char	**new_arr;

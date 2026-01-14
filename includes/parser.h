@@ -24,6 +24,7 @@ int		check_syntax(t_list *node, t_cmd *head);
 /* Redirection Management */
 t_redir	*create_redir(char *file_name, t_redir_type type);
 void	add_redir_to_end(t_redir **head, t_redir *new_redir);
+int		process_redir(t_cmd *cmd, t_list **current, t_shell *shell);
 
 /* Heredoc Processing */
 int		process_heredoc_at_parse_time(t_redir *redir, t_shell *shell);
@@ -31,5 +32,8 @@ int		process_heredoc_at_parse_time(t_redir *redir, t_shell *shell);
 /* Command Management */
 void	free_cmd(t_cmd *cmd);
 void	free_commands(t_cmd *cmds);
+
+/* Array Utilities */
+char	**copy_array(char **arr);
 
 #endif

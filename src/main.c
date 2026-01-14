@@ -31,17 +31,29 @@ static int	get_input(t_shell *shell)
 	return (1);
 }
 
-static t_cmd	*parse_input(t_shell *shell)
+static void	process_command(t_shell *shell)
 {
 	t_list	*tokens;
-	t_cmd	*cmds;
 
 	tokens = lexer(shell->input);
 	if (!tokens)
-		return (NULL);
-	cmds = parser(tokens, shell);
+		return ;
+	shell->cmds = parser(tokens, shell);
 	tokens_list_clear(&tokens);
-	return (cmds);
+	if (shell->cmds)
+	{
+		expander(shell->cmds, shell);
+		executor(shell->cmds, shell);
+		free_commands(shell->cmds);
+		shell->cmds = NULL;
+	}
+	else if (g_signal_received == SIGINT)
+	{
+		g_signal_received = 0;
+		shell->exit_status = 130;
+	}
+	else
+		shell->exit_status = 2;
 }
 
 void	main_loop(t_shell *shell)
@@ -52,18 +64,7 @@ void	main_loop(t_shell *shell)
 			break ;
 		handle_signal_status(shell);
 		if (*shell->input)
-		{
-			shell->cmds = parse_input(shell);
-			if (shell->cmds)
-			{
-				expander(shell->cmds, shell);
-				executor(shell->cmds, shell);
-				free_commands(shell->cmds);
-				shell->cmds = NULL;
-			}
-			else
-				shell->exit_status = 2;
-		}
+			process_command(shell);
 		free(shell->input);
 		shell->input = NULL;
 	}

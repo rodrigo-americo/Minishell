@@ -38,6 +38,7 @@ static pid_t	fork_pipe_left(int *fd, t_ast_node *node, t_shell *shell)
 		return (perror("minishell: fork"), -1);
 	if (pid == 0)
 	{
+		setup_signals_child();
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
@@ -57,6 +58,7 @@ static pid_t	fork_pipe_right(int *fd, t_ast_node *node, t_shell *shell)
 		return (perror("minishell: fork"), -1);
 	if (pid == 0)
 	{
+		setup_signals_child();
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
@@ -83,8 +85,10 @@ int	execute_pipe(t_ast_node *node, t_shell *shell)
 		return (close(fd[0]), close(fd[1]), 1);
 	close(fd[0]);
 	close(fd[1]);
+	setup_signals_executing();
 	waitpid(pid_left, &status, 0);
 	waitpid(pid_right, &status, 0);
+	setup_signals_interactive();
 	return (get_exit_status(status));
 }
 
@@ -102,9 +106,12 @@ int	execute_subshell(t_ast_node *node, t_shell *shell)
 	}
 	if (pid == 0)
 	{
+		setup_signals_child();
 		ret = executor(node->left, shell);
 		child_exit_bonus(shell, ret);
 	}
+	setup_signals_executing();
 	waitpid(pid, &status, 0);
+	setup_signals_interactive();
 	return (get_exit_status(status));
 }

@@ -51,6 +51,7 @@ void	execute_external_cmd_child(t_cmd *cmd, t_cmd *cmds,
 		t_shell *shell, char *path)
 {
 	char	**env;
+	char	**args;
 
 	if (!path)
 	{
@@ -58,9 +59,13 @@ void	execute_external_cmd_child(t_cmd *cmd, t_cmd *cmds,
 		child_exit(cmds, shell, NULL, 127);
 	}
 	env = env_to_array(shell->env);
-	execve(path, cmd->args, env);
+	args = copy_array(cmd->args);
+	cleanup_child(cmds, shell, NULL, NULL);
+	execve(path, args, env);
 	perror("minishell");
-	cleanup_child(cmds, shell, path, env);
+	free(path);
+	free_array(args);
+	free_array(env);
 	exit(126);
 }
 

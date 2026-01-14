@@ -189,8 +189,6 @@ val: readline.supp all
 				--show-leak-kinds=all \
 				--track-origins=yes \
 				--track-fds=yes \
-				--trace-children=yes \
-				--trace-children-skip='*/bin/*,*/sbin/*,/usr/bin/*' \
 				./${NAME}
 
 re_bonus: fclean_bonus bonus

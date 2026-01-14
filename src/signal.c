@@ -87,4 +87,5 @@ void	setup_signals_child(void)
 	sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGPIPE, &sa, NULL);
 }

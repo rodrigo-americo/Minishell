@@ -34,22 +34,32 @@ static int	validate_and_convert(char *str, int *exit_code)
 	return (1);
 }
 
-static void	cleanup_and_exit(int code)
+static void	cleanup_and_exit(int code, t_shell *shell)
 {
 	int	fd;
 
 	fd = 3;
 	while (fd < MAX_FD)
 		close(fd++);
+	if (shell)
+	{
+		if (shell->cmds)
+			free_commands(shell->cmds);
+		if (shell->input)
+			free(shell->input);
+		free_env(shell->env);
+		free(shell);
+	}
+	rl_clear_history();
 	exit(code);
 }
 
-static void	handle_invalid_arg(int is_main)
+static void	handle_invalid_arg(int is_main, t_shell *shell)
 {
 	if (is_main)
 		ft_putendl_fd("exit", 2);
 	ft_putstr_fd("exit :  numeric argument required\n", 2);
-	cleanup_and_exit(2);
+	cleanup_and_exit(2, shell);
 }
 
 int	builtin_exit(char **args, t_shell *shell)
@@ -60,20 +70,20 @@ int	builtin_exit(char **args, t_shell *shell)
 	{
 		if (shell->is_main)
 			ft_putendl_fd("exit", 2);
-		cleanup_and_exit(shell->exit_status);
+		cleanup_and_exit(shell->exit_status, shell);
 	}
 	if (!args[1][0] || (args[1][0] == '-' && !args[1][1])
 		|| (args[1][0] == '+' && !args[1][1]))
-		handle_invalid_arg(shell->is_main);
+		handle_invalid_arg(shell->is_main, shell);
 	if (!validate_and_convert(args[1], &exit_code))
-		handle_invalid_arg(shell->is_main);
+		handle_invalid_arg(shell->is_main, shell);
 	if (args[2])
 	{
 		if (shell->is_main)
 			ft_putendl_fd("exit", 2);
 		ft_putstr_fd("exit: too many arguments\n", 2);
-		cleanup_and_exit(1);
+		cleanup_and_exit(1, shell);
 	}
-	cleanup_and_exit(exit_code);
+	cleanup_and_exit(exit_code, shell);
 	return (0);
 }

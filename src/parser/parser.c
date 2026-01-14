@@ -12,31 +12,6 @@
 
 #include "minishell.h"
 
-static void	process_redir(t_cmd *cmd, t_list **current, t_shell *shell)
-{
-	t_token	*redir_tok;
-	t_token	*file_tok;
-	t_redir	*new_redir;
-
-	redir_tok = (t_token *)(*current)->content;
-	file_tok = (t_token *)(*current)->next->content;
-	new_redir = create_redir(file_tok->value, redir_tok->type);
-	if (new_redir)
-	{
-		if (new_redir->type == REDIR_HEREDOC)
-		{
-			if (process_heredoc_at_parse_time(new_redir, shell) < 0)
-			{
-				free(new_redir);
-				return ;
-			}
-		}
-		add_redir_to_end(&cmd->redirs, new_redir);
-		file_tok->value = NULL;
-	}
-	*current = (*current)->next->next;
-}
-
 static void	process_arg(t_cmd *cmd, t_list **current)
 {
 	t_token	*tok;
@@ -52,30 +27,49 @@ static void	process_arg(t_cmd *cmd, t_list **current)
 	*current = (*current)->next;
 }
 
+static int	parse_token(t_cmd *cmd, t_list **token, t_shell *shell)
+{
+	t_token	*tok;
+
+	tok = (t_token *)(*token)->content;
+	if (ft_strcmp(tok->value, "|") == 0)
+		return (1);
+	if (tok->type >= TOKEN_REDIR_IN)
+	{
+		if (process_redir(cmd, token, shell) < 0)
+			return (-1);
+	}
+	else
+		process_arg(cmd, token);
+	return (0);
+}
+
 static t_cmd	*parse_block(t_list **token, t_shell *shell)
 {
 	t_cmd	*cmd;
-	t_token	*tok;
+	int		ret;
 
 	cmd = ft_calloc(1, sizeof(t_cmd));
 	if (!cmd)
 		return (print_error("parser", "malloc error\n"), NULL);
 	while (*token)
 	{
-		tok = (t_token *)(*token)->content;
-		if (ft_strcmp(tok->value, "|") == 0)
+		ret = parse_token(cmd, token, shell);
+		if (ret == 1)
 			break ;
-		if (tok->type >= TOKEN_REDIR_IN)
-			process_redir(cmd, token, shell);
-		else
-			process_arg(cmd, token);
+		if (ret == -1)
+			return (free_cmd(cmd), NULL);
 	}
 	if (!cmd->args && !cmd->redirs)
-	{
-		free_cmd(cmd);
-		return (NULL);
-	}
+		return (free_cmd(cmd), NULL);
 	return (cmd);
+}
+
+static t_cmd	*handle_parse_err(t_cmd *head)
+{
+	if (g_signal_received != SIGINT)
+		print_error("syntax error", "unexpected token '|'\n");
+	return (free_commands(head), NULL);
 }
 
 t_cmd	*parser(t_list *tokens, t_shell *shell)
@@ -92,10 +86,7 @@ t_cmd	*parser(t_list *tokens, t_shell *shell)
 			return (free_commands(head), NULL);
 		new = parse_block(&tokens, shell);
 		if (!new)
-		{
-			print_error("syntax error", "unexpected token '|'\n");
-			return (free_commands(head), NULL);
-		}
+			return (handle_parse_err(head));
 		if (!head)
 			head = new;
 		else
