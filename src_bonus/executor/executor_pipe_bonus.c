@@ -19,12 +19,7 @@ static void	cleanup_child_bonus(t_shell *shell)
 	free_env(shell->env);
 	if (shell->input)
 		free(shell->input);
-	if (shell->stdin_backup != -1)
-		close(shell->stdin_backup);
-	if (shell->stdout_backup != -1)
-		close(shell->stdout_backup);
 	free(shell);
-	rl_clear_history();
 }
 
 static void	child_exit_bonus(t_shell *shell, int code)
