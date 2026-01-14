@@ -42,9 +42,9 @@ static t_ast_node *parse_input(t_shell *shell) {
 
 void main_loop(t_shell *shell) {
   while (1) {
-    handle_signal_status(shell);
-    if (!get_input(shell))
+	  if (!get_input(shell))
       break;
+	handle_signal_status(shell);
     if (*shell->input) {
       shell->ast = parse_input(shell);
       if (shell->ast) {

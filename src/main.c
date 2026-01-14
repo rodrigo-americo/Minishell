@@ -48,9 +48,9 @@ void	main_loop(t_shell *shell)
 {
 	while (1)
 	{
-		handle_signal_status(shell);
 		if (!get_input(shell))
 			break ;
+		handle_signal_status(shell);
 		if (*shell->input)
 		{
 			shell->cmds = parse_input(shell);

@@ -12,12 +12,11 @@
 
 #include "minishell.h"
 
-/* Global variable for signal handling (only allowed global) */
 volatile sig_atomic_t	g_signal_received = 0;
 
 static void	signal_handler_interactive(int signum)
 {
-	(void)signum;
+	g_signal_received = signum;
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
