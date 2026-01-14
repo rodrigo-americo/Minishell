@@ -24,8 +24,17 @@ void	fork_error_cleanup(t_exec *ex, t_cmd *curr);
 /* Pipeline Helpers */
 int		setup_pipe(t_exec *ex, t_cmd *curr);
 int		fork_and_exec(t_cmd *curr, t_cmd *cmds, t_shell *shell, t_exec *ex);
+int		wait_all(t_exec *ex);
 void	child_process(t_cmd *cmd, t_cmd *cmds, t_shell *shell, t_exec *ex);
 void	parent_process(t_exec *ex);
+
+/* Child Process Utils */
+void	cleanup_child(t_cmd *cmds, t_shell *shell, char *path, char **env);
+void	child_exit(t_cmd *cmds, t_shell *shell, char *path, int code);
+void	conf_child_pipes(t_exec *ex);
+void	execute_external_cmd_child(t_cmd *cmd, t_cmd *cmds,
+			t_shell *shell, char *path);
+void	execute_child_builtin(t_cmd *cmd, t_cmd *cmds, t_shell *shell);
 
 /* Redirections */
 int		setup_redirections(t_redir *redirs);

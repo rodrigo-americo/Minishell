@@ -39,3 +39,22 @@ int	fork_and_exec(t_cmd *curr, t_cmd *cmds, t_shell *shell, t_exec *ex)
 	parent_process(ex);
 	return (0);
 }
+
+int	wait_all(t_exec *ex)
+{
+	int	exit_code;
+	int	status;
+
+	exit_code = 0;
+	if (ex->last_pid != -1)
+	{
+		waitpid(ex->last_pid, &status, 0);
+		if (WIFEXITED(status))
+			exit_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			exit_code = 128 + WTERMSIG(status);
+	}
+	while (wait(NULL) != -1)
+		continue ;
+	return (exit_code);
+}

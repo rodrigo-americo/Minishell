@@ -44,6 +44,7 @@ SRC_FILES   = main.c \
 			  executor/pipes.c \
 			  executor/pipes_helpers.c \
 			  executor/pipe_utils.c \
+			  executor/child_utils.c \
 			  executor/redirections.c \
 			  executor/heredoc.c \
 			  builtins/builtins.c \
