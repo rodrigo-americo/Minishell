@@ -35,6 +35,7 @@ int match_pattern(char *pattern, char *str);
 /* Word Splitting */
 void word_splitting_ast(t_ast_node *node);
 char **expand_wildcards(char **args);
+char **expand_wildcard_for_redir(char *pattern);
 void restore_spaces(char **args);
 void restore_spaces_in_redirs(t_redir *redirs);
 

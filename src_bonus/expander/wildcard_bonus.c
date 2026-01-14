@@ -79,6 +79,11 @@ static char **expand_single_pattern(char *pattern) {
     return (NULL);
   entry = readdir(dir);
   while (entry) {
+    if ((ft_strcmp(entry->d_name, ".") == 0 || ft_strcmp(entry->d_name, "..") == 0))
+    {
+      entry = readdir(dir);
+      continue;
+    }
     if ((pattern[0] == '.' || entry->d_name[0] != '.') &&
         match_pattern(pattern, entry->d_name)) {
       matches = add_match(matches, entry->d_name, &count);
@@ -162,4 +167,10 @@ char **expand_wildcards(char **args) {
   if (!args)
     return (NULL);
   return (process_wildcards_recursive(args, 0));
+}
+
+char **expand_wildcard_for_redir(char *pattern) {
+  if (!pattern || !has_wildcard(pattern))
+    return (NULL);
+  return (expand_single_pattern(pattern));
 }

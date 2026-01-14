@@ -25,15 +25,47 @@ static void expand_args(char ***args, t_shell *shell) {
   }
 }
 
+static int count_array_elements(char **arr) {
+  int count;
+
+  count = 0;
+  if (!arr)
+    return (0);
+  while (arr[count])
+    count++;
+  return (count);
+}
+
 static void expand_redirs(t_redir *redirs, t_shell *shell) {
   t_redir *curr;
   char *tmp;
+  char **expanded;
+  int count;
 
   curr = redirs;
   while (curr) {
     if (curr->type != REDIR_HEREDOC) {
       tmp = curr->file;
       curr->file = process_string_content(tmp, shell);
+      if (has_wildcard(curr->file)) {
+        expanded = expand_wildcard_for_redir(curr->file);
+        if (expanded) {
+          count = count_array_elements(expanded);
+          if (count > 1) {
+            print_error(tmp, "ambiguous redirect\n");
+            shell->exit_status = 1;
+            free(curr->file);
+            curr->file = ft_strdup("");
+            free_array(expanded);
+            free(tmp);
+            curr = curr->next;
+            continue;
+          }
+          free(curr->file);
+          curr->file = ft_strdup(expanded[0]);
+          free_array(expanded);
+        }
+      }
       free(tmp);
     }
     curr = curr->next;

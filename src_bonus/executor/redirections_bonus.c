@@ -36,6 +36,8 @@ static int	handle_file_redir(t_redir *redir)
 	int	target_fd;
 	int	flags;
 
+	if (!redir->file || redir->file[0] == '\0')
+		return (-1);
 	flags = get_open_flags(redir->type);
 	fd = open(redir->file, flags, 0644);
 	if (fd < 0)

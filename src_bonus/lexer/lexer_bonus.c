@@ -42,6 +42,11 @@ t_list	*extract_operator_token(char **input)
 			return (result);
 		i++;
 	}
+	if (**input == '&')
+	{
+		print_error("syntax error", "unexpected token '&'");
+		return (NULL);
+	}
 	return (NULL);
 }
 

@@ -58,6 +58,14 @@ char	*process_string_content(char *str, t_shell *shell)
 	{
 		if (str[i] == '$' && quote != '\'')
 			i += ft_handle_expansion(&new_str, str + i, shell);
+		else if (str[i] == '\\' && str[i + 1] && quote != '\'')
+		{
+			if (str[i + 1] == '*')
+				new_str = append_char_safe(new_str, 0x1E, 0);
+			else
+				new_str = append_char_safe(new_str, str[i + 1], quote);
+			i += 2;
+		}
 		else
 		{
 			if (str[i] == '\'' || str[i] == '\"')

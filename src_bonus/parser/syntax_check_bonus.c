@@ -18,11 +18,11 @@ static int	check_pipe_syntax(t_list *node, int is_first)
 
 	(void)node->content;
 	if (!node->next || is_first)
-		return (print_error("syntax error", "unexpected token '|'\n"), 1);
+		return (print_error("syntax error", "unexpected token '|'"), 1);
 	next = (t_token *)node->next->content;
 	if (next->type == TOKEN_PIPE || next->type == TOKEN_AND
 		|| next->type == TOKEN_OR)
-		return (print_error("syntax error", "unexpected token\n"), 1);
+		return (print_error("syntax error", "unexpected token"), 1);
 	return (0);
 }
 
@@ -35,13 +35,26 @@ static int	check_logical_syntax(t_list *node, int is_first)
 	if (!node->next || is_first)
 	{
 		if (tok->type == TOKEN_AND)
-			return (print_error("syntax error", "unexpected token '&&'\n"), 1);
-		return (print_error("syntax error", "unexpected token '||'\n"), 1);
+			return (print_error("syntax error", "unexpected token '&&'"), 1);
+		return (print_error("syntax error", "unexpected token '||'"), 1);
 	}
 	next = (t_token *)node->next->content;
 	if (next->type == TOKEN_PIPE || next->type == TOKEN_AND
 		|| next->type == TOKEN_OR)
-		return (print_error("syntax error", "unexpected token\n"), 1);
+		return (print_error("syntax error", "unexpected token"), 1);
+	return (0);
+}
+
+static int	is_operator_string(char *str)
+{
+	if (!str)
+		return (0);
+	if (ft_strcmp(str, "&") == 0)
+		return (1);
+	if (ft_strcmp(str, "&&") == 0)
+		return (1);
+	if (ft_strcmp(str, "||") == 0)
+		return (1);
 	return (0);
 }
 
@@ -50,10 +63,14 @@ static int	check_redir_syntax(t_list *node)
 	t_token	*next;
 
 	if (!node->next)
-		return (print_error("syntax error", "unexpected newline\n"), 1);
+		return (print_error("syntax error", "unexpected newline"), 1);
 	next = (t_token *)node->next->content;
 	if (next->type != TOKEN_WORD)
-		return (print_error("syntax error", "unexpected token\n"), 1);
+		return (print_error("syntax error", "unexpected token"), 1);
+	if (is_operator_string(next->value))
+		return (print_error("syntax error", "unexpected token"), 1);
+	if (next->value && next->value[0] == '&' && next->value[1] == '\0')
+		return (print_error("syntax error", "unexpected token '&'"), 1);
 	return (0);
 }
 
@@ -91,11 +108,18 @@ static int	check_paren_syntax(t_list *node)
 	{
 		current = node->next;
 		if (!current || ((t_token *)current->content)->type == TOKEN_RPAREN)
-			return (print_error("syntax error", "empty parentheses\n"), 1);
+			return (print_error("syntax error", "empty parentheses"), 1);
 		if (count_parens(node) != 0)
-			return (print_error("syntax error", "unmatched '('\n"), 1);
+			return (print_error("syntax error", "unmatched '('"), 1);
 	}
 	return (0);
+}
+
+static int	is_redir_token(int type)
+{
+	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+		|| type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HEREDOC
+		|| type == TOKEN_REDIR_STDERR_OUT || type == TOKEN_REDIR_STDERR_APPEND);
 }
 
 static int	check_token_syntax(t_list *node, t_token *tok, int is_first)
@@ -105,8 +129,7 @@ static int	check_token_syntax(t_list *node, t_token *tok, int is_first)
 	if ((tok->type == TOKEN_AND || tok->type == TOKEN_OR)
 		&& check_logical_syntax(node, is_first))
 		return (1);
-	if (tok->type >= TOKEN_REDIR_IN && tok->type <= TOKEN_REDIR_HEREDOC
-		&& check_redir_syntax(node))
+	if (is_redir_token(tok->type) && check_redir_syntax(node))
 		return (1);
 	if ((tok->type == TOKEN_LPAREN || tok->type == TOKEN_RPAREN)
 		&& check_paren_syntax(node))
